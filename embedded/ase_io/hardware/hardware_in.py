@@ -1,6 +1,6 @@
 import json
 
-from ase_io.card_content import CardContent
+from ase_io.card_content import CardContent, InvalidCardContent
 
 try:
     from mfrc522 import SimpleMFRC522
@@ -25,6 +25,9 @@ class ASEHardwareIn:
     def mainloop(self):
         while True:
             _, text = self.reader.read()
-            card_content = card_content_from_json(text)
+            try:
+                card_content = card_content_from_json(text)
+            except json.JSONDecodeError:
+                card_content = InvalidCardContent()
             for listener in self.listeners:
                 listener(card_content)
