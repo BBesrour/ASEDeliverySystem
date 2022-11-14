@@ -11,8 +11,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 GREEN_PIN = 17
 RED_PIN = 15
-GPIO.setup(GREEN_PIN, GPIO.OUT, initial=GPIO.LOW)
-GPIO.setup(RED_PIN, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(GREEN_PIN, GPIO.OUT, initial=GPIO.HIGH)
+GPIO.setup(RED_PIN, GPIO.OUT, initial=GPIO.HIGH)
 
 
 class ASEHardwareOut:
@@ -29,9 +29,8 @@ class ASEHardwareOut:
         elif self.color == "green":
             GPIO.output(GREEN_PIN, GPIO.HIGH)
         else:
-            pass
-            # GPIO.output(RED_PIN, GPIO.LOW)
-            # GPIO.output(GREEN_PIN, GPIO.LOW)
+            GPIO.output(RED_PIN, GPIO.LOW)
+            GPIO.output(GREEN_PIN, GPIO.LOW)
 
     def turn_off(self):
         self.color = None
