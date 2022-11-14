@@ -14,3 +14,4 @@ try:
 except KeyboardInterrupt :
     GPIO.cleanup()
     raise
+print("Success!")
