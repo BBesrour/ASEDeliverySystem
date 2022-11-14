@@ -29,5 +29,8 @@ class ASEHardwareIn:
                 card_content = card_content_from_json(text)
             except json.JSONDecodeError:
                 card_content = InvalidCardContent()
+            except KeyError as e:
+                print("KeyError", e)
+                card_content = InvalidCardContent()
             for listener in self.listeners:
                 listener(card_content)

@@ -20,7 +20,10 @@ class ASEHardwareOut:
         self.color = None
 
     def update_led(self):
-        print("LED color: {}".format(self.color))
+        if self.color:
+            print("LED color: {}".format(self.color))
+        else:
+            print("LED off")
         if self.color == "red":
             GPIO.output(RED_PIN, GPIO.HIGH)
         elif self.color == "green":
