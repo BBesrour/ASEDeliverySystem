@@ -1,5 +1,5 @@
 try:
-    from ase_io.software import ase_in, ase_out, ase_mainloop
+    from ase_io.hardware import ase_in, ase_out, ase_mainloop
 except ImportError:
     print("importing")
     from ase_io.software import ase_in, ase_out, ase_mainloop
