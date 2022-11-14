@@ -25,14 +25,13 @@ class ASEHardwareOut:
         else:
             print("LED off")
         if self.color == "red":
-            print("red high")
             GPIO.output(RED_PIN, GPIO.HIGH)
         elif self.color == "green":
-            print("green high")
             GPIO.output(GREEN_PIN, GPIO.HIGH)
         else:
-            GPIO.output(RED_PIN, GPIO.LOW)
-            GPIO.output(GREEN_PIN, GPIO.LOW)
+            pass
+            # GPIO.output(RED_PIN, GPIO.LOW)
+            # GPIO.output(GREEN_PIN, GPIO.LOW)
 
     def turn_off(self):
         self.color = None
