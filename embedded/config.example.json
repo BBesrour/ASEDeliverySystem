@@ -1,0 +1,6 @@
+{
+  "box_id": 1,
+  "box_name": "TestBox",
+  "street_address": "Testaddress",
+  "server_url": "http://localhost:5111"
+}
