@@ -1,6 +1,6 @@
 try:
     import RPi.GPIO as GPIO
-except:
+except ImportError:
     raise ImportError("RPi.GPIO not installed")
 import threading
 
@@ -9,10 +9,10 @@ LED_ON_TIME_SECONDS = 3
 # set up LEDs
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
-GREEN_PIN = 17
-RED_PIN = 15
-GPIO.setup(GREEN_PIN, GPIO.OUT, initial=GPIO.HIGH)
-GPIO.setup(RED_PIN, GPIO.OUT, initial=GPIO.HIGH)
+GREEN_PIN = 6
+RED_PIN = 7
+GPIO.setup(GREEN_PIN, GPIO.OUT, initial=GPIO.LOW)
+GPIO.setup(RED_PIN, GPIO.OUT, initial=GPIO.LOW)
 
 
 class ASEHardwareOut:
