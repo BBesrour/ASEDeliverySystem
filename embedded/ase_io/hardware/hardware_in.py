@@ -33,6 +33,7 @@ class ASEHardwareIn:
         self.listeners.append(listener)
 
     def is_dark(self) -> bool:
+        print("Light sensor: {}".format(GPIO.input(LIGHT_SENSOR_PIN)))
         return GPIO.input(LIGHT_SENSOR_PIN) == GPIO.HIGH
 
     def mainloop(self):
