@@ -27,11 +27,11 @@ class ASESoftwareIn:
         self.listeners = []
         self._dark = False
         self._dark_turtle = Turtle()
-        self.set_up_dark_turtle()
-        onscreenclick(self.on_click)
+        self._set_up_dark_turtle()
+        onscreenclick(self._on_click)
         onkeypress(self._toggle_dark, "d")
 
-    def set_up_dark_turtle(self):
+    def _set_up_dark_turtle(self):
         self._dark_turtle.shape("square")
         self._dark_turtle.penup()
         self._dark_turtle.color("white")
@@ -39,7 +39,7 @@ class ASESoftwareIn:
     def add_listener(self, listener):
         self.listeners.append(listener)
 
-    def on_click(self, x, y):
+    def _on_click(self, x, y):
         if self._dark_turtle.distance(x, y) < 10:
             self._toggle_dark()
         else:

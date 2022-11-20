@@ -1,11 +1,21 @@
 import json
 
-from ase_io.card_content import CardContent, InvalidCardContent
-
+try:
+    import RPi.GPIO as GPIO
+except ImportError:
+    raise ImportError("RPi.GPIO not installed")
 try:
     from mfrc522 import SimpleMFRC522
 except ImportError:
     raise ImportError("mfrc522 not installed")
+
+from ase_io.card_content import CardContent, InvalidCardContent
+
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+LIGHT_SENSOR_PIN = 16
+GPIO.setup(LIGHT_SENSOR_PIN, GPIO.IN)
 
 
 def card_content_from_json(json_str: str) -> CardContent:
@@ -21,6 +31,9 @@ class ASEHardwareIn:
 
     def add_listener(self, listener):
         self.listeners.append(listener)
+
+    def is_dark(self) -> bool:
+        return GPIO.input(LIGHT_SENSOR_PIN) == GPIO.HIGH
 
     def mainloop(self):
         while True:
