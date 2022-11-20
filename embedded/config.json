@@ -2,5 +2,7 @@
   "box_id": 1,
   "box_name": "TestBox",
   "street_address": "Testaddress",
-  "server_url": "http://localhost:5111"
+  "auth_server_address": "http://localhost:5111",
+  "delivery_server_address": "http://localhost:5112",
+  "delivers_server_access_token": "abcdefg"
 }
