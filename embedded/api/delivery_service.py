@@ -1,6 +1,7 @@
 import requests
 
 from common.config import Config
+from ase_io.card_content import CardContent
 
 
 def _is_deliverer_token(card_token: str) -> bool:
@@ -19,14 +20,14 @@ class DeliveryService:
 
     def _get(self, url: str, data=None):
         return requests.get(
-            url,
+            self.config.delivery_server_address + url,
             data=data,
             headers={"Authorization": f"Bearer {self.config.delivery_server_access_token}"}
         )
 
     def _post(self, url: str, data=None):
         return requests.post(
-            url,
+            self.config.delivery_server_address + url,
             data=data,
             headers={"Authorization": f"Bearer {self.config.delivery_server_access_token}"}
         )
@@ -47,8 +48,9 @@ class DeliveryService:
         )
         return resp.status_code == 200
 
-    def authenticate(self, card_token):
+    def authenticate(self, card_content: CardContent):
         """Return True whether the card token is valid."""
+        card_token = card_content.token
         if _is_deliverer_token(card_token):
             return self._authenticate_deliverer(card_token)
         elif _is_customer_token(card_token):

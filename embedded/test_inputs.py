@@ -11,6 +11,6 @@ def log_light_sensor():
 
 
 if __name__ == '__main__':
-    ase_in.add_listener(lambda card_content: print(card_content))
+    ase_in.add_token_listener(lambda card_content: print(card_content))
     log_light_sensor()
     ase_mainloop()

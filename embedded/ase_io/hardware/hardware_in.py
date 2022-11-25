@@ -1,4 +1,5 @@
 import json
+from threading import Timer
 
 try:
     import RPi.GPIO as GPIO
@@ -27,16 +28,29 @@ def card_content_from_json(json_str: str) -> CardContent:
 class ASEHardwareIn:
     def __init__(self):
         self.reader = SimpleMFRC522()
-        self.listeners = []
+        self.token_listeners = []
+        self._dark = False
+        self.darkness_listeners = []
 
-    def add_listener(self, listener):
-        self.listeners.append(listener)
+    def add_token_listener(self, listener):
+        self.token_listeners.append(listener)
+
+    def add_darkness_listener(self, listener):
+        self.darkness_listeners.append(listener)
 
     def is_dark(self) -> bool:
         print("Light sensor: {}".format(GPIO.input(LIGHT_SENSOR_PIN)))
         return GPIO.input(LIGHT_SENSOR_PIN) == GPIO.HIGH
 
+    def _check_darkness_change(self):
+        if self.is_dark() != self._dark:
+            self._dark = not self._dark
+            for listener in self.darkness_listeners:
+                listener(self._dark)
+        Timer(0.1, self._check_darkness_change).start()
+
     def mainloop(self):
+        self._check_darkness_change()
         while True:
             _, text = self.reader.read()
             try:
@@ -46,5 +60,5 @@ class ASEHardwareIn:
             except KeyError as e:
                 print("KeyError", e)
                 card_content = InvalidCardContent()
-            for listener in self.listeners:
+            for listener in self.token_listeners:
                 listener(card_content)
