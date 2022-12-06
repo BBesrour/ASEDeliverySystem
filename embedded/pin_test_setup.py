@@ -5,7 +5,7 @@ import time
 
 HIGH_PIN = 16
 LOW_PIN = 26
-INPUT_PIN = 6
+INPUT_PIN = 5
 
 # set up LEDs
 GPIO.setmode(GPIO.BCM)
