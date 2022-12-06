@@ -14,6 +14,10 @@ GPIO.setup(HIGH_PIN, GPIO.OUT, initial=GPIO.HIGH)
 GPIO.setup(LOW_PIN, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(INPUT_PIN, GPIO.IN)
 
-while True:
-    time.sleep(1)
-    print("Input:", GPIO.input(INPUT_PIN))
+try:
+    while True:
+        time.sleep(.1)
+        print("Input:", GPIO.input(INPUT_PIN))
+except KeyboardInterrupt:
+    GPIO.cleanup()
+    print("Cleaned up.")
