@@ -18,6 +18,7 @@
     <modules>
         <module>delivery-service</module>
         <module>authentication-service</module>
+        <module>server-discovery</module>
     </modules>
 
     <properties>
