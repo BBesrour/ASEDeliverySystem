@@ -19,6 +19,7 @@
         <module>delivery-service</module>
         <module>authentication-service</module>
         <module>server-discovery</module>
+        <module>api-gateway</module>
     </modules>
 
     <properties>
