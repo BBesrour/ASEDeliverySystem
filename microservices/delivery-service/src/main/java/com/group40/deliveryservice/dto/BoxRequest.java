@@ -11,8 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoxRequest {
-    private String address;
-    private String status;
+    private String id;
     private String name;
-    private int number_of_items;
+    private String address;
+    private String key;
+    private String assigned_to;
+    private String assigned_by;
+    private String[] assigned_customers;
 }

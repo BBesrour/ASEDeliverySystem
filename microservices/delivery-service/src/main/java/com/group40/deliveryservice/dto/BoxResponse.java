@@ -12,9 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BoxResponse {
     private String id;
-    private String address;
-    private String status;
     private String name;
-    private int number_of_items;
-
+    private String address;
+    private String assigned_to;
+    private String assigned_by;
+    private String[] assigned_customers;
+    private String key;
 }
