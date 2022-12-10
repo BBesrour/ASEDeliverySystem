@@ -1,8 +1,7 @@
 package com.group40.deliveryservice.service;
 
-import com.group40.deliveryservice.dto.BoxRequest;
-import com.group40.deliveryservice.dto.BoxResponse;
-import com.group40.deliveryservice.model.Box;
+import com.group40.deliveryservice.exceptions.DeliveryNotFoundException;
+import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,33 +14,44 @@ import java.util.List;
 @Slf4j
 public class DeliveryService {
 
-    private final DeliveryRepository deliveryRepository;
+    private final DeliveryRepository repository;
 
-    public void createBox(BoxRequest boxRequest) {
-        Box box = Box.builder()
-                .address(boxRequest.getAddress())
-                .status(boxRequest.getStatus())
-                .name(boxRequest.getName())
-                .number_of_items(boxRequest.getNumber_of_items())
-                .build();
-
-        deliveryRepository.save(box);
-        log.info("box {} is saved", box.getId());
+    public List<Delivery> getAllDeliveries() {
+        return repository.findAll();
     }
 
-    public List<BoxResponse> getAllBoxes() {
-        List<Box> boxes = deliveryRepository.findAll();
-
-        return boxes.stream().map(this::mapToBoxResponse).toList();
+    public Delivery saveDelivery(Delivery newDelivery) {
+        return repository.save(newDelivery);
     }
 
-    private BoxResponse mapToBoxResponse(Box box) {
-        return BoxResponse.builder()
-                .id(box.getId())
-                .address(box.getAddress())
-                .status(box.getStatus())
-                .name(box.getName())
-                .number_of_items(box.getNumber_of_items())
-                .build();
+    public Delivery getSingleDelivery(String id) {
+        return repository.findById(id).orElseThrow(() -> new DeliveryNotFoundException(id));
+    }
+
+    public Delivery replaceDelivery(Delivery newDelivery, String id) {
+        return repository.findById(id)
+                .map(delivery -> {
+                    delivery.setActive(newDelivery.isActive());
+                    delivery.setTargetCustomerID(newDelivery.getTargetCustomerID());
+                    delivery.setTargetBoxID(newDelivery.getTargetBoxID());
+                    delivery.setDelivererID(newDelivery.getDelivererID());
+                    return repository.save(delivery);
+                })
+                .orElseGet(() -> {
+                    newDelivery.setId(id);
+                    return repository.save(newDelivery);
+                });
+    }
+
+    public void deleteDelivery(String id) {
+        repository.deleteById(id);
+    }
+
+    public List<Delivery> getActiveDeliveries(String customer) {
+        return repository.findActiveDeliveries(customer);
+    }
+
+    public List<Delivery> getInactiveDeliveries(String customer) {
+        return repository.findInactiveDeliveries(customer);
     }
 }
