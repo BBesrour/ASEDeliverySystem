@@ -1,13 +1,17 @@
 class Delivery {
-    private id: String;
-    private targetCustomerID: String;
-    private targetBoxID: String;
-    private delivererID: String;
+    readonly id: string;
+    readonly targetCustomerID: string;
+    readonly targetBoxID: string;
+    readonly delivererID: string;
 
-    constructor(id: String, targetCustomerID: String, targetBoxID: String, delivererID: String) {
+    constructor(id: string, targetCustomerID: string, targetBoxID: string, delivererID: string) {
         this.id = id;
         this.targetCustomerID = targetCustomerID;
         this.targetBoxID = targetBoxID;
         this.delivererID = delivererID;
+    }
+
+    static fromJson(json: any): Delivery {
+        return new Delivery(json.id, json.targetCustomerID, json.targetBoxID, json.delivererID);
     }
 }

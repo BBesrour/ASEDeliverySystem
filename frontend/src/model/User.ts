@@ -1,9 +1,15 @@
 class User {
-    private email: String;
-    private name: String;
+    readonly id: string;
+    readonly email: string;
+    readonly name: string;
     
-    constructor(email: String, name: String) {
+    constructor(id: string, email: string, name: string) {
+        this.id = id;
         this.email = email;
         this.name = name;
+    }
+
+    static fromJson(json: any): User {
+        return new User(json.id, json.email, json.name);
     }
 }
