@@ -1,28 +1,3 @@
-/*
-import * as React from 'react';
-import Button from '@mui/material/Button';
-
-
-const Dispatcher = () => {
-  return (
-    <div>
-      <Button onClick={()=>{props.history.push('/DispatcherBoxes')}} >Press</Button>
-      <Button variant="contained">Pick-up boxes</Button>
-      <Button variant="contained">Deliveries</Button>
-      <Button variant="contained">Users</Button>
-
-      <Button variant="contained"
-        onClick={() => {
-          history.push('./DispatcherBoxes')
-        }}
-      >
-        Click me
-      </Button>
-    </div>
-  );
-}
-
-export default Dispatcher;*/
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import {Routes, Route, useNavigate} from 'react-router-dom';
