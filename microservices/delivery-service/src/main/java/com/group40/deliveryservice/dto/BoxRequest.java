@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+
 
 @Data
 @Builder
@@ -17,5 +19,5 @@ public class BoxRequest {
     private String key;
     private String assigned_to;
     private String assigned_by;
-    private String[] assigned_customers;
+    private ArrayList<String> assigned_customers;
 }

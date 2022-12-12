@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -33,12 +34,12 @@ public class DeliveryController {
 
     @GetMapping("/box")
     @ResponseStatus(HttpStatus.OK)
-    public BoxResponse getBox(@RequestBody String id) throws Exception  { return deliveryService.getBox(id);}
+    public BoxResponse getBox(@RequestParam String id) throws Exception  { return deliveryService.getBox(id);}
 
-    @PutMapping("/box")
+    @PostMapping("/box")
     @ResponseStatus(HttpStatus.OK)
-    public void updateBox(@RequestBody BoxRequest boxRequest) throws Exception {
-        deliveryService.updateBox(boxRequest);
+    public BoxResponse updateBox(@RequestParam String id , @RequestBody Map<String, String> obj) throws Exception {
+        return deliveryService.updateBox(id, obj);
     }
 
 }

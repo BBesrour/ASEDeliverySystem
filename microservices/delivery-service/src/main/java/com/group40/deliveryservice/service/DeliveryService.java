@@ -10,10 +10,7 @@ import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,13 +20,7 @@ public class DeliveryService {
     private final DeliveryRepository deliveryRepository;
 
     private List<Box> getBoxes(){
-        List<Box> boxes = new ArrayList<>();
-        for(int i=1; i<=10; i++) {
-            String ist = Integer.toString(i);
-            String arr[] = {"1", "2"};
-            boxes.add(new Box(ist, "box"+ist, "box"+ist+" adress", "deliverer"+ist, "dispatcher"+ist, arr, ist+ist  ));
-        }
-        return boxes;
+        return deliveryRepository.findAll();
     }
 
     private BoxResponse mapToBoxResponse(Box box) {
@@ -56,6 +47,7 @@ public class DeliveryService {
 
     public void createBox(BoxRequest boxRequest) {
         Box box = Box.builder()
+                .id(UUID.randomUUID().toString())
                 .address(boxRequest.getAddress())
                 .name(boxRequest.getName())
                 .key(boxRequest.getKey())
@@ -64,8 +56,7 @@ public class DeliveryService {
                 .assigned_customers(boxRequest.getAssigned_customers())
                 .build();
 
-        deliveryRepository.save(box);
-        log.info("box {} is saved", box.getId());
+        deliveryRepository.insert(box);
     }
 
     public List<BoxResponse> getAllBoxes() {
@@ -86,10 +77,39 @@ public class DeliveryService {
         return mapToBoxResponse(box);
     }
 
-    public void updateBox(BoxRequest boxRequest) throws Exception {
+    private Box updateField(String key, String value, Box box) {
+        switch(key) {
+            case "name":
+                box.setName(value);
+                break;
+            case "key":
+                box.setKey(value);
+                break;
+            case "assigned_to":
+                box.setAssigned_to(value);
+                break;
+            case "assigned_by":
+                box.setAssigned_by(value);
+                break;
+            case "address":
+                box.setAddress(value);
+                break;
+            case "assigned_customers":
+                box.getAssigned_customers().add(value);
+                break;
+        }
+        return box;
+    }
+
+    public BoxResponse updateBox(String id, Map<String, String> obj) throws Exception {
         for (int i=0; i<getBoxes().size(); i++) {
-            if (Objects.equals(getBoxes().get(i).getId(), boxRequest.getId())) {
-                getBoxes().set(i, mapFromBoxRequest(boxRequest));
+            Box b = getBoxes().get(i);
+            if (Objects.equals(b.getId(), id)) {
+                for(String key: obj.keySet()) {
+                    b = updateField(key, obj.get(key), b);
+                }
+                deliveryRepository.save(b);
+                return mapToBoxResponse(b);
             }
         }
         throw new Exception("Box ID does not exist!!!");

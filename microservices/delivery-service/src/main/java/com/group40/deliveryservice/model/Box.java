@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 @Document(value = "box")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,10 +19,10 @@ public class Box {
     @Id
     private String id;
     private String name;
-    private String address;
+    private String key;
     private String assigned_to;
     private String assigned_by;
-    private String[] assigned_customers;
-    private String key;
+    private String address;
+    private ArrayList<String> assigned_customers;
 }
 
