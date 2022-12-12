@@ -1,8 +1,11 @@
 package com.group40.deliveryservice.controller;
 
 import com.group40.deliveryservice.model.Delivery;
+import com.group40.deliveryservice.model.EmailDetails;
 import com.group40.deliveryservice.service.DeliveryService;
+import com.group40.deliveryservice.service.EmailService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +16,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DeliveryController {
     private final DeliveryService deliveryService;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -57,5 +63,17 @@ public class DeliveryController {
             @RequestParam(value = "customer") String customer
     ) {
         return deliveryService.getInactiveDeliveries(customer);
+    }
+
+    @PostMapping("/sendmail")
+    @ResponseStatus(HttpStatus.OK)
+    public String
+    sendMail()
+    {
+        EmailDetails emailDetails = new EmailDetails("besrourbilel@gmail.com","Hey!\n This is a test mail from our services-1", "Test email");
+        String status
+                = emailService.sendSimpleMail(emailDetails);
+
+        return status;
     }
 }
