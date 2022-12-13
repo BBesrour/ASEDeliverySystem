@@ -1,6 +1,5 @@
 package com.group40.authenticationservice.dto.response;
 
-import com.group40.authenticationservice.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
