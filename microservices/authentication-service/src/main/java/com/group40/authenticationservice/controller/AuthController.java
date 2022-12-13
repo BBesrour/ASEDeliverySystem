@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.group40.authenticationservice.repository.RoleRepository;
+import com.group40.authenticationservice.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +28,6 @@ import com.group40.authenticationservice.dto.response.PersonResponse;
 import com.group40.authenticationservice.dto.request.SignupRequest;
 import com.group40.authenticationservice.dto.response.JwtResponse;
 import com.group40.authenticationservice.dto.response.MessageResponse;
-import com.group40.authenticationservice.repository.RoleRepository;
-import com.group40.authenticationservice.repository.UserRepository;
 import com.group40.authenticationservice.security.jwt.JwtUtils;
 import com.group40.authenticationservice.security.services.UserDetailsImpl;
 
