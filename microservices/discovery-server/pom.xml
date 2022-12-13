@@ -10,7 +10,7 @@
     </parent>
 
     <groupId>com.group40</groupId>
-    <artifactId>server-discovery</artifactId>
+    <artifactId>discovery-server</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
