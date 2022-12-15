@@ -12,13 +12,13 @@ export default class Client {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(body)
+            body: body ? JSON.stringify(body) : undefined
         });
         return await response.json();
     }
 
     getRequest(url: string, params: any = {}) {
-        return this.request('GET', url, params, {});
+        return this.request('GET', url, params, null);
     }
 
     postRequest(url: string, params: any = {}, body: any = {}) {

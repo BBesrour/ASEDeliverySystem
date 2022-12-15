@@ -1,5 +1,6 @@
 import Client from "../Client";
 import {deliveryServiceUrl} from "../config";
+import User from "../model/User";
 
 const client = new Client(`${deliveryServiceUrl}/user`);
 

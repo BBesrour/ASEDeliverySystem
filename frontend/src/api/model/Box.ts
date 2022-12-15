@@ -1,4 +1,4 @@
-class Box {
+export default class Box {
     readonly id: string;
     readonly name: string;
     readonly address: string;

@@ -1,4 +1,4 @@
-class Delivery {
+export default class Delivery {
     readonly id: string;
     readonly targetCustomerID: string;
     readonly targetBoxID: string;
