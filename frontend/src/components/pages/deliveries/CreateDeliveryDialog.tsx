@@ -8,6 +8,8 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {createDelivery} from "../../../api/delivery/deliveries";
 import Delivery from "../../../api/model/Delivery";
+import BoxSelection from "../helpers/BoxSelection";
+import Box from "../../../api/model/Box";
 
 export default function CreateDeliveryDialog({open, handleClose, onDeliveryCreated}: {
     open: boolean,
@@ -42,16 +44,7 @@ export default function CreateDeliveryDialog({open, handleClose, onDeliveryCreat
                         fullWidth
                         variant="standard"
                     />
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        value={targetBoxID}
-                        onChange={(event) => setTargetBoxID(event.target.value)}
-                        label="Name"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                    />
+                    <BoxSelection label="Target Box" onSelect={(box: Box | null) => setTargetBoxID(box?.id || "")}/>
                     <TextField
                         autoFocus
                         margin="dense"
