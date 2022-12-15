@@ -1,29 +1,26 @@
 import * as React from 'react';
+import {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import PageLayout from "./PageLayout";
-import {useEffect, useState} from "react";
-import Delivery from "../../api/model/Delivery";
-import {getDeliveries} from "../../api/delivery/deliveries";
-import Box from "../../api/model/Box";
-import {getBoxes} from "../../api/delivery/box";
-
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+import PageLayout from "../PageLayout";
+import Box from "../../../api/model/Box";
+import {getBoxes} from "../../../api/delivery/box";
+import CreateBoxDialog from "./CreateBoxDialog";
 
 export default function BoxesPage() {
     const [boxes, setBoxes] = useState<Box[]>([]);
+    const [showCreateDialog, setShowCreateDialog] = useState(false);
     useEffect(() => {
         getBoxes().then((boxes) => {
             setBoxes(boxes);
         });
-    });
+    }, []);
     const actionButtons = <>
-        <Button variant="contained">Create new box</Button>
-        <Button variant="outlined">temp</Button>
+        <Button variant="contained" onClick={ () => setShowCreateDialog(true) }>Create new box</Button>
     </>;
     const content = <Grid container spacing={4}>
         {boxes.map((box) => (
@@ -54,10 +51,12 @@ export default function BoxesPage() {
             </Grid>
         ))}
     </Grid>;
-    return PageLayout(
-        "Pick-up boxes",
-        "Text text text text text text",
-        actionButtons,
-        content
-    );
+    return <>
+        <PageLayout title={"Boxes"} description={""} actionButtons={actionButtons} content={content}/>
+        <CreateBoxDialog
+            open={showCreateDialog}
+            handleClose={ () => setShowCreateDialog(false) }
+            onBoxCreated={ (box) => setBoxes([box, ...boxes]) }
+        />
+        </>;
 }

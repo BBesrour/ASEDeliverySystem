@@ -33,14 +33,12 @@ export default function SignInPage() {
                     <Router/>
                 </main>
             ) : (
-
-                PageLayout(
-                    null,
-                    null,
-                    <></>,
-                    <>
-                        <CssBaseline/>
-                        <Box
+                <PageLayout
+                    title={null}
+                    description={null}
+                    actionButtons={<></>}
+                    content={
+                        <><CssBaseline/><Box
                             sx={{
                                 marginTop: 8,
                                 display: 'flex',
@@ -63,8 +61,7 @@ export default function SignInPage() {
                                     label="Email Address"
                                     name="email"
                                     autoComplete="email"
-                                    autoFocus
-                                />
+                                    autoFocus/>
                                 <TextField
                                     margin="normal"
                                     required
@@ -73,12 +70,10 @@ export default function SignInPage() {
                                     label="Password"
                                     type="password"
                                     id="password"
-                                    autoComplete="current-password"
-                                />
+                                    autoComplete="current-password"/>
                                 <FormControlLabel
                                     control={<Checkbox value="remember" color="primary"/>}
-                                    label="Remember me"
-                                />
+                                    label="Remember me"/>
                                 <Button
                                     type="submit"
                                     fullWidth
@@ -100,9 +95,9 @@ export default function SignInPage() {
                                     </Grid>
                                 </Grid>
                             </Box>
-                        </Box>
-                    </>
-                )
+                        </Box></>
+                    }
+                />
             )}
         </>
     );

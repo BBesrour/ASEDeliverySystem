@@ -45,10 +45,10 @@ export default function UsersPage() {
             </Grid>
         ))}
     </Grid>;
-    return PageLayout(
-        "Users",
-        "Text text text text text text",
-        actionButtons,
-        content
-    );
+    return <PageLayout
+        title="Users"
+        description="Text text text text text text"
+        actionButtons={actionButtons}
+        content={content}
+    />;
 }

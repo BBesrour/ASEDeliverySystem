@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from '@mui/material/Button';
 import {Route, Routes, useNavigate} from 'react-router-dom';
 import UsersPage from './pages/UsersPage';
-import BoxesPage from "./pages/BoxesPage";
+import BoxesPage from "./pages/boxes/BoxesPage";
 import DeliveriesPage from "./pages/DeliveriesPage";
 
 export default function Router() {

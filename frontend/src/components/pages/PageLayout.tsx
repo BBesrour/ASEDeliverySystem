@@ -12,12 +12,12 @@ import Stack from "@mui/material/Stack";
 
 const theme = createTheme();
 
-export default function PageLayout(
+export default function PageLayout({title, description, actionButtons, content}: {
     title: string | null,
     description: string | null,
     actionButtons: React.ReactNode,
     content: React.ReactNode
-) {
+}) {
     return <ThemeProvider theme={theme}>
         <CssBaseline/>
         {title ?

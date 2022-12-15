@@ -1,11 +1,11 @@
 export default class Box {
-    readonly id: string;
+    readonly id: string | null;
     readonly name: string;
     readonly address: string;
     readonly numberOfItems: string;
     readonly status: string;
 
-    constructor(id: string, name: string, address: string, numberOfItems: string, status: string) {
+    constructor(id: string | null, name: string, address: string, numberOfItems: string, status: string) {
         this.id = id;
         this.name = name;
         this.address = address;

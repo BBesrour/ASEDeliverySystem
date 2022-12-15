@@ -15,7 +15,7 @@ export default function DeliveriesPage() {
         getDeliveries().then((deliveries) => {
             setDeliveries(deliveries);
         });
-    });
+    }, []);
     const actionButtons = <>
         <Button variant="contained">Track delivery</Button>
         <Button variant="outlined">temp</Button>
@@ -39,10 +39,5 @@ export default function DeliveriesPage() {
             </Grid>
         ))}
     </Grid>;
-    return PageLayout(
-        "Deliveries",
-        "",
-        actionButtons,
-        content
-    );
+    return <PageLayout title="Deliveries" description={null} actionButtons={actionButtons} content={content} />
 }
