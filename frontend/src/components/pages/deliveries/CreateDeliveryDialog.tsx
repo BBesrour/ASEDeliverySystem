@@ -21,7 +21,7 @@ export default function CreateDeliveryDialog({open, handleClose, onDeliveryCreat
     const [delivererID, setDelivererID] = React.useState('');
 
     async function handleCreateDelivery() {
-        const newDelivery = new Delivery(null, targetCustomerID, targetBoxID, delivererID);
+        const newDelivery = new Delivery(null, targetCustomerID, targetBoxID, delivererID, "ORDERED", true);
         onDeliveryCreated(await createDelivery(newDelivery));
         handleClose();
     }

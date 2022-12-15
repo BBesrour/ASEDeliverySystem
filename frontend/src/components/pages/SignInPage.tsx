@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 import Router from '../Router';
 import PageLayout from "./PageLayout";
 import {login} from "../../api/auth/signup";
-import {getAccessToken, setAccessToken} from "../../storage/user";
+import {getAccessToken, setAccessToken, setRoles, setUserID} from "../../storage/user";
 
 export default function SignInPage() {
     const [success, setSuccess] = useState(getAccessToken() != null);
@@ -26,7 +26,8 @@ export default function SignInPage() {
         try {
             const response = await login(email, password);
             setAccessToken(response.accessToken);
-            localStorage.setItem("roles", JSON.stringify(response.roles));
+            setRoles(response.roles);
+            setUserID(response.id);
         } catch (e) {
             setLoginError("Wrong login. Please try again.");
             return;

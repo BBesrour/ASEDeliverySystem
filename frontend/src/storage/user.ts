@@ -18,3 +18,11 @@ export function getRoles(): string[] {
 export function setRoles(roles: string[]) {
     localStorage.setItem('roles', JSON.stringify(roles));
 }
+
+export function getUserID(): string {
+    return localStorage.getItem('userID') || '';
+}
+
+export function setUserID(userID: string) {
+    localStorage.setItem('userID', userID);
+}
