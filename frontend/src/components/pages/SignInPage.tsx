@@ -16,7 +16,7 @@ import PageLayout from "./PageLayout";
 
 export default function SignInPage() {
     const [success, setSuccess] = useState(false);
-    const handleSubmit = (event) => {
+    const handleSubmit = (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         console.log({

@@ -13,8 +13,8 @@ import Stack from "@mui/material/Stack";
 const theme = createTheme();
 
 export default function PageLayout(
-    title: string,
-    description: string,
+    title: string | null,
+    description: string | null,
     actionButtons: React.ReactNode,
     content: React.ReactNode
 ) {
