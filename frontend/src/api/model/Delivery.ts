@@ -1,10 +1,10 @@
 export default class Delivery {
-    readonly id: string;
+    readonly id: string | null;
     readonly targetCustomerID: string;
     readonly targetBoxID: string;
     readonly delivererID: string;
 
-    constructor(id: string, targetCustomerID: string, targetBoxID: string, delivererID: string) {
+    constructor(id: string | null, targetCustomerID: string, targetBoxID: string, delivererID: string) {
         this.id = id;
         this.targetCustomerID = targetCustomerID;
         this.targetBoxID = targetBoxID;

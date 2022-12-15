@@ -5,20 +5,21 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import PageLayout from "./PageLayout";
-import {getDeliveries} from "../../api/delivery/deliveries";
-import Delivery from "../../api/model/Delivery";
+import PageLayout from "../PageLayout";
+import {getDeliveries} from "../../../api/delivery/deliveries";
+import Delivery from "../../../api/model/Delivery";
+import CreateDeliveryDialog from "./CreateDeliveryDialog";
 
 export default function DeliveriesPage() {
     const [deliveries, setDeliveries] = useState<Delivery[]>([]);
+    const [showCreateDialog, setShowCreateDialog] = useState(false);
     useEffect(() => {
         getDeliveries().then((deliveries) => {
             setDeliveries(deliveries);
         });
     }, []);
     const actionButtons = <>
-        <Button variant="contained">Track delivery</Button>
-        <Button variant="outlined">temp</Button>
+        <Button variant="contained" onClick={() => setShowCreateDialog(true)}>Create delivery</Button>
     </>;
     const content = <Grid container spacing={4}>
         {deliveries.map(delivery => (
@@ -39,5 +40,12 @@ export default function DeliveriesPage() {
             </Grid>
         ))}
     </Grid>;
-    return <PageLayout title="Deliveries" description={null} actionButtons={actionButtons} content={content} />
+    return <>
+        <PageLayout title="Deliveries" description={null} actionButtons={actionButtons} content={content}/>
+        <CreateDeliveryDialog
+            open={showCreateDialog}
+            handleClose={() => setShowCreateDialog(false)}
+            onDeliveryCreated={(delivery) => setDeliveries([delivery, ...deliveries])}
+        />
+    </>;
 }

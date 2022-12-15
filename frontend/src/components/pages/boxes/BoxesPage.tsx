@@ -58,5 +58,5 @@ export default function BoxesPage() {
             handleClose={ () => setShowCreateDialog(false) }
             onBoxCreated={ (box) => setBoxes([box, ...boxes]) }
         />
-        </>;
+    </>;
 }
