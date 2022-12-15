@@ -12,10 +12,10 @@ import Typography from '@mui/material/Typography';
 import Router from '../Router';
 import PageLayout from "./PageLayout";
 import {login} from "../../api/auth/signup";
+import {getAccessToken, setAccessToken} from "../../storage/user";
 
 export default function SignInPage() {
-    let accessToken = localStorage.getItem("accessToken");
-    const [success, setSuccess] = useState(accessToken != null);
+    const [success, setSuccess] = useState(getAccessToken() != null);
     const [loginError, setLoginError] = useState("");
     const handleSubmit = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {
         event.preventDefault();
@@ -24,14 +24,15 @@ export default function SignInPage() {
         const email: string = data.get("email") as string;
         const password: string = data.get("password") as string;
         try {
-            accessToken = (await login(email, password)).accessToken;
+            const response = await login(email, password);
+            setAccessToken(response.accessToken);
+            localStorage.setItem("roles", JSON.stringify(response.roles));
         } catch (e) {
-            accessToken = null;
+            setLoginError("Wrong login. Please try again.");
+            return;
         }
-        if (accessToken) {
-            localStorage.setItem("accessToken", accessToken);
-            setSuccess(true);
-        } else {
+        setSuccess(getAccessToken() != null);
+        if (!getAccessToken()) {
             setLoginError("Login failed. Please try again.");
         }
     };
