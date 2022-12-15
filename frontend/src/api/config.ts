@@ -1,0 +1,1 @@
+export const deliveryServiceUrl = "http://localhost:5112/api/delivery";
