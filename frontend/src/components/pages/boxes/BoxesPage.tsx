@@ -7,7 +7,7 @@ import CardContent from '@mui/material/CardContent';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import PageLayout from "../PageLayout";
-import Box from "../../../api/model/Box";
+import Box from "../../../model/Box";
 import {getBoxes} from "../../../api/delivery/box";
 import CreateBoxDialog from "./CreateBoxDialog";
 

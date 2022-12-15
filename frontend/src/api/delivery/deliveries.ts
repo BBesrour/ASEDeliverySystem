@@ -1,6 +1,6 @@
 import Client from "../Client";
 import {deliveryServiceUrl} from "../config";
-import Delivery from "../model/Delivery";
+import Delivery from "../../model/Delivery";
 
 const client = new Client(`${deliveryServiceUrl}/deliveries`);
 

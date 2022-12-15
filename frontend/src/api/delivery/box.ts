@@ -1,6 +1,6 @@
 import Client from "../Client";
 import {deliveryServiceUrl} from "../config";
-import Box from "../model/Box";
+import Box from "../../model/Box";
 
 const client = new Client(`${deliveryServiceUrl}/box`);
 

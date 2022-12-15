@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import PageLayout from "../PageLayout";
 import {getDeliveries} from "../../../api/delivery/deliveries";
-import Delivery from "../../../api/model/Delivery";
+import Delivery from "../../../model/Delivery";
 import CreateDeliveryDialog from "./CreateDeliveryDialog";
 
 export default function DeliveriesPage() {

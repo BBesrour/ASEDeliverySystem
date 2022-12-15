@@ -1,4 +1,4 @@
-import Box from "../../../api/model/Box";
+import Box from "../../../model/Box";
 import {getBoxes} from "../../../api/delivery/box";
 import React, {useEffect, useState} from "react";
 import {Autocomplete} from "@mui/material";

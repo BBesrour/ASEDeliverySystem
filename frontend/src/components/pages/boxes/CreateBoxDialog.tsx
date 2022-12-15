@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {createBox} from "../../../api/delivery/box";
-import Box from "../../../api/model/Box";
+import Box from "../../../model/Box";
 
 export default function CreateBoxDialog({open, handleClose, onBoxCreated}: {
     open: boolean,

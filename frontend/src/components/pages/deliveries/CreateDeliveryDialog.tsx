@@ -7,9 +7,9 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import {createDelivery} from "../../../api/delivery/deliveries";
-import Delivery from "../../../api/model/Delivery";
+import Delivery from "../../../model/Delivery";
 import BoxSelection from "../helpers/BoxSelection";
-import Box from "../../../api/model/Box";
+import Box from "../../../model/Box";
 
 export default function CreateDeliveryDialog({open, handleClose, onDeliveryCreated}: {
     open: boolean,
