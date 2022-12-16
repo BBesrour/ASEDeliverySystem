@@ -24,7 +24,6 @@ public class EmailServiceImpl implements EmailService {
     public String sendSimpleMail(EmailDetails details)
     {
 
-        // Try block to check for exceptions
         try {
 
             // Creating a simple mail message
@@ -42,7 +41,6 @@ public class EmailServiceImpl implements EmailService {
             return "Mail Sent Successfully...";
         }
 
-        // Catch block to handle the exceptions
         catch (Exception e) {
             return "Error while Sending Mail";
         }

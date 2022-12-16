@@ -70,7 +70,7 @@ public class DeliveryController {
     public String
     sendMail()
     {
-        EmailDetails emailDetails = new EmailDetails("besrourbilel@gmail.com","Hey!\n This is a test mail from our services-1", "Test email");
+        EmailDetails emailDetails = new EmailDetails("bilel3ezdin@gmail.com","Hey!\n This is a test mail from our services-1", "Test email");
         String status
                 = emailService.sendSimpleMail(emailDetails);
 
