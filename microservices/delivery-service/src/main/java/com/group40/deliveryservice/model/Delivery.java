@@ -10,6 +10,7 @@ public class Delivery {
     private String targetCustomerID;
     private String targetBoxID;
     private String delivererID;
+    private DeliveryStatus status;
 
     public String getId() {
         return id;
@@ -49,5 +50,13 @@ public class Delivery {
 
     public void setDelivererID(String delivererID) {
         this.delivererID = delivererID;
+    }
+
+    public DeliveryStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(DeliveryStatus status) {
+        this.status = status;
     }
 }

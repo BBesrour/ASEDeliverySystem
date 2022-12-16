@@ -2,6 +2,7 @@ package com.group40.deliveryservice.controller;
 
 import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
+import com.group40.deliveryservice.model.Box;
 import com.group40.deliveryservice.service.BoxService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,8 +20,8 @@ public class BoxController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createBox(@RequestBody BoxRequest boxRequest) {
-        boxService.createBox(boxRequest);
+    public Box createBox(@RequestBody BoxRequest boxRequest) {
+        return boxService.createBox(boxRequest);
     }
 
     @GetMapping

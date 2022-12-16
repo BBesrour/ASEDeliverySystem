@@ -17,7 +17,7 @@ public class BoxService {
 
     private final BoxRepository boxRepository;
 
-    public void createBox(BoxRequest boxRequest) {
+    public Box createBox(BoxRequest boxRequest) {
         Box box = Box.builder()
                 .address(boxRequest.getAddress())
                 .status(boxRequest.getStatus())
@@ -27,6 +27,7 @@ public class BoxService {
 
         boxRepository.save(box);
         log.info("box {} is saved", box.getId());
+        return box;
     }
 
     public List<BoxResponse> getAllBoxes() {

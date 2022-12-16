@@ -1,11 +1,11 @@
 import './App.css';
-import SignIn from './SignIn';
+import SignInPage from './components/pages/SignInPage';
 
 
 function App() {
   return (
     <main className="App">
-      <SignIn />
+      <SignInPage />
     </main>
   );
 }
