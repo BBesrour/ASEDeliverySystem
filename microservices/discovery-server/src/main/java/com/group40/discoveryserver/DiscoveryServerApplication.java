@@ -1,4 +1,4 @@
-package main.java.com.group40.discoveryserver;
+package com.group40.discoveryserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
