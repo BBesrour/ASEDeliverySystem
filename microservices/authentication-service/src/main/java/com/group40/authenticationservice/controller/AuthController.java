@@ -64,14 +64,12 @@ public class AuthController {
 		String jwt = jwtUtils.generateJwtToken(authentication);
 		
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();		
-		List<String> roles = userDetails.getAuthorities().stream()
-				.map(GrantedAuthority::getAuthority)
-				.collect(Collectors.toList());
+		String role = userDetails.getAuthority().getAuthority();
 
 		return ResponseEntity.ok(new JwtResponse(jwt, 
 												 userDetails.getId(),
-												 userDetails.getEmail(), 
-												 roles));
+												 userDetails.getEmail(),
+												 role));
 	}
 
 	@PostMapping("/register")
@@ -89,36 +87,25 @@ public class AuthController {
 				.password(encoder.encode(signUpRequest.getPassword()))
 				.build();
 
-		Set<String> strRoles = signUpRequest.getRoles();
-		Set<Role> roles = new HashSet<>();
+		String strRole = signUpRequest.getRole();
+		Role role;
 
-		if (strRoles == null) {
-			Role userRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+		if (strRole == null || strRole.isBlank()) {
+			role = roleRepository.findByName(ERole.ROLE_CUSTOMER)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-			roles.add(userRole);
 		} else {
-			strRoles.forEach(role -> {
-				switch (role) {
-					case "dispatcher" -> {
-						Role adminRole = roleRepository.findByName(ERole.ROLE_DISPATCHER)
-								.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-						roles.add(adminRole);
-					}
-					case "deliverer" -> {
-						Role modRole = roleRepository.findByName(ERole.ROLE_DELIVERER)
-								.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-						roles.add(modRole);
-					}
-					default -> {
-						Role userRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
-								.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-						roles.add(userRole);
-					}
+				switch (strRole) {
+					case "dispatcher" -> role = roleRepository.findByName(ERole.ROLE_DISPATCHER)
+							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					case "deliverer" -> role = roleRepository.findByName(ERole.ROLE_DELIVERER)
+							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					default -> role = roleRepository.findByName(ERole.ROLE_CUSTOMER)
+							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 				}
-			});
+
 		}
 
-		user.setRoles(roles);
+		user.setRole(role);
 		userRepository.save(user);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
@@ -133,10 +120,8 @@ public class AuthController {
 		UserDetailsImpl userDetails =
 				(UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-		Set<String> roles = userDetails.getAuthorities().stream()
-				.map(GrantedAuthority::getAuthority)
-				.collect(Collectors.toSet());
+		String role = userDetails.getAuthority().getAuthority();
 
-		return ResponseEntity.ok(new PersonResponse(userDetails.getId(), userDetails.getUsername(), roles));
+		return ResponseEntity.ok(new PersonResponse(userDetails.getId(), userDetails.getUsername(), role));
 	}
 }

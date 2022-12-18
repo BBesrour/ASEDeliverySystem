@@ -24,6 +24,6 @@ public class Person {
     private String password;
 
     @DBRef
-    private Set<Role> roles = new HashSet<>();
+    private Role role;
 
 }
