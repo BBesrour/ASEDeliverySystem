@@ -5,14 +5,8 @@ import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.stereotype.Service;
-
-import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +14,6 @@ import java.util.Optional;
 public class DeliveryService {
 
     private final DeliveryRepository repository;
-
     public List<Delivery> getAllDeliveries() {
         return repository.findAll();
     }

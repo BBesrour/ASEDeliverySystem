@@ -1,7 +1,13 @@
 package com.group40.deliveryservice.controller;
 
+<<<<<<< HEAD
 import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.model.EmailDetails;
+=======
+import com.group40.deliveryservice.dto.BoxRequest;
+import com.group40.deliveryservice.dto.BoxResponse;
+import com.group40.deliveryservice.model.Box;
+>>>>>>> 780f05371ab231990e1d178054ff5ddae50e435e
 import com.group40.deliveryservice.service.DeliveryService;
 import com.group40.deliveryservice.service.EmailService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/delivery/deliveries")
@@ -48,6 +55,7 @@ public class DeliveryController {
         deliveryService.deleteDelivery(id);
     }
 
+<<<<<<< HEAD
     @GetMapping("/active")
     @ResponseStatus(HttpStatus.OK)
     List<Delivery> active(
@@ -77,4 +85,17 @@ public class DeliveryController {
     }
 
 
+=======
+
+    @GetMapping("/box")
+    @ResponseStatus(HttpStatus.OK)
+    public BoxResponse getBox(@RequestParam String id) throws Exception  { return deliveryService.getBox(id);}
+
+    @PostMapping("/box")
+    @ResponseStatus(HttpStatus.OK)
+    public BoxResponse updateBox(@RequestParam String id , @RequestBody Map<String, String> obj) throws Exception {
+        return deliveryService.updateBox(id, obj);
+    }
+
+>>>>>>> 780f05371ab231990e1d178054ff5ddae50e435e
 }

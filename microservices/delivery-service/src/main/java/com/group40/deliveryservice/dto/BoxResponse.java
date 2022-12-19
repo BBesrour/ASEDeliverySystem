@@ -15,9 +15,17 @@ import java.util.ArrayList;
 public class BoxResponse {
     private String id;
     private String name;
+<<<<<<< HEAD
     private String key;
     private String assigned_to;
     private String assigned_by;
     private String address;
     private ArrayList<String> assigned_customers;
+=======
+    private String address;
+    private String assigned_to;
+    private String assigned_by;
+    private ArrayList<String> assigned_customers;
+    private String key;
+>>>>>>> 780f05371ab231990e1d178054ff5ddae50e435e
 }
