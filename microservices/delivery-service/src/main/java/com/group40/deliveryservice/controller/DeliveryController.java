@@ -16,7 +16,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DeliveryController {
     private final DeliveryService deliveryService;
-
     @Autowired
     private EmailService emailService;
 
@@ -26,7 +25,7 @@ public class DeliveryController {
         return deliveryService.getAllDeliveries();
     }
 
-    @PostMapping
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     Delivery newDelivery(@RequestBody Delivery newDelivery) {
         return deliveryService.saveDelivery(newDelivery);
@@ -76,4 +75,6 @@ public class DeliveryController {
 
         return status;
     }
+
+
 }
