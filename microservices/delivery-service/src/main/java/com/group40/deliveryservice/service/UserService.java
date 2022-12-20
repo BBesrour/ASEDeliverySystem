@@ -2,13 +2,11 @@ package com.group40.deliveryservice.service;
 
 
 import com.group40.deliveryservice.exceptions.UserNotFoundException;
-import com.group40.deliveryservice.model.Customer;
-import com.group40.deliveryservice.model.Deliverer;
-import com.group40.deliveryservice.model.Dispatcher;
-import com.group40.deliveryservice.model.User;
+import com.group40.deliveryservice.model.*;
 import com.group40.deliveryservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -26,6 +24,8 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private EmailService emailService;
 
     public List<Customer> getAllCustomers() {
         return userRepository.findByRole("ROLE_CUSTOMER").stream().map(e -> (Customer) e).collect(Collectors.toList());
@@ -70,43 +70,39 @@ public class UserService {
         }).orElseThrow(() -> new UserNotFoundException(id));
     }
 
-/*    public User createUser(User newUser){
-        switch (newUser.getRole()){
-            case ROLE_CUSTOMER -> {
-                Customer customer = Customer.builder().email(newUser.getEmail()).role(newUser.getRole()).build();
-                return userRepository.insert(customer);
-            }
-            case ROLE_DELIVERER -> {
-                Deliverer deliverer = Deliverer.builder().email(newUser.getEmail()).role(newUser.getRole()).build();
-                return userRepository.insert(deliverer);
-            }
-            case ROLE_DISPATCHER -> {
-                Dispatcher dispatcher = Dispatcher.builder().email(newUser.getEmail()).role(newUser.getRole()).build();
-                return userRepository.insert(dispatcher);
-            }
-            default -> {
-                return userRepository.save(newUser);
-            }
-        }
-    }*/
-
     public User createCustomer(Customer customer, String password) {
         createInAuth(customer, password);
+        // sendMail(customer);
         return userRepository.insert(customer);
     }
 
     public User createDeliverer(Deliverer deliverer, String password) {
         createInAuth(deliverer, password);
+        // sendMail(deliverer);
         return userRepository.insert(deliverer);
     }
 
     public User createDispatcher(Dispatcher dispatcher, String password) {
         createInAuth(dispatcher, password);
+        // sendMail(dispatcher);
         return userRepository.insert(dispatcher);
+    }
+
+    private void sendMail(User user){
+        EmailDetails emailDetails = new EmailDetails(user.getEmail(),
+                "A new account was create for you. Role: " + user.getRole(),
+                "ASE Delivery: new account");
+        boolean status = emailService.sendSimpleMail(emailDetails);
+        if (status) {
+            log.info("Mail sent successfully for email: " + user.getEmail());
+        } else {
+            log.error("Mail not sent for email: " + user.getEmail());
+        }
     }
 
     private static void createInAuth(User user, String password){
         String response = executePost(bodyBuilder(user.getEmail(), password, user.getRole().toString()));
+        //TODO: Change auth service for better response
         if (!response.contains("User registered successfully!")){
             throw new RuntimeException("Couldn't create user in auth service");
         }

@@ -17,8 +17,6 @@ import java.util.List;
 public class DeliveryController {
     private final DeliveryService deliveryService;
 
-    @Autowired
-    private EmailService emailService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -65,15 +63,4 @@ public class DeliveryController {
         return deliveryService.getInactiveDeliveries(customer);
     }
 
-    @PostMapping("/sendmail")
-    @ResponseStatus(HttpStatus.OK)
-    public String
-    sendMail()
-    {
-        EmailDetails emailDetails = new EmailDetails("bilel3ezdin@gmail.com","Hey!\n This is a test mail from our services-1", "Test email");
-        String status
-                = emailService.sendSimpleMail(emailDetails);
-
-        return status;
-    }
 }
