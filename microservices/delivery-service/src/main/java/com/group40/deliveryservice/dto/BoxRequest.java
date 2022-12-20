@@ -15,16 +15,9 @@ import java.util.ArrayList;
 public class BoxRequest {
     private String id;
     private String name;
-<<<<<<< HEAD
-    private String key;
-    private String assigned_to;
-    private String assigned_by;
-    private String address;
-=======
     private String address;
     private String key;
     private String assigned_to;
     private String assigned_by;
->>>>>>> 780f05371ab231990e1d178054ff5ddae50e435e
     private ArrayList<String> assigned_customers;
 }

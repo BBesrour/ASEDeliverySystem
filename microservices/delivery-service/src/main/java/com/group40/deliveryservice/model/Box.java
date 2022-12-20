@@ -6,11 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-<<<<<<< HEAD
-=======
-import java.lang.reflect.Array;
->>>>>>> 780f05371ab231990e1d178054ff5ddae50e435e
 import java.util.ArrayList;
 
 @Document(value = "box")
