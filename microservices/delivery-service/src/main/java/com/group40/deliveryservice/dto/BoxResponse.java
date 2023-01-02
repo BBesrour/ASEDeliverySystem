@@ -16,8 +16,8 @@ public class BoxResponse {
     private String id;
     private String name;
     private String address;
-    private String assigned_to;
-    private String assigned_by;
-    private ArrayList<String> assigned_customers;
+    private String assignedTo;
+    private String assignedBy;
+    private ArrayList<String> assignedCustomers;
     private String key;
 }

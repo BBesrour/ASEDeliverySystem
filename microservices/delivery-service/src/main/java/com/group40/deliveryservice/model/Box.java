@@ -18,9 +18,9 @@ public class Box {
     private String id;
     private String name;
     private String key;
-    private String assigned_to;
-    private String assigned_by;
+    private String assignedTo;
+    private String assignedBy;
     private String address;
-    private ArrayList<String> assigned_customers;
+    private ArrayList<String> assignedCustomers;
 }
 

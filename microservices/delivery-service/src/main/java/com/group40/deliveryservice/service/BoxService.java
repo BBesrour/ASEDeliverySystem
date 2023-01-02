@@ -4,13 +4,10 @@ import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.model.Box;
 import com.group40.deliveryservice.repository.BoxRepository;
-import com.group40.deliveryservice.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.stereotype.Service;
 
-import java.io.FileReader;
 import java.util.*;
 
 @Service
@@ -29,20 +26,9 @@ public class BoxService {
                 .address(box.getAddress())
                 .name(box.getName())
                 .key(box.getKey())
-                .assigned_by(box.getAssigned_by())
-                .assigned_to(box.getAssigned_to())
-                .assigned_customers(box.getAssigned_customers())
-                .build();
-    }
-
-    private Box mapFromBoxRequest(BoxRequest boxRequest) {
-        return Box.builder()
-                .address(boxRequest.getAddress())
-                .name(boxRequest.getName())
-                .key(boxRequest.getKey())
-                .assigned_by(boxRequest.getAssigned_by())
-                .assigned_to(boxRequest.getAssigned_to())
-                .assigned_customers(boxRequest.getAssigned_customers())
+                .assignedBy(box.getAssignedBy())
+                .assignedTo(box.getAssignedTo())
+                .assignedCustomers(box.getAssignedCustomers())
                 .build();
     }
 
@@ -52,9 +38,9 @@ public class BoxService {
                 .address(boxRequest.getAddress())
                 .name(boxRequest.getName())
                 .key(boxRequest.getKey())
-                .assigned_by(boxRequest.getAssigned_by())
-                .assigned_to(boxRequest.getAssigned_to())
-                .assigned_customers(boxRequest.getAssigned_customers())
+                .assignedBy(boxRequest.getAssigned_by())
+                .assignedTo(boxRequest.getAssigned_to())
+                .assignedCustomers(boxRequest.getAssigned_customers())
                 .build();
 
         boxRepository.insert(box);
@@ -79,25 +65,13 @@ public class BoxService {
     }
 
     private Box updateField(String key, String value, Box box) {
-        switch(key) {
-            case "name":
-                box.setName(value);
-                break;
-            case "key":
-                box.setKey(value);
-                break;
-            case "assigned_to":
-                box.setAssigned_to(value);
-                break;
-            case "assigned_by":
-                box.setAssigned_by(value);
-                break;
-            case "address":
-                box.setAddress(value);
-                break;
-            case "assigned_customers":
-                box.getAssigned_customers().add(value);
-                break;
+        switch (key) {
+            case "name" -> box.setName(value);
+            case "key" -> box.setKey(value);
+            case "assigned_to" -> box.setAssignedTo(value);
+            case "assigned_by" -> box.setAssignedBy(value);
+            case "address" -> box.setAddress(value);
+            case "assigned_customers" -> box.getAssignedCustomers().add(value);
         }
         return box;
     }
