@@ -8,7 +8,7 @@ stages:
   - deploy
 
 build-job:
-  image: maven:3-jdk-17
+  image: 3.8.7-eclipse-temurin-17
   stage: build
   script:
   - cd microservices/
@@ -16,7 +16,7 @@ build-job:
 
 docker-job:
   stage: docker
-  image: maven:3-jdk-17
+  image: 3.8.7-eclipse-temurin-17
   script:
     - cd microservices/
     - echo "Deploying to Docker hub... This will take some time."
