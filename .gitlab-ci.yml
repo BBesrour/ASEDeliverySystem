@@ -1,0 +1,31 @@
+variables:
+  CI_REGISTRY_USER: ase40
+  CI_REGISTRY_PASSWORD: ASE123ase123
+
+stages:
+  - build
+  - docker
+  - deploy
+
+build-job:
+  image: maven:3.6.0-jdk-8-alpine
+  stage: build
+  script:
+  - mvn clean install -B
+
+docker-job:
+  stage: docker
+  image: maven:3.6.0-jdk-8-alpine
+  script:
+    - echo "Deploying to Docker hub... This will take some time."
+    - mvn compile jib:build \
+        -Djib.to.auth.username=${CI_REGISTRY_USER} \
+        -Djib.to.auth.password=${CI_REGISTRY_PASSWORD}
+    - echo "Deployment to Docker hub Done!"
+
+
+deploy-job:
+  stage: deploy
+  script:
+    - echo "Running linode trigger script..."
+
