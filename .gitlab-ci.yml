@@ -20,9 +20,7 @@ docker-job:
   script:
     - cd microservices/
     - echo "Deploying to Docker hub... This will take some time."
-    - mvn compile jib:build \
-        -Djib.to.auth.username=${CI_REGISTRY_USER} \
-        -Djib.to.auth.password=${CI_REGISTRY_PASSWORD}
+    - mvn compile jib:build -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD}
     - echo "Deployment to Docker hub Done!"
 
 
