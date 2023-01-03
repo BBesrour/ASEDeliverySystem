@@ -28,5 +28,5 @@ deploy-job:
   stage: deploy
   script:
     - echo "Running linode trigger script..."
-    - docker-compose up -d
+    - docker compose up -d
     - echo "Done. Changes are live!"
