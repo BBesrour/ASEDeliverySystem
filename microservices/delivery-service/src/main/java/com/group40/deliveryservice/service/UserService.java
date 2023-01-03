@@ -35,20 +35,18 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-/*    public User updateUser(User newUser, String id) {
+    public User updateUser(User newUser, String id) {
         return userRepository.findById(id)
                 .map(user -> {
                     user.setEmail(newUser.getEmail());
                     return userRepository.save(user);
                 }).orElseThrow(() -> new UserNotFoundException(id));
-    }*/
+    }
 
-    public User updateCustomer(Customer newUser, String id) {
+/*    public User updateCustomer(Customer newUser, String id) {
         return userRepository.findById(id).map(user -> {
             Customer customer = (Customer) user;
             customer.setEmail(newUser.getEmail());
-            customer.setBoxes(newUser.getBoxes());
-            customer.setDeliveries(newUser.getDeliveries());
             return userRepository.save(customer);
         }).orElseThrow(() -> new UserNotFoundException(id));
     }
@@ -57,7 +55,6 @@ public class UserService {
         return userRepository.findById(id).map(user -> {
             Deliverer deliverer = (Deliverer) user;
             deliverer.setEmail(newUser.getEmail());
-            deliverer.setDeliveries(newUser.getDeliveries());
             return userRepository.save(deliverer);
         }).orElseThrow(() -> new UserNotFoundException(id));
     }
@@ -68,9 +65,15 @@ public class UserService {
             dispatcher.setEmail(newUser.getEmail());
             return userRepository.save(dispatcher);
         }).orElseThrow(() -> new UserNotFoundException(id));
+    }*/
+
+    public User createUser(User user, String password) {
+        createInAuth(user, password);
+        // sendMail(deliverer);
+        return userRepository.insert(user);
     }
 
-    public User createCustomer(Customer customer, String password) {
+/*    public User createCustomer(Customer customer, String password) {
         createInAuth(customer, password);
         // sendMail(customer);
         return userRepository.insert(customer);
@@ -86,7 +89,7 @@ public class UserService {
         createInAuth(dispatcher, password);
         // sendMail(dispatcher);
         return userRepository.insert(dispatcher);
-    }
+    }*/
 
     private void sendMail(User user){
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),

@@ -13,17 +13,9 @@ import java.util.Map;
 public class Customer extends User {
 
     @Builder
-    public Customer(String email, ERole role, List<Delivery> deliveries, List<Box> boxes){
+    public Customer(String email, ERole role){
         super(email, role);
-        this.boxes = boxes;
-        this.deliveries = deliveries;
     }
-    @DBRef
-    private List<Delivery> deliveries;
-
-    @DBRef
-    private List<Box> boxes;
-
     //TODO: add token attribute
 
 

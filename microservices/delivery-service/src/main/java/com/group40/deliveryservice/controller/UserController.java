@@ -43,25 +43,22 @@ public class UserController {
                 Deliverer deliverer = Deliverer.builder()
                         .email(newUser.getEmail())
                         .role(newUser.getRole())
-                        .deliveries(newUser.getDeliveries())
                         .build();
-                return userService.updateDeliverer(deliverer, id);
+                return userService.updateUser(deliverer, id);
             }
             case ROLE_DISPATCHER -> {
                 Dispatcher dispatcher = Dispatcher.builder()
                         .email(newUser.getEmail())
                         .role(newUser.getRole())
                         .build();
-                return userService.updateDispatcher(dispatcher, id);
+                return userService.updateUser(dispatcher, id);
             }
             default -> {
                 Customer customer = Customer.builder()
                         .email(newUser.getEmail())
                         .role(newUser.getRole())
-                        .boxes(newUser.getBoxes())
-                        .deliveries(newUser.getDeliveries())
                         .build();
-                return userService.updateCustomer(customer, id);
+                return userService.updateUser(customer, id);
             }
         }
     }
@@ -81,21 +78,21 @@ public class UserController {
                         .email(newUser.getEmail())
                         .role(newUser.getRole())
                         .build();
-                return userService.createDeliverer(deliverer, newUser.getPassword());
+                return userService.createUser(deliverer, newUser.getPassword());
             }
             case ROLE_DISPATCHER -> {
                 Dispatcher dispatcher = Dispatcher.builder()
                         .email(newUser.getEmail())
                         .role(newUser.getRole())
                         .build();
-                return userService.createDispatcher(dispatcher, newUser.getPassword());
+                return userService.createUser(dispatcher, newUser.getPassword());
             }
             default -> {
                 Customer customer = Customer.builder()
                         .email(newUser.getEmail())
                         .role(newUser.getRole())
                         .build();
-                return userService.createCustomer(customer, newUser.getPassword());
+                return userService.createUser(customer, newUser.getPassword());
             }
         }
     }
