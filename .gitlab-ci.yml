@@ -5,6 +5,7 @@ variables:
 stages:
   - build
   - docker
+  - install
   - deploy
 
 build-job:
@@ -28,5 +29,7 @@ deploy-job:
   stage: deploy
   script:
     - echo "Running linode trigger script..."
-    - docker compose up -d
+    - curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    - chmod +x /usr/local/bin/docker-compose
+    - docker-compose up -d
     - echo "Done. Changes are live!"
