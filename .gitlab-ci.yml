@@ -30,6 +30,6 @@ deploy-job:
     - echo "Running linode trigger script..."
     - apt-get update
     - apt-get install sshpass
-    - sshpass -p "ASE123ase123" ssh root@139.144.181.63
+    - sshpass -p "ASE123ase123" ssh -tt root@139.144.181.63
     - docker-compose up -d
 
