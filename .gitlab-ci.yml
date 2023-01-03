@@ -17,8 +17,3 @@ deploy:
   - chmod 644 ~/.ssh/known_hosts
   script:
   - ssh $SSH_USER@$SSH_IP "hostname && echo 'Welcome!!!' > welcome.txt"
-  artifacts:
-    paths:
-    - public
-  only:
-  - master
