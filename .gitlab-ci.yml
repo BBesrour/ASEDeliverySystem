@@ -5,18 +5,20 @@ variables:
 stages:
   - deploy
 
-
-deploy-job:
+deploy:
   stage: deploy
-  image: docker:20.10.16
-  services:
-    - docker:20.10.16-dind
-  variables:
-    DOCKER_DRIVER: overlay2
-    DOCKER_HOST: tcp://docker:2375
-    DOCKER_TLS_CERTDIR: ""
+  before_script:
+  - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
+  - eval $(ssh-agent -s)
+  - echo "$PRIVATE_SSH" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan $SSH_IP >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
   script:
-    - cd microservices/
-    - echo "Running linode trigger script..."
-    - docker compose up -d
-    - echo "Done. Changes are live!"
+  - ssh $SSH_USER@$SSH_IP "hostname && echo 'Welcome!!!' > welcome.txt"
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
