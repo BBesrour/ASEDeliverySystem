@@ -3,6 +3,7 @@ package com.group40.deliveryservice.controller;
 import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.model.Box;
+import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.service.BoxService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,12 @@ public class BoxController {
     @ResponseStatus(HttpStatus.OK)
     public BoxResponse updateBox(@RequestParam String id , @RequestBody Map<String, String> obj) throws Exception {
         return boxService.updateBox(id, obj);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    Box replaceBox(@RequestBody Box newBox, @PathVariable String id) {
+        return boxService.replaceBox(newBox, id);
     }
 
 }

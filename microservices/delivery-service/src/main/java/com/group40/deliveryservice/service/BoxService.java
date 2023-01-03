@@ -3,6 +3,7 @@ package com.group40.deliveryservice.service;
 import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.model.Box;
+import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,16 +48,12 @@ public class BoxService {
     }
 
     public List<BoxResponse> getAllBoxes() {
-//        List<Box> boxes = deliveryRepository.findAll();
-
         return getBoxes().stream().map(this::mapToBoxResponse).toList();
     }
 
 
 
     public BoxResponse getBox(String id) throws Exception {
-//        List<Box> boxes = deliveryRepository.findAll();
-
         Box box = getBoxes().stream()
                 .filter(box1 -> Objects.equals(id, box1.getId()))
                 .findFirst()
@@ -88,5 +85,22 @@ public class BoxService {
             }
         }
         throw new Exception("Box ID does not exist!!!");
+    }
+
+    public Box replaceBox(Box newBox, String id) {
+        return boxRepository.findById(id)
+                .map(box -> {
+                    box.setName(newBox.getName());
+                    box.setKey(newBox.getKey());
+                    box.setAssignedBy(newBox.getAssignedBy());
+                    box.setAssignedTo(newBox.getAssignedTo());
+                    box.setAddress(newBox.getAddress());
+                    box.setAssignedCustomers(newBox.getAssignedCustomers());
+                    return boxRepository.save(box);
+                })
+                .orElseGet(() -> {
+                    newBox.setId(id);
+                    return boxRepository.save(newBox);
+                });
     }
 }
