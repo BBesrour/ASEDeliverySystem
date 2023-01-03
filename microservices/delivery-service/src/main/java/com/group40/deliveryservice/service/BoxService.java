@@ -3,13 +3,15 @@ package com.group40.deliveryservice.service;
 import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.model.Box;
-import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -102,5 +104,12 @@ public class BoxService {
                     newBox.setId(id);
                     return boxRepository.save(newBox);
                 });
+    }
+
+    public List<BoxResponse> getBoxesByDeliverer(String id) {
+        return getBoxes().stream()
+                .filter(box -> Objects.equals(box.getAssignedTo(), id))
+                .map(this::mapToBoxResponse)
+                .toList();
     }
 }
