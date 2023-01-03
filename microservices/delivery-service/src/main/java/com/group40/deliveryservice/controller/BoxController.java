@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -18,16 +19,28 @@ public class BoxController {
 
     private final BoxService boxService;
 
-    @PostMapping
+
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public Box createBox(@RequestBody BoxRequest boxRequest) {
-        return boxService.createBox(boxRequest);
+    public void createBox(@RequestBody BoxRequest boxRequest) {
+        boxService.createBox(boxRequest);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<BoxResponse> getAllBoxes() {
         return boxService.getAllBoxes();
+    }
+
+
+    @GetMapping("/box")
+    @ResponseStatus(HttpStatus.OK)
+    public BoxResponse getBox(@RequestParam String id) throws Exception  { return boxService.getBox(id);}
+
+    @PostMapping("/box")
+    @ResponseStatus(HttpStatus.OK)
+    public BoxResponse updateBox(@RequestParam String id , @RequestBody Map<String, String> obj) throws Exception {
+        return boxService.updateBox(id, obj);
     }
 
 }

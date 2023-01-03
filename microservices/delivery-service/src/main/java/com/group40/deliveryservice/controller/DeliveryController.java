@@ -17,6 +17,8 @@ import java.util.List;
 public class DeliveryController {
     private final DeliveryService deliveryService;
 
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

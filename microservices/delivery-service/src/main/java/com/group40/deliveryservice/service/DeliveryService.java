@@ -6,7 +6,6 @@ import com.group40.deliveryservice.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -15,7 +14,6 @@ import java.util.List;
 public class DeliveryService {
 
     private final DeliveryRepository repository;
-
     public List<Delivery> getAllDeliveries() {
         return repository.findAll();
     }
