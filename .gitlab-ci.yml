@@ -2,7 +2,6 @@ variables:
   CI_REGISTRY_USER: ase40
   CI_REGISTRY_PASSWORD: ASE123ase123
 
-
 stages:
   - build
   - docker
