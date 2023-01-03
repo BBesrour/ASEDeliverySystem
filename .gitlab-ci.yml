@@ -3,34 +3,14 @@ variables:
   CI_REGISTRY_PASSWORD: ASE123ase123
 
 stages:
-  - build
-  - docker
-  - install
   - deploy
-
-build-job:
-  image: maven:3.8.7-eclipse-temurin-17
-  stage: build
-  script:
-  - cd microservices/
-  - mvn clean install -B
-
-docker-job:
-  stage: docker
-  image: maven:3.8.7-eclipse-temurin-17
-  script:
-    - cd microservices/
-    - echo "Deploying to Docker hub... This will take some time."
-    - mvn compile jib:build -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD}
-    - echo "Deployment to Docker hub Done!"
 
 
 deploy-job:
   stage: deploy
+  image: docker:20.10.16
   script:
     - cd microservices/
     - echo "Running linode trigger script..."
-    - curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-    - chmod +x /usr/local/bin/docker-compose
-    - docker-compose up -d
+    - docker compose up -d
     - echo "Done. Changes are live!"
