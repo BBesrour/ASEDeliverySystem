@@ -18,9 +18,15 @@ export default function CustomerDeliveriesPage() {
     return <PageLayout title="Deliveries" description={null} actionButtons={<></>} content={
         <>
             <Typography variant="h2">Active Deliveries</Typography>
-            <DeliveriesList deliveries={activeDeliveries} propertiesToShow={customerDeliveriesProperties} />
+            <DeliveriesList deliveries={activeDeliveries}
+                            propertiesToShow={customerDeliveriesProperties}
+                            onDeliveryDeleted={(id) => {
+                            }}/>
             <Typography variant="h2">Past Deliveries</Typography>
-            <DeliveriesList deliveries={inactiveDeliveries} propertiesToShow={customerDeliveriesProperties} />
+            <DeliveriesList deliveries={inactiveDeliveries}
+                            propertiesToShow={customerDeliveriesProperties}
+                            onDeliveryDeleted={(id) => {
+                            }}/>
         </>
     }/>;
 }
