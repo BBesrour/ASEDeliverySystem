@@ -19,8 +19,8 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
         return delivery[property];
     }
 
-    async function handleDeleteDelivery(id: string | null) {
-        await deleteDelivery(id);
+    function handleDeleteDelivery(id: string | null) {
+        deleteDelivery(id);
         onDeliveryDeleted(id);
     }
 
