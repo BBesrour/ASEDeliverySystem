@@ -19,7 +19,7 @@ docker-job:
     - mvn compile jib:build -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD}
     - echo "Deployment to Docker hub Done!"
   only:
-    - master
+    - main
 
 
 deploy:
@@ -35,4 +35,4 @@ deploy:
   script:
     - ssh $SSH_USER@$SSH_IP "docker compose up -d"
   only:
-    - master
+    - main
