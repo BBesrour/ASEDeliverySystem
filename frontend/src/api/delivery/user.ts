@@ -20,6 +20,6 @@ export async function updateUser(user: User): Promise<void> {
     await client.putRequest(`/${user.id}`, user);
 }
 
-export async function createUser(user: User): Promise<void> {
-    await client.postRequest("/", user);
+export async function createUser(user: User): Promise<User> {
+    return await client.postRequest("/", user);
 }
