@@ -7,11 +7,8 @@ build-job:
   image: maven:3.8.7-eclipse-temurin-17
   stage: build
   script:
-  - cd microservices/
-  - mvn clean install -B
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-    - if: $CI_COMMIT_BRANCH == 'master'
+    - cd microservices/
+    - mvn clean install -B
 
 docker-job:
   stage: docker
@@ -21,21 +18,21 @@ docker-job:
     - echo "Deploying to Docker hub... This will take some time."
     - mvn compile jib:build -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD}
     - echo "Deployment to Docker hub Done!"
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
+  only:
+    - master
 
 
 deploy:
   stage: deploy
   before_script:
-  - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
-  - eval $(ssh-agent -s)
-  - echo "$PRIVATE_SSH" | tr -d '\r' | ssh-add -
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
-  - ssh-keyscan $SSH_IP >> ~/.ssh/known_hosts
-  - chmod 644 ~/.ssh/known_hosts
+    - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
+    - eval $(ssh-agent -s)
+    - echo "$PRIVATE_SSH" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $SSH_IP >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   script:
-  - ssh $SSH_USER@$SSH_IP "docker compose up -d"
-  rules:
-    - if: $CI_COMMIT_BRANCH == 'master'
+    - ssh $SSH_USER@$SSH_IP "docker compose up -d"
+  only:
+    - master
