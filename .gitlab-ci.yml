@@ -11,6 +11,7 @@ build-job:
   - mvn clean install -B
   rules:
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_REF_NAME == "master"
 
 
 docker-job:
@@ -21,6 +22,8 @@ docker-job:
     - echo "Deploying to Docker hub... This will take some time."
     - mvn compile jib:build -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD}
     - echo "Deployment to Docker hub Done!"
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "master"
 
 
 deploy:
@@ -35,3 +38,5 @@ deploy:
   - chmod 644 ~/.ssh/known_hosts
   script:
   - ssh $SSH_USER@$SSH_IP "docker compose up -d"
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "master"
