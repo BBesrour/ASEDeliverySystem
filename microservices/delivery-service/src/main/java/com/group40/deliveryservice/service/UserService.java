@@ -35,57 +35,18 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-/*    public User updateUser(User newUser, String id) {
+    public User updateUser(User newUser, String id) {
         return userRepository.findById(id)
                 .map(user -> {
                     user.setEmail(newUser.getEmail());
                     return userRepository.save(user);
                 }).orElseThrow(() -> new UserNotFoundException(id));
-    }*/
-
-    public User updateCustomer(Customer newUser, String id) {
-        return userRepository.findById(id).map(user -> {
-            Customer customer = (Customer) user;
-            customer.setEmail(newUser.getEmail());
-            customer.setBoxes(newUser.getBoxes());
-            customer.setDeliveries(newUser.getDeliveries());
-            return userRepository.save(customer);
-        }).orElseThrow(() -> new UserNotFoundException(id));
     }
 
-    public User updateDeliverer(Deliverer newUser, String id) {
-        return userRepository.findById(id).map(user -> {
-            Deliverer deliverer = (Deliverer) user;
-            deliverer.setEmail(newUser.getEmail());
-            deliverer.setDeliveries(newUser.getDeliveries());
-            return userRepository.save(deliverer);
-        }).orElseThrow(() -> new UserNotFoundException(id));
-    }
-
-    public User updateDispatcher(Dispatcher newUser, String id) {
-        return userRepository.findById(id).map(user -> {
-            Dispatcher dispatcher = (Dispatcher) user;
-            dispatcher.setEmail(newUser.getEmail());
-            return userRepository.save(dispatcher);
-        }).orElseThrow(() -> new UserNotFoundException(id));
-    }
-
-    public User createCustomer(Customer customer, String password) {
-        createInAuth(customer, password);
-        // sendMail(customer);
-        return userRepository.insert(customer);
-    }
-
-    public User createDeliverer(Deliverer deliverer, String password) {
-        createInAuth(deliverer, password);
+    public User createUser(User user, String password) {
+        createInAuth(user, password);
         // sendMail(deliverer);
-        return userRepository.insert(deliverer);
-    }
-
-    public User createDispatcher(Dispatcher dispatcher, String password) {
-        createInAuth(dispatcher, password);
-        // sendMail(dispatcher);
-        return userRepository.insert(dispatcher);
+        return userRepository.insert(user);
     }
 
     private void sendMail(User user){

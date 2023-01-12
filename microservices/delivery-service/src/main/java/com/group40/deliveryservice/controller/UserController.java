@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//TODO: Change to ResponseEntity
 
 @RestController
 @RequestMapping("/api/delivery/user")
@@ -37,7 +36,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    User updateUser(@RequestBody UserRequest newUser, @PathVariable String id) {
+    ResponseEntity<?> updateUser(@RequestBody UserRequest newUser, @PathVariable String id) {
         switch (newUser.getRole()) {
             case ROLE_DELIVERER -> {
                 Deliverer deliverer = Deliverer.builder()
@@ -45,14 +44,14 @@ public class UserController {
                         .role(newUser.getRole())
                         .deliveries(newUser.getDeliveries())
                         .build();
-                return userService.updateDeliverer(deliverer, id);
+                return ResponseEntity.ok(userService.updateUser(deliverer, id));
             }
             case ROLE_DISPATCHER -> {
                 Dispatcher dispatcher = Dispatcher.builder()
                         .email(newUser.getEmail())
                         .role(newUser.getRole())
                         .build();
-                return userService.updateDispatcher(dispatcher, id);
+                return ResponseEntity.ok(userService.updateUser(dispatcher, id));
             }
             default -> {
                 Customer customer = Customer.builder()
@@ -61,13 +60,13 @@ public class UserController {
                         .boxes(newUser.getBoxes())
                         .deliveries(newUser.getDeliveries())
                         .build();
-                return userService.updateCustomer(customer, id);
+                return ResponseEntity.ok(userService.updateUser(customer, id));
             }
         }
     }
 
     @PostMapping
-    User createUser(@RequestBody UserRequest newUser) {
+    ResponseEntity<?> createUser(@RequestBody UserRequest newUser) {
         //TODO: Better handling
         if (userRepository.existsByEmail(newUser.getEmail())) {
             throw new RuntimeException("Email already in use!");
@@ -81,21 +80,21 @@ public class UserController {
                         .email(newUser.getEmail())
                         .role(newUser.getRole())
                         .build();
-                return userService.createDeliverer(deliverer, newUser.getPassword());
+                return ResponseEntity.ok(userService.createUser(deliverer, newUser.getPassword()));
             }
             case ROLE_DISPATCHER -> {
                 Dispatcher dispatcher = Dispatcher.builder()
                         .email(newUser.getEmail())
                         .role(newUser.getRole())
                         .build();
-                return userService.createDispatcher(dispatcher, newUser.getPassword());
+                return ResponseEntity.ok(userService.createUser(dispatcher, newUser.getPassword()));
             }
             default -> {
                 Customer customer = Customer.builder()
                         .email(newUser.getEmail())
                         .role(newUser.getRole())
                         .build();
-                return userService.createCustomer(customer, newUser.getPassword());
+                return ResponseEntity.ok(userService.createUser(customer, newUser.getPassword()));
             }
         }
     }
