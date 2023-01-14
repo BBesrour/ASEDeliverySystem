@@ -97,6 +97,7 @@ public class AuthController {
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 			roles.add(userRole);
 		} else {
+
 			strRoles.forEach(role -> {
 				switch (role) {
 					case "dispatcher" -> {
@@ -110,6 +111,7 @@ public class AuthController {
 						roles.add(modRole);
 					}
 					default -> {
+						System.out.println(roleRepository.findAll());
 						Role userRole = roleRepository.findByName(ERole.ROLE_CUSTOMER)
 								.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 						roles.add(userRole);
@@ -120,7 +122,6 @@ public class AuthController {
 
 		user.setRoles(roles);
 		userRepository.save(user);
-
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 
@@ -139,4 +140,6 @@ public class AuthController {
 
 		return ResponseEntity.ok(new PersonResponse(userDetails.getId(), userDetails.getUsername(), roles));
 	}
+
+
 }
