@@ -3,11 +3,10 @@ package com.group40.deliveryservice.controller;
 import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.dto.PersonResponse;
+import com.group40.deliveryservice.model.Box;
 import com.group40.deliveryservice.service.BoxService;
 import lombok.RequiredArgsConstructor;
-
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
