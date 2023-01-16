@@ -6,7 +6,7 @@ export default class Client {
     }
 
     async request(method: string, url: string, params: any, body: any) {
-        const urlWithParams = url + new URLSearchParams(params);
+        const urlWithParams = url + params ? `?${new URLSearchParams(params)}` : '';
         const response = await fetch(this.urlBase + urlWithParams, {
             method: method,
             headers: {
