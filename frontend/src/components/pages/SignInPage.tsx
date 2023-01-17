@@ -15,7 +15,7 @@ import {login} from "../../api/auth/signup";
 import {getAccessToken, setAccessToken, setRoles, setUserID} from "../../storage/user";
 
 export default function SignInPage() {
-    const [success, setSuccess] = useState(getAccessToken() != null);
+    const [success, setSuccess] = useState(!!getAccessToken());
     const [loginError, setLoginError] = useState("");
     const handleSubmit = async (event: { preventDefault: () => void; currentTarget: HTMLFormElement | undefined; }) => {
         event.preventDefault();
@@ -32,7 +32,7 @@ export default function SignInPage() {
             setLoginError("Wrong login. Please try again.");
             return;
         }
-        setSuccess(getAccessToken() != null);
+        setSuccess(!!getAccessToken());
         if (!getAccessToken()) {
             setLoginError("Login failed. Please try again.");
         }
