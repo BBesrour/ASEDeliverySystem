@@ -17,8 +17,6 @@ build-job: # builds spring boot apps
 docker-frontend-job: # build FE image + pushes it to Docker hub
   image: docker:20.10.16
   stage: docker-frontend
-  tags:
-    - latest
   services:
     - docker:20.10.16-dind
   variables:
