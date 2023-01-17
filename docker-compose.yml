@@ -3,7 +3,7 @@ version: "3"
 services:
   ## Eureka Server
   discovery-server:
-    image: ase40/server-discovery:latest
+    image: ase40/discovery-server:latest
     container_name: discovery-server
     pull_policy: always
     ports:
