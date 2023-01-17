@@ -47,7 +47,7 @@ export default function QRCodeDialog({
             <DialogTitle>QR Code for Delivery {deliveryId}</DialogTitle>
             <DialogContent>
                 <img src={qrCode ?? ""} alt="QR Code"/><br />
-                <a href={qrUrl ?? ""} target="_blank">{qrUrl ?? ""}</a><br />
+                <a href={qrUrl ?? ""} target="_blank" rel="noreferrer">{qrUrl ?? ""}</a><br />
                 <Button onClick={printQRCode}>Print</Button>
                 <Button onClick={handleClose}>Close</Button>
             </DialogContent>
