@@ -13,9 +13,12 @@ export default function QRCodeDialog({
                                          deliveryId
                                      }: { open?: boolean, handleClose: () => void, deliveryId: string }) {
     const [qrCode, setQrCode] = React.useState<string | null>(null);
+    const [qrUrl, setQrUrl] = React.useState<string | null>(null);
     useEffect(() => {
         if (open) {
-            createBoxQR(deliveryId).then((qrCode) => {
+            const url = `${document.location.origin}/deliveries/change_status?id=${encodeURIComponent(deliveryId)}`;
+            setQrUrl(url);
+            createBoxQR(url).then((qrCode) => {
                 setQrCode(qrCode);
             });
         }
@@ -31,7 +34,8 @@ export default function QRCodeDialog({
             '   <head>',
             '   </head>',
             '   <body onload="window.print()" onafterprint="window.close()">',
-            '       <img src="' + qrCode + '"/>',
+            '       <img src="' + qrCode + '"/><br />',
+            '       <a href="' + qrUrl + '">' + qrUrl + '</a>',
             '   </body>',
             '</html>'
         ].join(''));
@@ -43,6 +47,7 @@ export default function QRCodeDialog({
             <DialogTitle>QR Code for Delivery {deliveryId}</DialogTitle>
             <DialogContent>
                 <img src={qrCode ?? ""} alt="QR Code"/><br />
+                <a href={qrUrl ?? ""} target="_blank">{qrUrl ?? ""}</a><br />
                 <Button onClick={printQRCode}>Print</Button>
                 <Button onClick={handleClose}>Close</Button>
             </DialogContent>
