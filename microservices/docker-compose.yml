@@ -34,7 +34,7 @@ services:
       - discovery-server
       - api-gateway
 
-  ## Delivery Service
+  ## Delivery Service!
   authentication-service:
     image: ase40/authentication-service:latest
     container_name: authentication-service
