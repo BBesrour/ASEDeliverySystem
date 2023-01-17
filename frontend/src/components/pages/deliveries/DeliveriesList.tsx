@@ -6,6 +6,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import QRCodeDialog from "./QRCodeDialog";
 import Button from "@mui/material/Button";
+import DeliveryStatusPage from "./DeliveryStatusPage";
 
 
 export default function DeliveriesList({deliveries, propertiesToShow}: {
@@ -13,6 +14,7 @@ export default function DeliveriesList({deliveries, propertiesToShow}: {
     propertiesToShow: string[]
 }) {
     const [showQRDialogFor, setShowQRDialogFor] = useState<string | null>(null);
+    const [showStatusDialogFor, setShowStatusDialogFor] = useState<string | null>(null);
 
     function getDeliveryProperty(delivery: Delivery, property: string) {
         // @ts-ignore
@@ -36,6 +38,7 @@ export default function DeliveriesList({deliveries, propertiesToShow}: {
                                     {property}: {getDeliveryProperty(delivery, property)}
                                 </Typography>
                             ))}
+                            <Button size="small" onClick={() => setShowStatusDialogFor(delivery.id)}>Status</Button>
                             <Button size="small" onClick={() => setShowQRDialogFor(delivery.id)}>QR</Button>
                         </CardContent>
                     </Card>
@@ -43,5 +46,6 @@ export default function DeliveriesList({deliveries, propertiesToShow}: {
             ))}
         </Grid>
         <QRCodeDialog open={showQRDialogFor !== null} handleClose={() => setShowQRDialogFor(null)} deliveryId={showQRDialogFor ?? ""} />
+        <DeliveryStatusPage id={showStatusDialogFor} handleClose={() => setShowStatusDialogFor(null)} />
     </>;
 }

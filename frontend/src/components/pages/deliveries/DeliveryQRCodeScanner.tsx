@@ -1,5 +1,6 @@
 import React, {useState} from "react";
-import {useZxing} from "react-zxing";
+// @ts-ignore
+import QrReader from "react-qr-scanner";
 import Dialog from "@mui/material/Dialog";
 import Button from "@mui/material/Button";
 import DeliveryStatusPage from "./DeliveryStatusPage";
@@ -8,21 +9,25 @@ export default function DeliveryQRCodeScanner({open, handleClose}: { open: boole
     const [result, setResult] = useState("");
     const [deliveryIDOpen, setDeliveryIDOpen] = useState<string | null>(null);
 
-    const { ref } = useZxing({
-        paused: !open,
-        onResult(result) {
-            const url = result.getText();
+    function onResult(result: { text: string; }) {
+        if (result) {
+            const url = result.text ?? "";
             setResult(url);
             const match = url.match(/id=([^&]+)/);
             if (match) {
                 setDeliveryIDOpen(match[1]);
             }
-        },
-    });
+        }
+    }
 
     return <>
         <Dialog open={open} onClose={handleClose}>
-            <video ref={ref} />
+            <QrReader
+                delay={300}
+                onScan={onResult}
+                onError={console.error}
+                style={{width: '100%'}}
+            />
             <p>
                 <span>Last result:</span>
                 <span>{result}</span>
