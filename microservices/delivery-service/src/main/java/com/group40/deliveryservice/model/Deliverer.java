@@ -14,10 +14,10 @@ import java.util.Map;
 public class Deliverer extends User{
 
     @Builder
-    public Deliverer(String email, ERole role){
+    public Deliverer(String email, ERole role, String token){
         super(email, role);
+        this.token = token;
     }
 
-
-    //TODO: add token attribute
+    private String token;
 }

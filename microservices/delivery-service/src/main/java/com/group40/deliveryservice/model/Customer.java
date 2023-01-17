@@ -13,10 +13,12 @@ import java.util.Map;
 public class Customer extends User {
 
     @Builder
-    public Customer(String email, ERole role){
+    public Customer(String email, ERole role, String token){
         super(email, role);
+        this.token = token;
     }
-    //TODO: add token attribute
+
+    private String token;
 
 
 }

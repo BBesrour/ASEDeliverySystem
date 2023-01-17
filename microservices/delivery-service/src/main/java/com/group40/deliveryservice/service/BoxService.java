@@ -2,28 +2,18 @@ package com.group40.deliveryservice.service;
 
 import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
-import com.group40.deliveryservice.dto.PersonResponse;
 import com.group40.deliveryservice.model.Box;
 import com.group40.deliveryservice.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpEntity;
-//import org.springframework.http.HttpHeaders;
-//import org.springframework.http.HttpMethod;
-//import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.json.JSONObject;
-import org.json.JSONArray;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 
 @Service
@@ -97,25 +87,13 @@ public class BoxService {
     }
 
     private Box updateField(String key, String value, Box box) {
-        switch(key) {
-            case "name":
-                box.setName(value);
-                break;
-            case "key":
-                box.setKey(value);
-                break;
-            case "assigned_to":
-                box.setAssigned_to(value);
-                break;
-            case "assigned_by":
-                box.setAssigned_by(value);
-                break;
-            case "address":
-                box.setAddress(value);
-                break;
-            case "assigned_customers":
-                box.getAssigned_customers().add(value);
-                break;
+        switch (key) {
+            case "name" -> box.setName(value);
+            case "key" -> box.setKey(value);
+            case "assigned_to" -> box.setAssigned_to(value);
+            case "assigned_by" -> box.setAssigned_by(value);
+            case "address" -> box.setAddress(value);
+            case "assigned_customers" -> box.getAssigned_customers().add(value);
         }
         return box;
     }
@@ -136,44 +114,5 @@ public class BoxService {
 
     public void deleteBox(String id) throws Exception {
         boxRepository.deleteById(id);
-    }
-
-
-    public PersonResponse getUser(String token) throws IOException, JSONException {
-
-        URL url = new URL("http://localhost:8080/api/auth/current");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        con.setRequestProperty("Authorization", token);
-        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        con.setRequestProperty("Content-Language", "en-US");
-        con.setUseCaches(false);
-        con.setDoInput(true);
-        con.setDoOutput(true);
-
-        int responseCode = con.getResponseCode();
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(con.getInputStream()));
-        String inputLine;
-        StringBuffer response = new StringBuffer();
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
-        }
-        in.close();
-        //print in String
-        System.out.println(response.toString());
-        //Read JSON response and print
-        JSONObject myResponse = new JSONObject(response.toString());
-        JSONArray roles = myResponse.getJSONArray("roles");
-        Set<String> resRoles = new HashSet<>();
-        for (int i=0; i<roles.length(); i++) {
-            resRoles.add(roles.getString(i));
-        }
-
-        return PersonResponse.builder()
-                .email(myResponse.getString("email"))
-                .roles(resRoles)
-                .id(myResponse.getString("id"))
-                .build();
     }
 }

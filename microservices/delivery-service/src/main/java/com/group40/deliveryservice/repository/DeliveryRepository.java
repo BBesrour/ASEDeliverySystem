@@ -12,4 +12,7 @@ public interface DeliveryRepository extends MongoRepository<Delivery, String> {
 
     @Query("{ 'isActive' :  false, 'targetCustomerID' : ?0 }")
     List<Delivery> findInactiveDeliveries(String customer);
+
+    @Query("{'targetCustomerID' : ?0 }")
+    List<Delivery> findDeliveriesForCustomer(String customer);
 }
