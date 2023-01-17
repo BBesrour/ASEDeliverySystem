@@ -55,7 +55,7 @@ deploy: # deploys to linode and runs services with docker-compose (pullling from
     - ssh-keyscan $SSH_IP >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - scp docker-compose.yml root@139.162.132.244:/root/
+    - scp docker-compose.yml root@139.162.132.244:/root/ # copy docker-compose to linode
     - ssh $SSH_USER@$SSH_IP "docker compose up -d"
   only:
     - main
