@@ -32,7 +32,7 @@ export default function DeliveriesList({deliveries, propertiesToShow}: {
                                 Delivery
                             </Typography>
                             {propertiesToShow.map(property => (
-                                <Typography>
+                                <Typography key={property}>
                                     {property}: {getDeliveryProperty(delivery, property)}
                                 </Typography>
                             ))}

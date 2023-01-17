@@ -4,6 +4,7 @@ import {ROLE_CUSTOMER, ROLE_DELIVERER, ROLE_DISPATCHER} from "../../../model/rol
 import DispatcherDeliveriesPage from "./DispatcherDeliveriesPage";
 import CustomerDeliveriesPage from "./CustomerDeliveriesPage";
 import DelivererDeliveriesPage from "./DelivererDeliveriesPage";
+import {Outlet} from "react-router-dom";
 
 export default function DeliveriesPage() {
     const roles = getRoles();
@@ -11,5 +12,6 @@ export default function DeliveriesPage() {
         {roles.includes(ROLE_CUSTOMER) ? <CustomerDeliveriesPage /> : null}
         {roles.includes(ROLE_DELIVERER) ? <DelivererDeliveriesPage /> : null}
         {roles.includes(ROLE_DISPATCHER) ? <DispatcherDeliveriesPage /> : null}
+        <Outlet />
     </>;
 }
