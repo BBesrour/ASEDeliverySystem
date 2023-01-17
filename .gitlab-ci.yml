@@ -19,6 +19,10 @@ docker-frontend-job: # build FE image + pushes it to Docker hub
   stage: docker-frontend
   services:
     - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
   script:
