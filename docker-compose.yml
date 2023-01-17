@@ -1,5 +1,5 @@
 ---
-version: '3'
+version: "3"
 services:
   ## Eureka Server
   discovery-server:
@@ -44,3 +44,13 @@ services:
     depends_on:
       - discovery-server
       - api-gateway
+
+  ## Frontned
+  ui-service:
+    image: ase40/ui-service:latest
+    container_name: ui-service
+    pull_policy: always
+    ports:
+      - 3001:3000
+    environment:
+      - CHOKIDAR_USEPOLLING=true
