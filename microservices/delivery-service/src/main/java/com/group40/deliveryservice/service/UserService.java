@@ -1,11 +1,16 @@
 package com.group40.deliveryservice.service;
 
 
+import com.group40.deliveryservice.dto.PersonResponse;
 import com.group40.deliveryservice.exceptions.UserNotFoundException;
 import com.group40.deliveryservice.model.*;
 import com.group40.deliveryservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONStringer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +19,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +33,11 @@ public class UserService {
     private final UserRepository userRepository;
 
     private EmailService emailService;
+
+
+    public User getUserFromDB(String id){
+        return userRepository.findById(id).orElseThrow();
+    }
 
     public List<Customer> getAllCustomers() {
         return userRepository.findByRole("ROLE_CUSTOMER").stream().map(e -> (Customer) e).collect(Collectors.toList());
@@ -43,11 +55,14 @@ public class UserService {
                 }).orElseThrow(() -> new UserNotFoundException(id));
     }
 
+
+
     public User createUser(User user, String password) {
         createInAuth(user, password);
         // sendMail(deliverer);
         return userRepository.insert(user);
     }
+
 
     private void sendMail(User user){
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),
@@ -86,7 +101,6 @@ public class UserService {
 
         try {
             //Create connection
-            //TODO: Change URL
             URL url = new URL("http://api-gateway:8080/api/auth/register");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
@@ -129,6 +143,35 @@ public class UserService {
                 connection.disconnect();
             }
         }
+    }
+
+    public User getUser(String token) throws IOException, JSONException {
+
+        URL url = new URL("http://api-gateway:8080/api/auth/current");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Authorization", token);
+        con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        con.setRequestProperty("Content-Language", "en-US");
+        con.setUseCaches(false);
+        con.setDoInput(true);
+        con.setDoOutput(true);
+
+        int responseCode = con.getResponseCode();
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuffer response = new StringBuffer();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        //print in String
+        System.out.println(response.toString());
+        //Read JSON response and print
+        JSONObject myResponse = new JSONObject(response.toString());
+
+        return userRepository.findByEmail(myResponse.getString("email"));
     }
 
 }

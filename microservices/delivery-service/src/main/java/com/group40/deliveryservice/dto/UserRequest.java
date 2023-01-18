@@ -18,9 +18,5 @@ public class UserRequest {
     @NonNull
     private ERole role;
 
-    private List<Box> boxes;
-
-    private List<Delivery> deliveries;
-
     private String password;
 }
