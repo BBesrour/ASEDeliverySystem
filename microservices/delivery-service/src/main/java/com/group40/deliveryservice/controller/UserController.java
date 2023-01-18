@@ -86,7 +86,6 @@ public class UserController {
 
     @PostMapping
     ResponseEntity<?> createUser(@RequestBody UserRequest newUser) {
-        //TODO: Better handling
         if (userRepository.existsByEmail(newUser.getEmail())) {
             throw new RuntimeException("Email already in use!");
         }

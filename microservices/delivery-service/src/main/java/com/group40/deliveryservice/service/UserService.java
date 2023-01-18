@@ -101,7 +101,6 @@ public class UserService {
 
         try {
             //Create connection
-            //TODO: Change URL
             URL url = new URL("http://api-gateway:8080/api/auth/register");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
