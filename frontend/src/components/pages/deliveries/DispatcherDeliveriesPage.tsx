@@ -20,7 +20,10 @@ export default function DispatcherDeliveriesPage() {
     </>;
     return <PageLayout title="Deliveries" description={null} actionButtons={actionButtons} content={<>
         <Typography variant="h2">All Deliveries</Typography>
-        <DeliveriesList deliveries={deliveries} propertiesToShow={dispatcherDeliveriesProperties} />
+        <DeliveriesList deliveries={deliveries}
+                        propertiesToShow={dispatcherDeliveriesProperties}
+                        onDeliveryDeleted={(idToDelete) => setDeliveries(deliveries.filter((d) => d.id !== idToDelete))}
+        />
         <CreateDeliveryDialog
             open={showCreateDialog}
             handleClose={() => setShowCreateDialog(false)}

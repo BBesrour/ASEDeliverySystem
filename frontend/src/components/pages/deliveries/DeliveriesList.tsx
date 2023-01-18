@@ -4,15 +4,24 @@ import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import {Button, CardActions} from "@mui/material";
+import {deleteDelivery} from "../../../api/delivery/deliveries";
+import {getDeliveries} from "../../../api/delivery/deliveries";
 
 
-export default function DeliveriesList({deliveries, propertiesToShow}: {
+export default function DeliveriesList({deliveries, propertiesToShow, onDeliveryDeleted}: {
     deliveries: Delivery[],
-    propertiesToShow: string[]
+    propertiesToShow: string[],
+    onDeliveryDeleted: (id : string | null) => void
 }) {
     function getDeliveryProperty(delivery: Delivery, property: string) {
         // @ts-ignore
         return delivery[property];
+    }
+
+    function handleDeleteDelivery(id: string | null) {
+        deleteDelivery(id);
+        onDeliveryDeleted(id);
     }
 
     return <Grid container spacing={4}>
@@ -32,6 +41,10 @@ export default function DeliveriesList({deliveries, propertiesToShow}: {
                             </Typography>
                         ))}
                     </CardContent>
+                    <CardActions>
+                        <Button size="small">Edit</Button>
+                        <Button size="small" onClick={() => handleDeleteDelivery(delivery.id)}>Delete</Button>
+                    </CardActions>
                 </Card>
             </Grid>
         ))}

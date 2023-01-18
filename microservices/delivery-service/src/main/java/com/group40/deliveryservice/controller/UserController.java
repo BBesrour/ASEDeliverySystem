@@ -17,7 +17,6 @@ import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
 
-//TODO: Change to ResponseEntity
 
 @RestController
 @RequestMapping("/api/delivery/user")
@@ -86,7 +85,7 @@ public class UserController {
     }
 
     @PostMapping
-    User createUser(@RequestBody UserRequest newUser) {
+    ResponseEntity<?> createUser(@RequestBody UserRequest newUser) {
         //TODO: Better handling
         if (userRepository.existsByEmail(newUser.getEmail())) {
             throw new RuntimeException("Email already in use!");
@@ -103,14 +102,14 @@ public class UserController {
                         .role(newUser.getRole())
                         .token(base64Encoder.encodeToString(randomBytes))
                         .build();
-                return userService.createUser(deliverer, newUser.getPassword());
+                return ResponseEntity.ok(userService.createUser(deliverer, newUser.getPassword()));
             }
             case ROLE_DISPATCHER -> {
                 Dispatcher dispatcher = Dispatcher.builder()
                         .email(newUser.getEmail())
                         .role(newUser.getRole())
                         .build();
-                return userService.createUser(dispatcher, newUser.getPassword());
+                return ResponseEntity.ok(userService.createUser(dispatcher, newUser.getPassword()));
             }
             default -> {
                 Customer customer = Customer.builder()
@@ -118,7 +117,7 @@ public class UserController {
                         .role(newUser.getRole())
                         .token(base64Encoder.encodeToString(randomBytes))
                         .build();
-                return userService.createUser(customer, newUser.getPassword());
+                return ResponseEntity.ok(userService.createUser(customer, newUser.getPassword()));
             }
         }
     }

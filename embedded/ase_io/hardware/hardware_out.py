@@ -4,7 +4,7 @@ except ImportError:
     raise ImportError("RPi.GPIO not installed")
 import threading
 
-LED_ON_TIME_SECONDS = 3
+LED_ON_TIME_SECONDS = 2
 
 # set up LEDs
 GPIO.setmode(GPIO.BCM)
