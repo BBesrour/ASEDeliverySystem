@@ -123,7 +123,7 @@ public class UserController {
         }
     }
 
-    @GetMapping
+    @GetMapping("/token")
     public ResponseEntity<?> getUserToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
         User user = userService.getUser(token);
         switch (user.getRole()){
