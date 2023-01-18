@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,7 @@ import java.util.Map;
 public class BoxController {
 
     private final BoxService boxService;
-
+    @Autowired
     private final UserService userService;
 
     @PostMapping()

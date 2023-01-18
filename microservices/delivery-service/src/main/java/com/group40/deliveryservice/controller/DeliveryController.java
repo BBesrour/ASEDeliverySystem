@@ -27,7 +27,7 @@ public class DeliveryController {
 
     @Autowired
     private EmailService emailService;
-
+    @Autowired
     private UserService userService;
 
     @GetMapping

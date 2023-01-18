@@ -172,7 +172,7 @@ public class UserService {
         //Read JSON response and print
         JSONObject myResponse = new JSONObject(response.toString());
 
-        return userRepository.findById(myResponse.getString("id")).orElseThrow();
+        return userRepository.findByEmail(myResponse.getString("email"));
     }
 
 }
