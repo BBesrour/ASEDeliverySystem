@@ -10,13 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/delivery/deliveries")
 @RequiredArgsConstructor
 public class DeliveryController {
     private final DeliveryService deliveryService;
+
     @Autowired
     private EmailService emailService;
 
@@ -26,7 +26,7 @@ public class DeliveryController {
         return deliveryService.getAllDeliveries();
     }
 
-    @PostMapping()
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     Delivery newDelivery(@RequestBody Delivery newDelivery) {
         return deliveryService.saveDelivery(newDelivery);
@@ -64,18 +64,5 @@ public class DeliveryController {
     ) {
         return deliveryService.getInactiveDeliveries(customer);
     }
-
-    @PostMapping("/sendmail")
-    @ResponseStatus(HttpStatus.OK)
-    public String
-    sendMail()
-    {
-        EmailDetails emailDetails = new EmailDetails("bilel3ezdin@gmail.com","Hey!\n This is a test mail from our services-1", "Test email");
-        String status
-                = emailService.sendSimpleMail(emailDetails);
-
-        return status;
-    }
-
 
 }

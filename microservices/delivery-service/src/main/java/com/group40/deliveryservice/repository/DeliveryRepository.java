@@ -1,6 +1,5 @@
 package com.group40.deliveryservice.repository;
 
-import com.group40.deliveryservice.model.Box;
 import com.group40.deliveryservice.model.Delivery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

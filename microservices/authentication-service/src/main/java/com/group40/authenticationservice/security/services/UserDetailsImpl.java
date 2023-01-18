@@ -1,6 +1,7 @@
 package com.group40.authenticationservice.security.services;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -24,33 +25,36 @@ public class UserDetailsImpl implements UserDetails {
 	@JsonIgnore
 	private String password;
 
-	private Collection<? extends GrantedAuthority> authorities;
+	private GrantedAuthority authority;
 
 	public UserDetailsImpl(String id, String username, String email, String password,
-			Collection<? extends GrantedAuthority> authorities) {
+						   GrantedAuthority authority) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.authorities = authorities;
+		this.authority = authority;
 	}
 
 	public static UserDetailsImpl build(Person user) {
-		List<GrantedAuthority> authorities = user.getRoles().stream()
-				.map(role -> new SimpleGrantedAuthority(role.getName().name()))
-				.collect(Collectors.toList());
+
+		SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(user.getRole().getName().name());
 
 		return new UserDetailsImpl(
 				user.getId(),
 				user.getEmail(),
 				user.getEmail(),
-				user.getPassword(), 
-				authorities);
+				user.getPassword(),
+				simpleGrantedAuthority);
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
+		return Collections.singletonList(authority);
+	}
+
+	public GrantedAuthority getAuthority() {
+		return authority;
 	}
 
 	public String getId() {
