@@ -86,3 +86,4 @@ export default function UpdateBoxDialog({open, handleClose, onBoxUpdated, box}: 
     );
 }
 
+
