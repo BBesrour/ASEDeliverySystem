@@ -4,12 +4,12 @@ import {Route, Routes, useNavigate} from 'react-router-dom';
 import UsersPage from './pages/users/UsersPage';
 import BoxesPage from "./pages/boxes/BoxesPage";
 import DeliveriesPage from "./pages/deliveries/DeliveriesPage";
-import {getRole} from "../storage/user";
+import {getRoles} from "../storage/user";
 import {ROLE_DISPATCHER} from "../model/roles";
 
 export default function Router() {
     const navigate = useNavigate();
-    const roles = getRole();
+    const roles = getRoles();
 
     const navigateToBoxes = () => {
         navigate('/boxes');
@@ -26,16 +26,16 @@ export default function Router() {
     return (
         <div>
             <div>
-                {roles === ROLE_DISPATCHER && <>
+                {roles.includes(ROLE_DISPATCHER) && <>
                     <Button onClick={navigateToUsers}>Users</Button>
                     <Button onClick={navigateToBoxes}>Boxes</Button>
                 </>}
                 <Button onClick={navigateToDeliveries}>Deliveries</Button>
 
                 <Routes>
-                    <Route path="/boxes" element={<BoxesPage/>}/>
-                    <Route path="/users" element={<UsersPage/>}/>
-                    <Route path="/deliveries" element={<DeliveriesPage/>}/>
+                    <Route path="/boxes" element={<BoxesPage />} />
+                    <Route path="/users" element={<UsersPage />} />
+                    <Route path="/deliveries" element={<DeliveriesPage />} />
                 </Routes>
             </div>
         </div>
