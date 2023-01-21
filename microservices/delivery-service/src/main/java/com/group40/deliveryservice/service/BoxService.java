@@ -121,8 +121,15 @@ public class BoxService {
                 .toList();
     }
 
+    public List<BoxResponse> getBoxesByCustomer(String id) {
+        return getBoxes().stream()
+                .filter(box -> box.getAssignedCustomers().contains(id))
+                .map(this::mapToBoxResponse)
+                .toList();
+    }
+
     
-    public void deleteBox(String id) throws Exception {
+    public void deleteBox(String id) {
         boxRepository.deleteById(id);
     }
 }
