@@ -25,7 +25,7 @@ export async function getInactiveDeliveries(customerId: string): Promise<Deliver
 }
 
 export async function createDelivery(delivery: Delivery): Promise<Delivery> {
-    return Delivery.fromJson(await client.postRequest('/', {}, {...delivery, isActive: true}));
+    return Delivery.fromJson(await client.postRequest('/', {}, {...delivery, active: true}));
 }
 
 export async function updateDelivery(delivery: Delivery): Promise<Delivery> {

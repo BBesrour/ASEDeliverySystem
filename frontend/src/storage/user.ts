@@ -16,7 +16,9 @@ export function getRoles(): string[] {
 }
 
 export function setRoles(roles: string[]) {
-    localStorage.setItem('roles', JSON.stringify(roles));
+    if (roles) {
+        localStorage.setItem('roles', JSON.stringify(roles));
+    }
 }
 
 export function getUserID(): string {
