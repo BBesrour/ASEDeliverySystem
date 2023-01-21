@@ -1,6 +1,7 @@
-package com.group40.authenticationservice.model;
+package com.group40.deliveryservice.model;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -8,12 +9,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.HashSet;
 import java.util.Set;
 
-@Document(value = "person")
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@RequiredArgsConstructor
 @Data
-public class Person {
+public abstract class User {
     @Id
     private String id;
 
@@ -21,9 +21,5 @@ public class Person {
     private String email;
 
     @NonNull
-    private String password;
-
-    @DBRef
-    private Role role;
-
+    private ERole role;
 }

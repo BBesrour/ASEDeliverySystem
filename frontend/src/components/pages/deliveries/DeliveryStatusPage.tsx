@@ -21,7 +21,7 @@ export default function DeliveryStatusPage({id, handleClose}: { id: string | nul
         <DialogTitle>Change status</DialogTitle>
         <DialogContent>
             <p>Target Box ID: {delivery?.targetBoxID}</p>
-            <p>Delivery active: {delivery?.active ? "active" : "inactive"}</p>
+            <p>Delivery active: {delivery?.isActive ? "active" : "inactive"}</p>
             <p>Delivery status: {delivery?.status ?? "no status"}</p>
             <Button onClick={() => {
                 if (delivery) {

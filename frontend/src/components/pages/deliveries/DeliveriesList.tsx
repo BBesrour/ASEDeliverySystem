@@ -7,11 +7,13 @@ import Typography from "@mui/material/Typography";
 import QRCodeDialog from "./QRCodeDialog";
 import Button from "@mui/material/Button";
 import DeliveryStatusPage from "./DeliveryStatusPage";
+import {deleteDelivery} from "../../../api/delivery/deliveries";
 
 
-export default function DeliveriesList({deliveries, propertiesToShow}: {
+export default function DeliveriesList({deliveries, propertiesToShow, onDeliveryDeleted}: {
     deliveries: Delivery[],
-    propertiesToShow: string[]
+    propertiesToShow: string[],
+    onDeliveryDeleted: (id : string | null) => void
 }) {
     const [showQRDialogFor, setShowQRDialogFor] = useState<string | null>(null);
     const [showStatusDialogFor, setShowStatusDialogFor] = useState<string | null>(null);
@@ -19,6 +21,11 @@ export default function DeliveriesList({deliveries, propertiesToShow}: {
     function getDeliveryProperty(delivery: Delivery, property: string) {
         // @ts-ignore
         return delivery[property];
+    }
+
+    function handleDeleteDelivery(id: string | null) {
+        deleteDelivery(id);
+        onDeliveryDeleted(id);
     }
 
     return <>
@@ -40,6 +47,7 @@ export default function DeliveriesList({deliveries, propertiesToShow}: {
                             ))}
                             <Button size="small" onClick={() => setShowStatusDialogFor(delivery.id)}>Status</Button>
                             <Button size="small" onClick={() => setShowQRDialogFor(delivery.id)}>QR</Button>
+                            <Button size="small" onClick={() => handleDeleteDelivery(delivery.id)}>Delete</Button>
                         </CardContent>
                     </Card>
                 </Grid>

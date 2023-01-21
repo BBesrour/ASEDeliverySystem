@@ -32,6 +32,6 @@ export async function updateDelivery(delivery: Delivery): Promise<Delivery> {
     return Delivery.fromJson(await client.putRequest(`/${delivery.id}`, {}, delivery));
 }
 
-export async function deleteDelivery(deliveryId: string): Promise<void> {
-    await client.deleteRequest('/deliveries/' + deliveryId);
+export async function deleteDelivery(deliveryId: string | null): Promise<void> {
+    await client.deleteRequest('/' + deliveryId);
 }

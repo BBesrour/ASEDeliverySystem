@@ -12,6 +12,9 @@ export default function DelivererDeliveriesPage() {
     const dispatcherDeliveriesProperties = ["targetCustomerID", "targetBoxID", "delivererID", "status", "active"];
     return <>
         <Typography variant="h2">All Deliveries</Typography>
-        <DeliveriesList deliveries={deliveries} propertiesToShow={dispatcherDeliveriesProperties} />
+        <DeliveriesList deliveries={deliveries}
+                        propertiesToShow={dispatcherDeliveriesProperties}
+                        onDeliveryDeleted={(id) => {
+                        }}/>
     </>;
 }

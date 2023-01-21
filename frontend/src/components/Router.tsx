@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import {Route, Routes, useNavigate} from 'react-router-dom';
-import UsersPage from './pages/UsersPage';
+import UsersPage from './pages/users/UsersPage';
 import BoxesPage from "./pages/boxes/BoxesPage";
 import DeliveriesPage from "./pages/deliveries/DeliveriesPage";
 import {getRoles} from "../storage/user";

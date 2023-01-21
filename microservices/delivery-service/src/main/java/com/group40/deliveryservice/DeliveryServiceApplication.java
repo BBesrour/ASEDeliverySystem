@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import java.security.SecureRandom;
+import java.util.Base64;
+
 @SpringBootApplication
 @RestController
 @EnableEurekaClient
@@ -19,6 +22,16 @@ public class DeliveryServiceApplication {
     @LoadBalanced
     public RestTemplate getRestTemplate(){
         return new RestTemplate();
+    }
+
+    @Bean
+    public SecureRandom getSecureRandom(){
+        return new SecureRandom();
+    }
+
+    @Bean
+    public Base64.Encoder getBase64Encoder(){
+        return Base64.getEncoder();
     }
     public static void main(String[] args) {
         SpringApplication.run(DeliveryServiceApplication.class, args);
