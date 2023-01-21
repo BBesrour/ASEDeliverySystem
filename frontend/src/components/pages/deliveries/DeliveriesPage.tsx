@@ -13,9 +13,9 @@ export default function DeliveriesPage() {
     const [qrCodeScannerOpen, setQrCodeScannerOpen] = useState(false);
     const roles = getRole();
     return <>
-        {roles.includes(ROLE_CUSTOMER) ? <CustomerDeliveriesPage /> : null}
-        {roles.includes(ROLE_DELIVERER) ? <DelivererDeliveriesPage /> : null}
-        {roles.includes(ROLE_DISPATCHER) ? <DispatcherDeliveriesPage /> : null}
+        {roles === ROLE_CUSTOMER ? <CustomerDeliveriesPage /> : null}
+        {roles === ROLE_DELIVERER ? <DelivererDeliveriesPage /> : null}
+        {roles === ROLE_DISPATCHER ? <DispatcherDeliveriesPage /> : null}
         <Outlet />
         <Button onClick={() => setQrCodeScannerOpen(true)}>Scan QR code</Button>
         <DeliveryQRCodeScanner open={qrCodeScannerOpen} handleClose={() => setQrCodeScannerOpen(false)} />

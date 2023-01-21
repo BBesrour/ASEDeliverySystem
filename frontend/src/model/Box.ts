@@ -1,8 +1,8 @@
 export default class Box {
   readonly id: string | null;
-  readonly name: string;
-  readonly address: string;
-  readonly numberOfItems: string;
+  name: string;
+  address: string;
+  numberOfItems: string;
   readonly assigned_to: string;
   readonly assigned_customers: string[];
   readonly key: string;
