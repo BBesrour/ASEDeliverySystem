@@ -36,20 +36,9 @@ public class BoxService {
                 .address(box.getAddress())
                 .name(box.getName())
                 .key(box.getKey())
-                .assigned_by(box.getAssigned_by())
-                .assigned_to(box.getAssigned_to())
-                .assigned_customers(box.getAssigned_customers())
-                .build();
-    }
-
-    private Box mapFromBoxRequest(BoxRequest boxRequest) {
-        return Box.builder()
-                .address(boxRequest.getAddress())
-                .name(boxRequest.getName())
-                .key(boxRequest.getKey())
-                .assigned_by(boxRequest.getAssigned_by())
-                .assigned_to(boxRequest.getAssigned_to())
-                .assigned_customers(boxRequest.getAssigned_customers())
+                .assignedBy(box.getAssignedBy())
+                .assignedTo(box.getAssignedTo())
+                .assignedCustomers(box.getAssignedCustomers())
                 .build();
     }
 
@@ -59,9 +48,9 @@ public class BoxService {
                 .address(boxRequest.getAddress())
                 .name(boxRequest.getName())
                 .key(boxRequest.getKey())
-                .assigned_by(boxRequest.getAssigned_by())
-                .assigned_to(boxRequest.getAssigned_to())
-                .assigned_customers(boxRequest.getAssigned_customers())
+                .assignedBy(boxRequest.getAssigned_by())
+                .assignedTo(boxRequest.getAssigned_to())
+                .assignedCustomers(boxRequest.getAssigned_customers())
                 .build();
 
         boxRepository.insert(box);
@@ -69,16 +58,12 @@ public class BoxService {
     }
 
     public List<BoxResponse> getAllBoxes() {
-//        List<Box> boxes = deliveryRepository.findAll();
-
         return getBoxes().stream().map(this::mapToBoxResponse).toList();
     }
 
 
 
     public BoxResponse getBox(String id) throws Exception {
-//        List<Box> boxes = deliveryRepository.findAll();
-
         Box box = getBoxes().stream()
                 .filter(box1 -> Objects.equals(id, box1.getId()))
                 .findFirst()
@@ -90,10 +75,10 @@ public class BoxService {
         switch (key) {
             case "name" -> box.setName(value);
             case "key" -> box.setKey(value);
-            case "assigned_to" -> box.setAssigned_to(value);
-            case "assigned_by" -> box.setAssigned_by(value);
+            case "assigned_to" -> box.setAssignedTo(value);
+            case "assigned_by" -> box.setAssignedBy(value);
             case "address" -> box.setAddress(value);
-            case "assigned_customers" -> box.getAssigned_customers().add(value);
+            case "assigned_customers" -> box.getAssignedCustomers().add(value);
         }
         return box;
     }
@@ -112,6 +97,31 @@ public class BoxService {
         throw new Exception("Box ID does not exist!!!");
     }
 
+    public Box replaceBox(Box newBox, String id) {
+        return boxRepository.findById(id)
+                .map(box -> {
+                    box.setName(newBox.getName());
+                    box.setKey(newBox.getKey());
+                    box.setAssignedBy(newBox.getAssignedBy());
+                    box.setAssignedTo(newBox.getAssignedTo());
+                    box.setAddress(newBox.getAddress());
+                    box.setAssignedCustomers(newBox.getAssignedCustomers());
+                    return boxRepository.save(box);
+                })
+                .orElseGet(() -> {
+                    newBox.setId(id);
+                    return boxRepository.save(newBox);
+                });
+    }
+
+    public List<BoxResponse> getBoxesByDeliverer(String id) {
+        return getBoxes().stream()
+                .filter(box -> Objects.equals(box.getAssignedTo(), id))
+                .map(this::mapToBoxResponse)
+                .toList();
+    }
+
+    
     public void deleteBox(String id) throws Exception {
         boxRepository.deleteById(id);
     }
