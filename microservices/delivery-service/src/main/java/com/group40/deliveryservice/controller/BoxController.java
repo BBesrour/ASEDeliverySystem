@@ -4,14 +4,12 @@ import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.dto.PersonResponse;
 import com.group40.deliveryservice.model.Box;
-import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.model.ERole;
 import com.group40.deliveryservice.model.User;
 import com.group40.deliveryservice.service.BoxService;
 import com.group40.deliveryservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -72,10 +70,11 @@ public class BoxController {
         return boxService.getBoxesByDeliverer(id);
     }
 
-    @DeleteMapping("/box")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteBox(@RequestParam String id) throws Exception {
+    public String deleteBox(@PathVariable String id) throws Exception {
         boxService.deleteBox(id);
+        return "{}";
     }
 
     @GetMapping("/current")

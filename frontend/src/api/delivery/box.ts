@@ -27,7 +27,7 @@ export async function updateBox(box: Box): Promise<Box> {
 }
 
 export async function deleteBox(id: string): Promise<null> {
-  return await client.deleteRequest(`/box/${id}`, {});
+  return await client.deleteRequest(`/${id}`, {});
 }
 
 export async function updateBoxStatus(
