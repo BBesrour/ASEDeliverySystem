@@ -11,14 +11,12 @@ export function removeAccessToken() {
 }
 
 
-export function getRoles(): string[] {
-    return JSON.parse(localStorage.getItem('roles') || '[]');
+export function getRole(): string {
+    return localStorage.getItem('role') ?? "";
 }
 
-export function setRoles(roles: string[]) {
-    if (roles) {
-        localStorage.setItem('roles', JSON.stringify(roles));
-    }
+export function setRole(role: string) {
+    localStorage.setItem('role', role);
 }
 
 export function getUserID(): string {
