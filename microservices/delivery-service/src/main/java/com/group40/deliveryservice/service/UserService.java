@@ -1,28 +1,27 @@
 package com.group40.deliveryservice.service;
 
 
-import com.group40.deliveryservice.dto.PersonResponse;
 import com.group40.deliveryservice.exceptions.UserNotFoundException;
-import com.group40.deliveryservice.model.*;
+import com.group40.deliveryservice.model.Customer;
+import com.group40.deliveryservice.model.ERole;
+import com.group40.deliveryservice.model.EmailDetails;
+import com.group40.deliveryservice.model.User;
 import com.group40.deliveryservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONStringer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -167,11 +166,15 @@ public class UserService {
         }
         in.close();
         //print in String
-        System.out.println(response.toString());
+        System.out.println(response);
         //Read JSON response and print
         JSONObject myResponse = new JSONObject(response.toString());
 
-        return userRepository.findByEmail(myResponse.getString("email"));
+        String id = myResponse.getString("id");
+        String email = myResponse.getString("email");
+        String role = myResponse.getString("role");
+        ERole eRole = ERole.valueOf(role);
+        return new User(id, email, eRole);
     }
 
 }
