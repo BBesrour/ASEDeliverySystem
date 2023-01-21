@@ -9,9 +9,12 @@ export default function DelivererDeliveriesPage() {
     useEffect(() => {
         getDeliveries().then(setDeliveries);
     }, []);
-    const dispatcherDeliveriesProperties = ["targetCustomerID", "targetBoxID", "delivererID", "status", "isActive"];
+    const dispatcherDeliveriesProperties = ["targetCustomerID", "targetBoxID", "delivererID", "status", "active"];
     return <>
         <Typography variant="h2">All Deliveries</Typography>
-        <DeliveriesList deliveries={deliveries} propertiesToShow={dispatcherDeliveriesProperties} />
+        <DeliveriesList deliveries={deliveries}
+                        propertiesToShow={dispatcherDeliveriesProperties}
+                        onDeliveryDeleted={(id) => {
+                        }}/>
     </>;
 }

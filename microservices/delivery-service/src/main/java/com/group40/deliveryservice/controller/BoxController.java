@@ -4,11 +4,18 @@ import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.dto.PersonResponse;
 import com.group40.deliveryservice.model.Box;
+import com.group40.deliveryservice.model.Delivery;
+import com.group40.deliveryservice.model.ERole;
+import com.group40.deliveryservice.model.User;
 import com.group40.deliveryservice.service.BoxService;
+import com.group40.deliveryservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -22,11 +29,18 @@ import java.util.Map;
 public class BoxController {
 
     private final BoxService boxService;
+    @Autowired
+    private final UserService userService;
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public BoxResponse createBox(@RequestBody BoxRequest boxRequest) {
-        return boxService.createBox(boxRequest);
+    public ResponseEntity<?> createBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody BoxRequest boxRequest) throws JSONException, IOException {
+        User user = userService.getUser(token);
+        if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
+            return ResponseEntity.ok(boxService.createBox(boxRequest));
+        }else {
+            return ResponseEntity.badRequest().body("Not authorized!");
+        }
     }
 
     @GetMapping
@@ -67,7 +81,13 @@ public class BoxController {
     @GetMapping("/current")
     @ResponseStatus(HttpStatus.OK)
     public PersonResponse getUserDetail(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
-        return boxService.getUser(token);
+        User user = userService.getUser(token);
+
+        return PersonResponse.builder()
+                .email(user.getEmail())
+                .role(user.getRole().name())
+                .id(user.getId())
+                .build();
     }
 
 }

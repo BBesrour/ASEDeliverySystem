@@ -9,7 +9,7 @@ import json
 try:
     writer.write(json.dumps({
         "id": input("Card ID (C12345): ") or "C12345",
-        "card_token": input("Card token (1234567890): ") or "1234567890",
+        "card_token": input("Card token (D1234567890): ") or "D1234567890",
     }))
 except KeyboardInterrupt :
     GPIO.cleanup()

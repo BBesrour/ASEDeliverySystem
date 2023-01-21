@@ -21,7 +21,7 @@ public class EmailServiceImpl implements EmailService {
 
     @Value("${spring.mail.username}") private String sender;
 
-    public String sendSimpleMail(EmailDetails details)
+    public boolean sendSimpleMail(EmailDetails details)
     {
 
         try {
@@ -38,11 +38,11 @@ public class EmailServiceImpl implements EmailService {
 
             // Sending the mail
             javaMailSender.send(mailMessage);
-            return "Mail Sent Successfully...";
+            return true;
         }
-
+        //TODO: Better error handling
         catch (Exception e) {
-            return "Error while Sending Mail";
+            return false;
         }
     }
 

@@ -1,6 +1,5 @@
 package com.group40.deliveryservice.repository;
 
-import com.group40.deliveryservice.model.Box;
 import com.group40.deliveryservice.model.Delivery;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -13,4 +12,7 @@ public interface DeliveryRepository extends MongoRepository<Delivery, String> {
 
     @Query("{ 'isActive' :  false, 'targetCustomerID' : ?0 }")
     List<Delivery> findInactiveDeliveries(String customer);
+
+    @Query("{'targetCustomerID' : ?0 }")
+    List<Delivery> findDeliveriesForCustomer(String customer);
 }

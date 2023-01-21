@@ -14,6 +14,10 @@ import java.util.List;
 public class DeliveryService {
 
     private final DeliveryRepository repository;
+
+    public List<Delivery> getDeliveriesForCustomer(String id){
+        return repository.findDeliveriesForCustomer(id);
+    }
     public List<Delivery> getAllDeliveries() {
         return repository.findAll();
     }

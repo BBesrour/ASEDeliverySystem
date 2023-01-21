@@ -1,34 +1,61 @@
 stages:
   - build
-  - docker
+  - docker-frontend
+  - docker-backend
   - deploy
 
-build-job:
+build-job: # builds spring boot apps
   image: maven:3.8.7-eclipse-temurin-17
   stage: build
   script:
-  - cd microservices/
-  - mvn clean install -B
+    - cd microservices/
+    - mvn clean install -B
+  only:
+    changes:
+      - microservices/*
 
-docker-job:
-  stage: docker
+docker-frontend-job: # build FE image + pushes it to Docker hub
+  image: docker:20.10.16
+  stage: docker-frontend
+  services:
+    - docker:20.10.16-dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ""
+  before_script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
+  script:
+    - cd frontend/
+    - docker build -t ase40/ui-service:latest .
+    - docker push ase40/ui-service:latest
+  only:
+    - main
+
+docker-backend-job: # builds BE images using jib + pushes to Docker hub
+  stage: docker-backend
   image: maven:3.8.7-eclipse-temurin-17
   script:
     - cd microservices/
     - echo "Deploying to Docker hub... This will take some time."
     - mvn compile jib:build -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD}
     - echo "Deployment to Docker hub Done!"
+  only:
+    - main
 
 
-deploy:
+deploy: # deploys to linode and runs services with docker-compose (pullling from hub)
   stage: deploy
   before_script:
-  - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
-  - eval $(ssh-agent -s)
-  - echo "$PRIVATE_SSH" | tr -d '\r' | ssh-add -
-  - mkdir -p ~/.ssh
-  - chmod 700 ~/.ssh
-  - ssh-keyscan $SSH_IP >> ~/.ssh/known_hosts
-  - chmod 644 ~/.ssh/known_hosts
+    - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
+    - eval $(ssh-agent -s)
+    - echo "$PRIVATE_SSH" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan $SSH_IP >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   script:
-  - ssh $SSH_USER@$SSH_IP "docker compose up -d"
+    - scp docker-compose.yml root@139.162.132.244:/root/ # copy docker-compose to linode
+    - ssh $SSH_USER@$SSH_IP "docker compose up -d"
+  only:
+    - main
