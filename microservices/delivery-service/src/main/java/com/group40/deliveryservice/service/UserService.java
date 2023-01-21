@@ -100,7 +100,7 @@ public class UserService {
 
         try {
             //Create connection
-            URL url = new URL("http://api-gateway:8080/api/auth/register");
+            URL url = new URL("http://localhost:8080/api/auth/register");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
@@ -146,7 +146,7 @@ public class UserService {
 
     public User getUser(String token) throws IOException, JSONException {
 
-        URL url = new URL("http://api-gateway:8080/api/auth/current");
+        URL url = new URL("http://localhost:8080/api/auth/current");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Authorization", token);
