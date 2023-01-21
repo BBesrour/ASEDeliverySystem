@@ -2,7 +2,6 @@ package com.group40.deliveryservice.controller;
 
 import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.model.ERole;
-import com.group40.deliveryservice.model.EmailDetails;
 import com.group40.deliveryservice.model.User;
 import com.group40.deliveryservice.service.DeliveryService;
 import com.group40.deliveryservice.service.EmailService;
@@ -16,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.net.http.HttpResponse;
 import java.util.List;
 
 @RestController
@@ -81,7 +79,7 @@ public class DeliveryController {
         Delivery delivery = deliveryService.getSingleDelivery(id);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getTargetCustomerID().equals(user.getId())) {
             deliveryService.deleteDelivery(id);
-            return ResponseEntity.ok("Delivery deleted");
+            return ResponseEntity.ok("{}");
         }else {
             return ResponseEntity.badRequest().body("Not authorized!");
         }
