@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {getRoles} from "../../../storage/user";
+import {getRole} from "../../../storage/user";
 import {ROLE_CUSTOMER, ROLE_DELIVERER, ROLE_DISPATCHER} from "../../../model/roles";
 import DispatcherDeliveriesPage from "./DispatcherDeliveriesPage";
 import CustomerDeliveriesPage from "./CustomerDeliveriesPage";
@@ -11,7 +11,7 @@ import DeliveryQRCodeScanner from "./DeliveryQRCodeScanner";
 
 export default function DeliveriesPage() {
     const [qrCodeScannerOpen, setQrCodeScannerOpen] = useState(false);
-    const roles = getRoles();
+    const roles = getRole();
     return <>
         {roles.includes(ROLE_CUSTOMER) ? <CustomerDeliveriesPage /> : null}
         {roles.includes(ROLE_DELIVERER) ? <DelivererDeliveriesPage /> : null}
