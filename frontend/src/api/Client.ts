@@ -1,3 +1,5 @@
+import {getAccessToken} from "../storage/user";
+
 export default class Client {
     private readonly urlBase: string
 
@@ -10,7 +12,9 @@ export default class Client {
         const response = await fetch(this.urlBase + urlWithParams, {
             method: method,
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                // add authorization header with access token
+                'Authorization': `Bearer ${getAccessToken()}`
             },
             body: body ? JSON.stringify(body) : undefined
         });
