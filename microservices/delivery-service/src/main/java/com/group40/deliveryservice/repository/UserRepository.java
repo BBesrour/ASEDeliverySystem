@@ -16,4 +16,6 @@ public interface UserRepository extends MongoRepository<User, String> {
     Boolean existsByEmail(String email);
 
     User findByEmail(String email);
+    @Query("{'token':  ?0 }")
+    User findByToken(String token);
 }
