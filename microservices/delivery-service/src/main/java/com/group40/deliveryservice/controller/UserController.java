@@ -121,8 +121,8 @@ public class UserController {
         }
     }
 
-    @GetMapping("/token")
-    public ResponseEntity<?> getUserToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
+    @GetMapping("/user-to-token")
+    public ResponseEntity<?> getTokenFromUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
         User user = userService.getUser(token);
         switch (user.getRole()){
             case ROLE_DELIVERER -> {
@@ -136,6 +136,10 @@ public class UserController {
                         .body("Incorrect role");
             }
         }
+    }
+    @GetMapping("/token-to-user")
+    public ResponseEntity<?> getUserFromToken(@RequestParam String token){
+        return ResponseEntity.ok(userService.getUserFromToken(token));
     }
 
 }

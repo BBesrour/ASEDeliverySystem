@@ -177,4 +177,8 @@ public class UserService {
         return new User(id, email, eRole);
     }
 
+    public User getUserFromToken(String token){
+        return userRepository.findByToken(token);
+    }
+
 }
