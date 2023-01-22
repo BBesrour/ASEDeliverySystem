@@ -15,6 +15,7 @@ export default function BoxSelection({label, onSelect}: { label: string, onSelec
     useEffect(() => {
         getBoxes().then((boxes) => {
             setBoxes(boxes);
+            console.log({boxes});
         });
     }, []);
 
@@ -34,8 +35,15 @@ export default function BoxSelection({label, onSelect}: { label: string, onSelec
 
     return <Autocomplete
         disablePortal
-        options={boxOptions}
         sx={{width: 300}}
+        options={boxOptions}
+        renderOption={(props, option) => {
+            return (
+                <li {...props} key={option.boxID}>
+                    {option.label}
+                </li>
+            );
+        }}
         renderInput={(params) => <TextField {...params} label={label} />}
         onChange={(event, newValue) => {
             onSelect(getBoxByID(newValue?.boxID || ""));
