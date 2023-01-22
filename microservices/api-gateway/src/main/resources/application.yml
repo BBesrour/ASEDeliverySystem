@@ -10,12 +10,6 @@ spring:
     gateway:
       default-filters:
         - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials, RETAIN_UNIQUE
-      globalcors:
-        cors-configurations:
-          '[/**]':
-            allowedOrigins: "*"
-            allowed-methods: "*"
-            allowed-headers: "*"
       routes:
           - id: authentication-service
             uri: lb://authentication-service
