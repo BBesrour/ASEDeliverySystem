@@ -9,7 +9,7 @@ LED_ON_TIME_SECONDS = 2
 # set up LEDs
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
-GREEN_PIN = 6
+GREEN_PIN = 5
 RED_PIN = 7
 GPIO.setup(GREEN_PIN, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(RED_PIN, GPIO.OUT, initial=GPIO.LOW)
