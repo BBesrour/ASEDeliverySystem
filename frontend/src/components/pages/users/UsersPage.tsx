@@ -35,7 +35,10 @@ export default function UsersPage() {
     if (id) {
       deleteUser(id)
         .then(() => alert("Delete Successful"))
-        .catch((err) => console.log(err));
+        .catch((err) => {
+            console.log(err);
+            alert(err);
+        });
     }
   };
 
