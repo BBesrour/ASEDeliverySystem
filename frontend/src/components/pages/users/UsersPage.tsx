@@ -34,7 +34,7 @@ export default function UsersPage() {
   const onClickDelete = (id: string | null) => {
     if (id) {
       deleteUser(id)
-        .then((res) => alert("Delete Successfull"))
+        .then(() => alert("Delete Successful"))
         .catch((err) => console.log(err));
     }
   };
@@ -54,7 +54,6 @@ export default function UsersPage() {
               <Typography>Email: {user.email}</Typography>
             </CardContent>
             <CardActions>
-              <Button size="small">Edit</Button>
               <Button onClick={() => setUserToEdit(user)} size="small">
                 Edit
               </Button>
