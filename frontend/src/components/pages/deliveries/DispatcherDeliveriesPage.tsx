@@ -14,7 +14,7 @@ export default function DispatcherDeliveriesPage() {
         getDeliveries().then(setDeliveries);
     }, []);
     const [showCreateDialog, setShowCreateDialog] = useState(false);
-    const dispatcherDeliveriesProperties = ["targetCustomerID", "targetBoxID", "delivererID", "active"];
+    const dispatcherDeliveriesProperties = ["targetCustomerID", "targetBoxID", "delivererID", "isActive"];
     const actionButtons = <>
         <Button variant="contained" onClick={() => setShowCreateDialog(true)}>Create delivery</Button>
     </>;
@@ -22,6 +22,9 @@ export default function DispatcherDeliveriesPage() {
         <Typography variant="h2">All Deliveries</Typography>
         <DeliveriesList deliveries={deliveries}
                         propertiesToShow={dispatcherDeliveriesProperties}
+                        onDeliveryUpdated={(delivery) => {
+                            setDeliveries(deliveries.map(d => d.id === delivery.id ? delivery : d));
+                        }}
                         onDeliveryDeleted={(idToDelete) => setDeliveries(deliveries.filter((d) => d.id !== idToDelete))}
         />
         <CreateDeliveryDialog

@@ -16,20 +16,12 @@ export default function BoxesPage() {
     const [boxes, setBoxes] = useState<Box[]>([]);
     const [showCreateDialog, setShowCreateDialog] = useState(false);
     const [showUpdateDialog, setShowUpdateDialog] = useState(false);
-    const [currentBox, setCurrentBox] = useState<Box>(new Box(null, "", "", "", "", [], ""));
+    const [currentBox, setCurrentBox] = useState(new Box(null, "", "", 0, "", []));
     useEffect(() => {
         getBoxes().then((boxes) => {
             setBoxes(boxes);
         });
     }, []);
-
-    function camelize(str: string) {
-        return str
-            .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
-                return index === 0 ? word.toLowerCase() : word.toUpperCase();
-            })
-            .replace(/\s+/g, "");
-    }
 
     const actionButtons = (
         <>
@@ -47,7 +39,7 @@ export default function BoxesPage() {
     const onClickDelete = (id: string | null) => {
         if (id) {
             deleteBox(id)
-                .then((res) => {
+                .then(() => {
                     alert("Delete Successful");
                     setBoxes(boxes.filter((box) => box.id !== id));
                 });
@@ -67,9 +59,9 @@ export default function BoxesPage() {
                             </Typography>
                             <Typography>Name: </Typography>
                             <Typography>Address: {box.address}</Typography>
-                            <Typography>Assigned Deliverer: {box.assigned_to}</Typography>
+                            <Typography>Assigned Deliverer: {box.assignedTo}</Typography>
                             <Typography>
-                                Assigned Customers: {box.assigned_customers}
+                                Assigned Customers: {box.assignedCustomers}
                             </Typography>
                         </CardContent>
                         <CardActions>
@@ -99,7 +91,9 @@ export default function BoxesPage() {
             <UpdateBoxDialog
                 open={showUpdateDialog}
                 handleClose={() => setShowUpdateDialog(false)}
-                onBoxUpdated={(box) => setBoxes(boxes)}
+                onBoxUpdated={(box) => {
+                    setBoxes(boxes.map((b) => (b.id === box.id ? box : b)));
+                }}
                 box={currentBox}
             />
         </>
