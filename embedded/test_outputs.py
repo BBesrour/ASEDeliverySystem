@@ -19,6 +19,9 @@ async def on_off():
         ase_out.turn_off()
 
 if __name__ == '__main__':
-    thread = Timer(1, lambda: asyncio.run(on_off()))
-    thread.start()
-    ase_mainloop()
+    try:
+        thread = Timer(1, lambda: asyncio.run(on_off()))
+        thread.start()
+        ase_mainloop()
+    except KeyboardInterrupt:
+        ase_out.turn_off()
