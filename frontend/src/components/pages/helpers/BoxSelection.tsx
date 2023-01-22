@@ -15,7 +15,6 @@ export default function BoxSelection({label, onSelect}: { label: string, onSelec
     useEffect(() => {
         getBoxes().then((boxes) => {
             setBoxes(boxes);
-            console.log({boxes});
         });
     }, []);
 
