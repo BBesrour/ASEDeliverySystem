@@ -67,9 +67,9 @@ export default function BoxesPage() {
                             </Typography>
                             <Typography>Name: </Typography>
                             <Typography>Address: {box.address}</Typography>
-                            <Typography>Assigned Deliverer: {box.assigned_to}</Typography>
+                            <Typography>Assigned Deliverer: {box.assignedTo}</Typography>
                             <Typography>
-                                Assigned Customers: {box.assigned_customers}
+                                Assigned Customers: {box.assignedCustomers}
                             </Typography>
                         </CardContent>
                         <CardActions>

@@ -3,8 +3,8 @@ export default class Box {
   name: string;
   address: string;
   numberOfItems: string;
-  readonly assigned_to: string;
-  readonly assigned_customers: string[];
+  readonly assignedTo: string;
+  readonly assignedCustomers: string[];
   readonly key: string;
 
   constructor(
@@ -12,16 +12,16 @@ export default class Box {
     name: string,
     address: string,
     numberOfItems: string,
-    assigned_to: string,
-    assigned_customers: string[],
+    assignedTo: string,
+    assignedCustomers: string[],
     key: string
   ) {
     this.id = id;
     this.name = name;
     this.address = address;
     this.numberOfItems = numberOfItems;
-    this.assigned_to = assigned_to;
-    this.assigned_customers = assigned_customers;
+    this.assignedTo = assignedTo;
+    this.assignedCustomers = assignedCustomers;
     this.key = key;
   }
 
@@ -31,8 +31,8 @@ export default class Box {
       json.name,
       json.address,
       json.numberOfItems,
-      json.assigned_to,
-      json.assigned_customers,
+      json.assignedTo,
+      json.assignedCustomers,
       json.key
     );
   }
