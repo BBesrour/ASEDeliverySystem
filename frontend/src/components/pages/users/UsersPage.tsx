@@ -85,7 +85,7 @@ export default function UsersPage() {
       />
       <UpdateUserDialog
           open={!!userToEdit}
-          user={userToEdit || new User(null, "", "")}
+          user={userToEdit || new User(null, "", null, "", "ROLE_CUSTOMER")}
           handleClose={() => setUserToEdit(null)}
           onUserUpdated={(user) => setUsers(users.map((u) => u.id === user.id ? user : u))}
       />
