@@ -31,7 +31,7 @@ public class DeliveryController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<Delivery> getAllDeliveries(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)){
             return deliveryService.getAllDeliveries();
         }
@@ -41,7 +41,7 @@ public class DeliveryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     ResponseEntity<?> newDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody Delivery newDelivery) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER) || newDelivery.getTargetCustomerID().equals(user.getId())) {
             return ResponseEntity.ok(deliveryService.saveDelivery(newDelivery));
         }else {
@@ -52,7 +52,7 @@ public class DeliveryController {
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<?> getSingleDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable(value = "id") String id) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         Delivery delivery = deliveryService.getSingleDelivery(id);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getTargetCustomerID().equals(user.getId())) {
             return ResponseEntity.ok(deliveryService.getSingleDelivery(id));
@@ -64,7 +64,7 @@ public class DeliveryController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<?> replaceDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody Delivery newDelivery, @PathVariable String id) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         Delivery delivery = deliveryService.getSingleDelivery(id);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getTargetCustomerID().equals(user.getId())) {
             return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id));
@@ -75,7 +75,7 @@ public class DeliveryController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String id) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         Delivery delivery = deliveryService.getSingleDelivery(id);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getTargetCustomerID().equals(user.getId())) {
             deliveryService.deleteDelivery(id);

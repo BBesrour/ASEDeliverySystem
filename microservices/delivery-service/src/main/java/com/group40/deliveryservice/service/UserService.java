@@ -144,7 +144,7 @@ public class UserService {
         }
     }
 
-    public User getUser(String token) throws IOException, JSONException {
+    public User getUserFromAuth(String token) throws IOException, JSONException {
 
         URL url = new URL("http://api-gateway:8080/api/auth/current");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();

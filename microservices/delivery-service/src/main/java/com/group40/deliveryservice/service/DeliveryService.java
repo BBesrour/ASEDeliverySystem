@@ -2,6 +2,8 @@ package com.group40.deliveryservice.service;
 
 import com.group40.deliveryservice.exceptions.DeliveryNotFoundException;
 import com.group40.deliveryservice.model.Delivery;
+import com.group40.deliveryservice.model.EmailDetails;
+import com.group40.deliveryservice.model.User;
 import com.group40.deliveryservice.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +17,10 @@ public class DeliveryService {
 
     private final DeliveryRepository repository;
 
+    private final EmailService emailService;
+
+    private final UserService userService;
+
     public List<Delivery> getDeliveriesForCustomer(String id){
         return repository.findDeliveriesForCustomer(id);
     }
@@ -23,7 +29,18 @@ public class DeliveryService {
     }
 
     public Delivery saveDelivery(Delivery newDelivery) {
-        return repository.save(newDelivery);
+        Delivery savedDelivery = repository.save(newDelivery);
+        User user = userService.getUserFromDB(newDelivery.getTargetCustomerID());
+        EmailDetails emailDetails = new EmailDetails(user.getEmail(),
+                "A new delivery was created!",
+                "New delivery");
+        boolean status = emailService.sendSimpleMail(emailDetails);
+        if (status) {
+            log.info("Mail sent successfully for email: " + user.getEmail());
+        } else {
+            log.error("Mail not sent for email: " + user.getEmail());
+        }
+        return savedDelivery;
     }
 
     public Delivery getSingleDelivery(String id) {
@@ -31,7 +48,7 @@ public class DeliveryService {
     }
 
     public Delivery replaceDelivery(Delivery newDelivery, String id) {
-        return repository.findById(id)
+        Delivery replacedDelivery = repository.findById(id)
                 .map(delivery -> {
                     delivery.setActive(newDelivery.isActive());
                     delivery.setTargetCustomerID(newDelivery.getTargetCustomerID());
@@ -43,6 +60,17 @@ public class DeliveryService {
                     newDelivery.setId(id);
                     return repository.save(newDelivery);
                 });
+        User user = userService.getUserFromDB(newDelivery.getTargetCustomerID());
+        EmailDetails emailDetails = new EmailDetails(user.getEmail(),
+                "Delivery updated!",
+                "Delivery updated.");
+        boolean status = emailService.sendSimpleMail(emailDetails);
+        if (status) {
+            log.info("Mail sent successfully for email: " + user.getEmail());
+        } else {
+            log.error("Mail not sent for email: " + user.getEmail());
+        }
+        return replacedDelivery;
     }
 
     public void deleteDelivery(String id) {
