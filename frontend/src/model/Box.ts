@@ -4,7 +4,7 @@ export default class Box {
   address: string;
   numberOfItems: number;
   readonly assignedTo: string;
-  readonly assignedCustomers: string[];
+  readonly assignedCustomer: string;
 
   constructor(
     id: string | null,
@@ -12,14 +12,14 @@ export default class Box {
     address: string,
     numberOfItems: number,
     assignedTo: string,
-    assignedCustomers: string[]
+    assignedCustomer: string
   ) {
     this.id = id;
     this.name = name;
     this.address = address;
     this.numberOfItems = numberOfItems;
     this.assignedTo = assignedTo;
-    this.assignedCustomers = assignedCustomers;
+    this.assignedCustomer = assignedCustomer;
   }
 
   static fromJson(json: any): Box {
@@ -29,7 +29,7 @@ export default class Box {
       json.address,
       json.numberOfItems,
       json.assignedTo,
-      json.assignedCustomers
+      json.assignedCustomer
     );
   }
 }
