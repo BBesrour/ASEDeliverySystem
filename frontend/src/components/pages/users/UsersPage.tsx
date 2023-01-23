@@ -13,82 +13,83 @@ import User from "../../../model/User";
 import UpdateUserDialog from "./UpdateUserDialog";
 
 export default function UsersPage() {
-  const [users, setUsers] = useState<User[]>([]);
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [userToEdit, setUserToEdit] = useState<User | null>(null);
+    const [users, setUsers] = useState<User[]>([]);
+    const [showCreateDialog, setShowCreateDialog] = useState(false);
+    const [userToEdit, setUserToEdit] = useState<User | null>(null);
 
-  useEffect(() => {
-    getAllUsers().then((users) => {
-      setUsers(users);
-    });
-  }, []);
-
-  const actionButtons = (
-    <>
-      <Button variant="contained" onClick={() => setShowCreateDialog(true)}>
-        Create new user
-      </Button>
-    </>
-  );
-
-  const onClickDelete = (id: string | null) => {
-    if (id) {
-      deleteUser(id)
-        .then(() => alert("Delete Successful"))
-        .catch((err) => {
-            console.log(err);
-            alert(err);
+    useEffect(() => {
+        getAllUsers().then((users) => {
+            setUsers(users);
         });
-    }
-  };
+    }, []);
 
-  const content = (
-    <Grid container spacing={4}>
-      {users.map((user) => (
-        <Grid item key={user.id} xs={12} sm={6} md={4}>
-          <Card
-            sx={{ height: "100%", display: "flex", flexDirection: "column" }}
-          >
-            <CardContent sx={{ flexGrow: 1 }}>
-              <Typography gutterBottom variant="h5" component="h2">
-                {user.name}
-              </Typography>
-              <Typography>ID: {user.id}</Typography>
-              <Typography>Email: {user.email}</Typography>
-            </CardContent>
-            <CardActions>
-              <Button onClick={() => setUserToEdit(user)} size="small">
-                Edit
-              </Button>
-              <Button onClick={() => onClickDelete(user.id)} size="small">
-                Delete
-              </Button>
-            </CardActions>
-          </Card>
+    const actionButtons = (
+        <>
+            <Button variant="contained" onClick={() => setShowCreateDialog(true)}>
+                Create new user
+            </Button>
+        </>
+    );
+
+    const onClickDelete = (id: string | null) => {
+        if (id) {
+            deleteUser(id)
+                .then(() => alert("Delete Successful"))
+                .catch((err) => {
+                    console.log(err);
+                    alert(err);
+                });
+        }
+    };
+
+    const content = (
+        <Grid container spacing={4}>
+            {users.map((user) => (
+                <Grid item key={user.id} xs={12} sm={6} md={4}>
+                    <Card
+                        sx={{height: "100%", display: "flex", flexDirection: "column"}}
+                    >
+                        <CardContent sx={{flexGrow: 1}}>
+                            <Typography gutterBottom variant="h5" component="h2">
+                                {user.name}
+                            </Typography>
+                            <Typography>ID: {user.id}</Typography>
+                            <Typography>Email: {user.email}</Typography>
+                        </CardContent>
+                        <CardActions>
+                            <Button onClick={() => setUserToEdit(user)} size="small">
+                                Edit
+                            </Button>
+                            <Button onClick={() => onClickDelete(user.id)} size="small">
+                                Delete
+                            </Button>
+                        </CardActions>
+                    </Card>
+                </Grid>
+            ))}
         </Grid>
-      ))}
-    </Grid>
-  );
-  // @ts-ignore
-  return (
-    <>
-      <PageLayout
-        title={"Users"}
-        description={""}
-        actionButtons={actionButtons}
-        content={content}
-      />
-      <CreateUserDialog
-        open={showCreateDialog}
-        handleClose={() => setShowCreateDialog(false)}
-        onUserCreated={(user) => setUsers([user, ...users])}
-      />
-      <UpdateUserDialog
-          open={!!userToEdit}
-          user={userToEdit || new User(null, "", null, "", "ROLE_CUSTOMER")}
-          handleClose={() => setUserToEdit(null)}
-          onUserUpdated={(user) => setUsers(users.map((u) => u.id === user.id ? user : u))}
-      />
-    </>
-  );
+    );
+    // @ts-ignore
+    return (
+        <>
+            <PageLayout
+                title={"Users"}
+                description={""}
+                actionButtons={actionButtons}
+                content={content}
+            />
+            <CreateUserDialog
+                open={showCreateDialog}
+                handleClose={() => setShowCreateDialog(false)}
+                onUserCreated={(user) => setUsers([user, ...users])}
+            />
+            {userToEdit ? <UpdateUserDialog
+                    open={!!userToEdit}
+                    user={userToEdit as User}
+                    handleClose={() => setUserToEdit(null)}
+                    onUserUpdated={(user) => setUsers(users.map((u) => u.id === user.id ? user : u))}
+                />
+                : null}
+        </>
+    );
 }
