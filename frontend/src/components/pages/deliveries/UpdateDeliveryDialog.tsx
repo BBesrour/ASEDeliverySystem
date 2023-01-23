@@ -1,49 +1,45 @@
-import React from "react";
+import React, {useState} from "react";
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import {createDelivery} from "../../../api/delivery/deliveries";
 import Delivery from "../../../model/Delivery";
 import DeliveryFields from "./DeliveryFields";
+import {updateDelivery} from "../../../api/delivery/deliveries";
 
-export default function CreateDeliveryDialog({open, handleClose, onDeliveryCreated}: {
+export default function UpdateDeliveryDialog({open, handleClose, onDeliveryUpdated, delivery}: {
     open: boolean,
     handleClose: () => void,
-    onDeliveryCreated: (delivery: Delivery) => void
+    onDeliveryUpdated: (delivery: Delivery) => void,
+    delivery: Delivery
 }) {
-    const [delivery, setDelivery] = React.useState(new Delivery(
-        null,
-        "",
-        "",
-        "",
-        "ORDERED",
-        true,
-    ));
+    const [changedDelivery, setChangedDelivery] = useState(delivery);
 
-    async function handleCreateDelivery() {
-        const createdDelivery = await createDelivery(delivery);
-        onDeliveryCreated(createdDelivery);
+    async function updateDeliveryAndClose() {
+        await updateDelivery(changedDelivery);
+        onDeliveryUpdated(changedDelivery);
         handleClose();
     }
 
     return (
         open ?
             <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Create New Delivery</DialogTitle>
+                <DialogTitle>Update Delivery</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
                         Enter new delivery details here:
                     </DialogContentText>
-                    <DeliveryFields delivery={delivery} onDeliveryUpdate={setDelivery} />
+                    <DeliveryFields delivery={delivery} onDeliveryUpdate={setChangedDelivery}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleCreateDelivery}>Create</Button>
+                    <Button onClick={updateDeliveryAndClose}>Update</Button>
                 </DialogActions>
             </Dialog>
             : <></>
     );
 }
+
+
