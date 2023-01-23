@@ -8,24 +8,28 @@ import QRCodeDialog from "./QRCodeDialog";
 import Button from "@mui/material/Button";
 import DeliveryStatusPage from "./DeliveryStatusPage";
 import {deleteDelivery} from "../../../api/delivery/deliveries";
+import UpdateDeliveryDialog from "./UpdateDeliveryDialog";
 
 
-export default function DeliveriesList({deliveries, propertiesToShow, onDeliveryDeleted}: {
+export default function DeliveriesList({deliveries, propertiesToShow, onDeliveryDeleted, onDeliveryUpdated}: {
     deliveries: Delivery[],
     propertiesToShow: string[],
-    onDeliveryDeleted: (id : string | null) => void
+    onDeliveryDeleted: (id: string | null) => void
+    onDeliveryUpdated: (delivery: Delivery) => void
 }) {
     const [showQRDialogFor, setShowQRDialogFor] = useState<string | null>(null);
     const [showStatusDialogFor, setShowStatusDialogFor] = useState<string | null>(null);
+    const [currentDelivery, setCurrentDelivery] = useState<Delivery | null>(null);
+
 
     function getDeliveryProperty(delivery: Delivery, property: string) {
         // @ts-ignore
         return delivery[property];
     }
 
-    function handleDeleteDelivery(id: string | null) {
-        deleteDelivery(id);
-        onDeliveryDeleted(id);
+    function handleDeleteDelivery(delivery: Delivery) {
+        deleteDelivery(delivery.id);
+        onDeliveryDeleted(delivery.id);
     }
 
     return <>
@@ -47,13 +51,21 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
                             ))}
                             <Button size="small" onClick={() => setShowStatusDialogFor(delivery.id)}>Status</Button>
                             <Button size="small" onClick={() => setShowQRDialogFor(delivery.id)}>QR</Button>
-                            <Button size="small" onClick={() => handleDeleteDelivery(delivery.id)}>Delete</Button>
+                            <Button size="small" onClick={() => setCurrentDelivery(delivery)}>Edit</Button>
+                            <Button size="small" onClick={() => handleDeleteDelivery(delivery)}>Delete</Button>
                         </CardContent>
                     </Card>
                 </Grid>
             ))}
         </Grid>
-        <QRCodeDialog open={showQRDialogFor !== null} handleClose={() => setShowQRDialogFor(null)} deliveryId={showQRDialogFor ?? ""} />
-        <DeliveryStatusPage id={showStatusDialogFor} handleClose={() => setShowStatusDialogFor(null)} />
+        <QRCodeDialog open={showQRDialogFor !== null} handleClose={() => setShowQRDialogFor(null)}
+                      deliveryId={showQRDialogFor ?? ""}/>
+        <DeliveryStatusPage id={showStatusDialogFor} handleClose={() => setShowStatusDialogFor(null)}/>
+        <UpdateDeliveryDialog
+            open={!!currentDelivery}
+            delivery={currentDelivery || new Delivery(null, "", "", "", "", false)}
+            handleClose={() => setCurrentDelivery(null)}
+            onDeliveryUpdated={onDeliveryUpdated}
+        />
     </>;
 }

@@ -36,7 +36,7 @@ export default function BoxSelection({label, onSelect}: { label: string, onSelec
         disablePortal
         options={boxOptions}
         sx={{width: 300}}
-        renderInput={(params) => <TextField {...params} label={label} />}
+        renderInput={(params) => <TextField {...params} label={label}/>}
         onChange={(event, newValue) => {
             onSelect(getBoxByID(newValue?.boxID || ""));
         }}

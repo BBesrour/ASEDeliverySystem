@@ -21,11 +21,15 @@ export default function CustomerDeliveriesPage() {
             <DeliveriesList deliveries={activeDeliveries}
                             propertiesToShow={customerDeliveriesProperties}
                             onDeliveryDeleted={(id) => {
+                            }}
+                            onDeliveryUpdated={(id) => {
                             }}/>
             <Typography variant="h2">Past Deliveries</Typography>
             <DeliveriesList deliveries={inactiveDeliveries}
                             propertiesToShow={customerDeliveriesProperties}
                             onDeliveryDeleted={(id) => {
+                            }}
+                            onDeliveryUpdated={(id) => {
                             }}/>
         </>
     }/>;

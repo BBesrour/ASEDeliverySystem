@@ -23,6 +23,7 @@ export default function DispatcherDeliveriesPage() {
         <DeliveriesList deliveries={deliveries}
                         propertiesToShow={dispatcherDeliveriesProperties}
                         onDeliveryDeleted={(idToDelete) => setDeliveries(deliveries.filter((d) => d.id !== idToDelete))}
+                        onDeliveryUpdated={(delivery) => setDeliveries(deliveries.map((d) => d.id === delivery.id ? delivery : d))}
         />
         <CreateDeliveryDialog
             open={showCreateDialog}

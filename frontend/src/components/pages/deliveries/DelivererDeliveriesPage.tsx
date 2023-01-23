@@ -15,6 +15,8 @@ export default function DelivererDeliveriesPage() {
         <DeliveriesList deliveries={deliveries}
                         propertiesToShow={dispatcherDeliveriesProperties}
                         onDeliveryDeleted={(id) => {
+                        }}
+                        onDeliveryUpdated={(id) => {
                         }}/>
     </>;
 }

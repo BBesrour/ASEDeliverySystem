@@ -10,6 +10,8 @@ import {createDelivery} from "../../../api/delivery/deliveries";
 import Delivery from "../../../model/Delivery";
 import BoxSelection from "../helpers/BoxSelection";
 import Box from "../../../model/Box";
+import User from "../../../model/User";
+import DelivererSelection from "../helpers/DelivererSelection";
 
 export default function CreateDeliveryDialog({open, handleClose, onDeliveryCreated}: {
     open: boolean,
@@ -34,27 +36,9 @@ export default function CreateDeliveryDialog({open, handleClose, onDeliveryCreat
                     <DialogContentText>
                         Enter new delivery details here:
                     </DialogContentText>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        value={targetCustomerID}
-                        onChange={(event) => setTargetCustomerID(event.target.value)}
-                        label="Name"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                    />
+                    <DelivererSelection label="Deliverer" onSelect={(user: User | null) => setTargetCustomerID(user?.id || "")}/>
                     <BoxSelection label="Target Box" onSelect={(box: Box | null) => setTargetBoxID(box?.id || "")}/>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        value={delivererID}
-                        onChange={(event) => setDelivererID(event.target.value)}
-                        label="Name"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                    />
+                    <DelivererSelection label="Deliverer" onSelect={(user: User | null) => setDelivererID(user?.id || "")}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
