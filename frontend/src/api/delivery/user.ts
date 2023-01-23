@@ -17,9 +17,19 @@ export async function deleteUser(id: string): Promise<void> {
 }
 
 export async function updateUser(user: User): Promise<void> {
-    await client.putRequest(`/${user.id}`, user);
+    await client.putRequest(`/${user.id}`, {}, user);
 }
 
 export async function createUser(user: User): Promise<User> {
-    return await client.postRequest("/", user);
+    const userJSON = {
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        role: user.role
+    };
+    if (!user.password) {
+        // @ts-ignore
+        delete userJSON.password;
+    }
+    return await client.postRequest("/", {}, user);
 }
