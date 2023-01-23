@@ -8,6 +8,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import User, {UserRole} from "../../../model/User";
 import {createUser} from "../../../api/delivery/user";
+import UserRoleSelection from "./UserRoleSelection";
 
 export default function CreateUserDialog({open, handleClose, onUserCreated}: {
     open: boolean;
@@ -20,6 +21,18 @@ export default function CreateUserDialog({open, handleClose, onUserCreated}: {
     const [role, setRole] = useState<UserRole>("ROLE_CUSTOMER");
 
     async function handleCreateUser() {
+        if (!email) {
+            alert("Email is required");
+            return;
+        }
+        if (!password) {
+            alert("Password is required");
+            return;
+        }
+        if (!name) {
+            alert("Name is required");
+            return;
+        }
         const newUser = new User(null, email, password, name, role);
         try {
             const createdUser = await createUser(newUser);
@@ -65,6 +78,9 @@ export default function CreateUserDialog({open, handleClose, onUserCreated}: {
                     fullWidth
                     variant="standard"
                 />
+                <br />
+                <br />
+                <UserRoleSelection role={role} setRole={setRole} />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
