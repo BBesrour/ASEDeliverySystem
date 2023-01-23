@@ -7,6 +7,7 @@ import DeliveriesPage from "./pages/deliveries/DeliveriesPage";
 import {getRole} from "../storage/user";
 import {ROLE_DISPATCHER} from "../model/roles";
 import DeliveryStatusPage from "./pages/deliveries/DeliveryStatusPage";
+import WelcomePage from "./pages/welcome/WelcomePage";
 
 export default function Router() {
     const navigate = useNavigate();
@@ -34,6 +35,7 @@ export default function Router() {
                 <Button onClick={navigateToDeliveries}>Deliveries</Button>
 
                 <Routes>
+                    <Route path="/" element={<WelcomePage />} />
                     <Route path="/boxes" element={<BoxesPage />} />
                     <Route path="/users" element={<UsersPage />} />
                     <Route path="/deliveries" element={<DeliveriesPage />}>

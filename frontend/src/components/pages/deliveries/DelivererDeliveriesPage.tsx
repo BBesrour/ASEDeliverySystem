@@ -9,14 +9,17 @@ export default function DelivererDeliveriesPage() {
     useEffect(() => {
         getDeliveries().then(setDeliveries);
     }, []);
-    const dispatcherDeliveriesProperties = ["targetCustomerID", "targetBoxID", "delivererID", "status", "active"];
+    const dispatcherDeliveriesProperties = ["targetCustomerID", "targetBoxID", "delivererID", "status", "isActive"];
     return <>
         <Typography variant="h2">All Deliveries</Typography>
         <DeliveriesList deliveries={deliveries}
                         propertiesToShow={dispatcherDeliveriesProperties}
-                        onDeliveryDeleted={(id) => {
+                        onDeliveryUpdated={(delivery) => {
+                            setDeliveries(deliveries.map(d => d.id === delivery.id ? delivery : d));
                         }}
-                        onDeliveryUpdated={(id) => {
-                        }}/>
+                        onDeliveryDeleted={(id) => {
+                            setDeliveries(deliveries.filter(d => d.id !== id));
+                        }}
+        />
     </>;
 }

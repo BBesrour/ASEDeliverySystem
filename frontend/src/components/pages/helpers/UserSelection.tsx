@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Autocomplete} from "@mui/material";
 import TextField from "@mui/material/TextField";
-import User from "../../../model/User";
+import User, {UserRole} from "../../../model/User";
 import {getAllUsers} from "../../../api/delivery/user";
 
 interface AutocompleteDelivererOption {
@@ -9,7 +9,7 @@ interface AutocompleteDelivererOption {
     label: string;
 }
 
-export default function DelivererSelection({label, onSelect}: { label: string, onSelect: (user: User | null) => void }) {
+export default function UserSelection({label, onSelect, userRole}: { label: string, onSelect: (user: User | null) => void, userRole: UserRole }) {
     const [users, setUsers] = useState<User[]>([]);
     useEffect(() => {
         getAllUsers().then((users) => {
@@ -19,7 +19,7 @@ export default function DelivererSelection({label, onSelect}: { label: string, o
 
     const [userOptions, setUserOptions] = useState<AutocompleteDelivererOption[]>([]);
     useEffect(() => {
-        setUserOptions(users.map((user) => {
+        setUserOptions(users.filter((user) => user.role === userRole).map((user) => {
             return {
                 delivererID: user.id || "",
                 label: user.name

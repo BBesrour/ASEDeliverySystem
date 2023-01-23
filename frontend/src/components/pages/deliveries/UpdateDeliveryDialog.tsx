@@ -1,36 +1,30 @@
 import React from "react";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Delivery from "../../../model/Delivery";
 import {updateDelivery} from "../../../api/delivery/deliveries";
-import BoxSelection from "../helpers/BoxSelection";
-import Box from "../../../model/Box";
-import DelivererSelection from "../helpers/DelivererSelection";
-import User from "../../../model/User";
+import DeliveryFields from "./DeliveryFields";
 
-export default function UpdateDeliveryDialog({
-                                                 open,
-                                                 delivery,
-                                                 handleClose,
-                                                 onDeliveryUpdated,
-                                             }: {
+export default function UpdateDeliveryDialog({open, currentDelivery, handleClose, onDeliveryUpdated}: {
     open: boolean;
-    delivery: Delivery,
+    currentDelivery: Delivery,
     handleClose: () => void;
     onDeliveryUpdated: (delivery: Delivery) => void;
 }) {
-    const [targetCustomerID, setTargetCustomerID] = React.useState('');
-    const [targetBoxID, setTargetBoxID] = React.useState('');
-    const [delivererID, setDelivererID] = React.useState('');
-
+    const [delivery, setDelivery] = React.useState(new Delivery(
+        currentDelivery.id,
+        currentDelivery.targetCustomerID,
+        currentDelivery.targetBoxID,
+        currentDelivery.delivererID,
+        currentDelivery.status,
+        currentDelivery.isActive,
+    ));
     async function handleUpdateDelivery() {
-        const newDelivery = new Delivery(delivery.id, targetCustomerID, targetBoxID, delivererID, delivery.status, delivery.isActive);
-        await updateDelivery(newDelivery);
-        onDeliveryUpdated(newDelivery);
+        await updateDelivery(delivery);
+        onDeliveryUpdated(delivery);
         handleClose();
     }
 
@@ -40,9 +34,7 @@ export default function UpdateDeliveryDialog({
             <DialogContentText>
                 Enter new delivery details here:
             </DialogContentText>
-            <DelivererSelection label="Customer" onSelect={(user: User | null) => setTargetCustomerID(user?.id || "")}/>
-            <BoxSelection label="Target Box" onSelect={(box: Box | null) => setTargetBoxID(box?.id || "")}/>
-            <DelivererSelection label="Deliverer" onSelect={(user: User | null) => setDelivererID(user?.id || "")}/>
+            <DeliveryFields delivery={delivery} onDeliveryUpdate={setDelivery} />
             <DialogActions>
                 <Button onClick={handleClose}>Cancel</Button>
                 <Button onClick={handleUpdateDelivery}>Update</Button>

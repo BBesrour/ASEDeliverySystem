@@ -15,15 +15,14 @@ export default function UpdateBoxDialog({open, handleClose, onBoxUpdated, box}: 
     onBoxUpdated: (box: Box) => void,
     box: Box
 }) {
+    // TODO: enable updating all fields
+
     const [name, setName] = React.useState('');
     const [address, setAddress] = React.useState('');
-    const [status, setStatus] = React.useState('');
-    const [numberOfItems, setNumberOfItems] = React.useState('');
 
     async function handleUpdateBox() {
         box.name = name;
         box.address = address;
-        box.numberOfItems = numberOfItems;
         onBoxUpdated(await updateBox(box));
         handleClose();
     }
@@ -53,26 +52,6 @@ export default function UpdateBoxDialog({open, handleClose, onBoxUpdated, box}: 
                         onChange={(event) => setAddress(event.target.value)}
                         label="Address"
                         type="address"
-                        fullWidth
-                        variant="standard"
-                    />
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        value={status}
-                        onChange={(event) => setStatus(event.target.value)}
-                        label="Status"
-                        type="text"
-                        fullWidth
-                        variant="standard"
-                    />
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        defaultValue={box.numberOfItems}
-                        onChange={(event) => setNumberOfItems(event.target.value)}
-                        label="Number of items"
-                        type="number"
                         fullWidth
                         variant="standard"
                     />

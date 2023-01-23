@@ -2,19 +2,17 @@ export default class Box {
   readonly id: string | null;
   name: string;
   address: string;
-  numberOfItems: string;
+  numberOfItems: number;
   readonly assignedTo: string;
   readonly assignedCustomers: string[];
-  readonly key: string;
 
   constructor(
     id: string | null,
     name: string,
     address: string,
-    numberOfItems: string,
+    numberOfItems: number,
     assignedTo: string,
-    assignedCustomers: string[],
-    key: string
+    assignedCustomers: string[]
   ) {
     this.id = id;
     this.name = name;
@@ -22,18 +20,15 @@ export default class Box {
     this.numberOfItems = numberOfItems;
     this.assignedTo = assignedTo;
     this.assignedCustomers = assignedCustomers;
-    this.key = key;
   }
-
   static fromJson(json: any): Box {
     return new Box(
-      json.id,
-      json.name,
-      json.address,
-      json.numberOfItems,
-      json.assignedTo,
-      json.assignedCustomers,
-      json.key
+        json.id,
+        json.name,
+        json.address,
+        json.numberOfItems,
+        json.assignedTo,
+        json.assignedCustomers
     );
   }
 }
