@@ -35,7 +35,6 @@ public class BoxService {
                 .id(box.getId())
                 .address(box.getAddress())
                 .name(box.getName())
-                .key(box.getKey())
                 .assignedBy(box.getAssignedBy())
                 .assignedTo(box.getAssignedTo())
                 .assignedCustomers(box.getAssignedCustomers())
@@ -47,7 +46,6 @@ public class BoxService {
                 .id(UUID.randomUUID().toString())
                 .address(boxRequest.getAddress())
                 .name(boxRequest.getName())
-                .key(boxRequest.getKey())
                 .assignedBy(boxRequest.getAssigned_by())
                 .assignedTo(boxRequest.getAssigned_to())
                 .assignedCustomers(boxRequest.getAssigned_customers())
@@ -74,7 +72,6 @@ public class BoxService {
     private Box updateField(String key, String value, Box box) {
         switch (key) {
             case "name" -> box.setName(value);
-            case "key" -> box.setKey(value);
             case "assigned_to" -> box.setAssignedTo(value);
             case "assigned_by" -> box.setAssignedBy(value);
             case "address" -> box.setAddress(value);
@@ -101,7 +98,6 @@ public class BoxService {
         return boxRepository.findById(id)
                 .map(box -> {
                     box.setName(newBox.getName());
-                    box.setKey(newBox.getKey());
                     box.setAssignedBy(newBox.getAssignedBy());
                     box.setAssignedTo(newBox.getAssignedTo());
                     box.setAddress(newBox.getAddress());
