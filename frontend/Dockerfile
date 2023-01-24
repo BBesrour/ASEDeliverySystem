@@ -18,4 +18,5 @@ FROM nginx:alpine
 WORKDIR /usr/share/nginx/html
 RUN rm -rf ./*
 COPY --from=builder /app/build .
+COPY ./default.conf /etc/nginx/conf.d/
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
