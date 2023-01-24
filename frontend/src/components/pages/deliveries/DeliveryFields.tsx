@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from "react";
 import Delivery from "../../../model/Delivery";
-import TextField from "@mui/material/TextField";
 import Box from "../../../model/Box";
 import BoxSelection from "../helpers/BoxSelection";
 import DeliveryStatusSelection from "./DeliveryStatusSelection";
 import {FormControlLabel, FormGroup, Switch} from "@mui/material";
+import UserSelection from "../helpers/UserSelection";
+import User from "../../../model/User";
 
 export default function DeliveryFields({delivery, onDeliveryUpdate}: {
     delivery: Delivery,
@@ -33,26 +34,9 @@ export default function DeliveryFields({delivery, onDeliveryUpdate}: {
 
     return (
         <div>
-            <TextField
-                autoFocus
-                margin="dense"
-                defaultValue={delivery.targetCustomerID}
-                onChange={(event) => setTargetCustomerID(event.target.value)}
-                label="Target Customer ID"
-                type="text"
-                fullWidth
-                variant="standard"
-            />
+            <UserSelection label="Customer" onSelect={(user: User | null) => setTargetCustomerID(user?.id || "")} userRole={"ROLE_CUSTOMER"}/>
             <BoxSelection label="Target Box" onSelect={(box: Box | null) => setTargetBoxID(box?.id || "")}/>
-            <TextField
-                margin="dense"
-                defaultValue={delivery.delivererID}
-                onChange={(event) => setDelivererID(event.target.value)}
-                label="Deliverer ID"
-                type="text"
-                fullWidth
-                variant="standard"
-            />
+            <UserSelection label="Deliverer" onSelect={(user: User | null) => setDelivererID(user?.id || "")} userRole={"ROLE_DELIVERER"}/>
             <DeliveryStatusSelection status={status} onStatusUpdate={setStatus}/>
             <FormGroup>
                 <FormControlLabel control={
