@@ -21,7 +21,6 @@ export default class Box {
     this.assignedTo = assignedTo;
     this.assignedCustomer = assignedCustomer;
   }
-
   static fromJson(json: any): Box {
     return new Box(
       json.id,
