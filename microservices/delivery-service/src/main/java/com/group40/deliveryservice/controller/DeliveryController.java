@@ -8,7 +8,7 @@ import com.group40.deliveryservice.service.EmailService;
 import com.group40.deliveryservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,10 +23,11 @@ import java.util.List;
 public class DeliveryController {
     private final DeliveryService deliveryService;
 
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private UserService userService;
+    private final EmailService emailService;
+    private final UserService userService;
+
+    @Value("${adminToken}")
+    private String adminToken;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -64,8 +65,13 @@ public class DeliveryController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<?> replaceDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody Delivery newDelivery, @PathVariable String id) throws JSONException, IOException {
-        User user = userService.getUser(token);
         Delivery delivery = deliveryService.getSingleDelivery(id);
+        String adminTokenCheck = "Bearer " + adminToken;
+        if (adminTokenCheck.equals(token)){
+            return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id));
+        }
+
+        User user = userService.getUser(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getTargetCustomerID().equals(user.getId())) {
             return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id));
         }else {
