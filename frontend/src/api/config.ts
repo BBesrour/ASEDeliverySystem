@@ -1,2 +1,2 @@
-export const deliveryServiceUrl = ':8080/api/delivery';
-export const authenticationServiceUrl = ':8080/api/auth';
+export const deliveryServiceUrl = `${process.env.REACT_APP_URL}/api/delivery`;
+export const authenticationServiceUrl = `${process.env.REACT_APP_URL}/api/auth`;

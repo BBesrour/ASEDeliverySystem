@@ -37,6 +37,7 @@ public class DeliveryService {
                     delivery.setTargetCustomerID(newDelivery.getTargetCustomerID());
                     delivery.setTargetBoxID(newDelivery.getTargetBoxID());
                     delivery.setDelivererID(newDelivery.getDelivererID());
+                    delivery.setStatus(newDelivery.getStatus());
                     return repository.save(delivery);
                 })
                 .orElseGet(() -> {
