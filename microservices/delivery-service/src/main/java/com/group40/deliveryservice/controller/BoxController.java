@@ -10,7 +10,7 @@ import com.group40.deliveryservice.service.BoxService;
 import com.group40.deliveryservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +26,12 @@ import java.util.Map;
 public class BoxController {
 
     private final BoxService boxService;
-    @Autowired
+
     private final UserService userService;
+
+    @Value("${adminToken}")
+    private String adminToken;
+
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
@@ -75,6 +79,11 @@ public class BoxController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> updateBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                        @RequestParam String id, @RequestBody Map<String, String> obj) throws Exception {
+        String adminTokenCheck = "Bearer " + adminToken;
+        if (adminTokenCheck.equals(token)) {
+            return ResponseEntity.ok(boxService.updateBox(id, obj));
+        }
+
         User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.updateBox(id, obj));

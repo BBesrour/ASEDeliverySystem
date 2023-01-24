@@ -22,9 +22,7 @@ export default function DispatcherDeliveriesPage() {
         <Typography variant="h2">All Deliveries</Typography>
         <DeliveriesList deliveries={deliveries}
                         propertiesToShow={dispatcherDeliveriesProperties}
-                        onDeliveryUpdated={(delivery) => {
-                            setDeliveries(deliveries.map(d => d.id === delivery.id ? delivery : d));
-                        }}
+                        onDeliveryUpdated={(delivery) => setDeliveries(deliveries.map(d => d.id === delivery.id ? delivery : d))}
                         onDeliveryDeleted={(idToDelete) => setDeliveries(deliveries.filter((d) => d.id !== idToDelete))}
         />
         <CreateDeliveryDialog
