@@ -87,13 +87,13 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
         <UpdateDeliveryDialog
             open={!!showUpdateDialogFor}
             handleClose={() => setShowUpdateDialogFor(null)}
-            delivery={deliveries.find(d => d.id === showUpdateDialogFor) || new Delivery(null, "", "", "", "", false)}
             onDeliveryUpdated={(delivery) => {
                 const index = deliveries.findIndex(d => d.id === delivery.id);
                 deliveries[index] = delivery;
                 onDeliveryUpdated(delivery);
                 setShowUpdateDialogFor(null)
             }}
+            delivery={deliveries.find(d => d.id === showUpdateDialogFor) || new Delivery(null, "", "", "", "", false)}
         />
     </>;
 }

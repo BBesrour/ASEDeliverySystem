@@ -1,13 +1,13 @@
 import React, {useState} from "react";
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 import Delivery from "../../../model/Delivery";
-import DeliveryFields from "./DeliveryFields";
 import {updateDelivery} from "../../../api/delivery/deliveries";
+import DeliveryFields from "./DeliveryFields";
+import {DialogContent} from "@mui/material";
 
 export default function UpdateDeliveryDialog({open, handleClose, onDeliveryUpdated, delivery}: {
     open: boolean,
@@ -41,5 +41,4 @@ export default function UpdateDeliveryDialog({open, handleClose, onDeliveryUpdat
             : <></>
     );
 }
-
 

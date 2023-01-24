@@ -21,15 +21,14 @@ export default class Box {
     this.assignedTo = assignedTo;
     this.assignedCustomers = assignedCustomers;
   }
-
   static fromJson(json: any): Box {
     return new Box(
-      json.id,
-      json.name,
-      json.address,
-      json.numberOfItems,
-      json.assignedTo,
-      json.assignedCustomers
+        json.id,
+        json.name,
+        json.address,
+        json.numberOfItems,
+        json.assignedTo,
+        json.assignedCustomers
     );
   }
 }
