@@ -37,7 +37,7 @@ public class BoxService {
                 .name(box.getName())
                 .assignedBy(box.getAssignedBy())
                 .assignedTo(box.getAssignedTo())
-                .assignedCustomers(box.getAssignedCustomers())
+                .assignedCustomer(box.getAssignedCustomer())
                 .build();
     }
 
@@ -48,7 +48,7 @@ public class BoxService {
                 .name(boxRequest.getName())
                 .assignedBy(boxRequest.getAssigned_by())
                 .assignedTo(boxRequest.getAssigned_to())
-                .assignedCustomers(boxRequest.getAssigned_customers())
+                .assignedCustomer(boxRequest.getAssignedCustomer())
                 .build();
 
         boxRepository.insert(box);
@@ -75,7 +75,7 @@ public class BoxService {
             case "assigned_to" -> box.setAssignedTo(value);
             case "assigned_by" -> box.setAssignedBy(value);
             case "address" -> box.setAddress(value);
-            case "assigned_customers" -> box.getAssignedCustomers().add(value);
+            case "assigned_customers" -> box.setAssignedCustomer(value);
         }
         return box;
     }
@@ -101,7 +101,7 @@ public class BoxService {
                     box.setAssignedBy(newBox.getAssignedBy());
                     box.setAssignedTo(newBox.getAssignedTo());
                     box.setAddress(newBox.getAddress());
-                    box.setAssignedCustomers(newBox.getAssignedCustomers());
+                    box.setAssignedCustomer(newBox.getAssignedCustomer());
                     return boxRepository.save(box);
                 })
                 .orElseGet(() -> {
@@ -119,7 +119,7 @@ public class BoxService {
 
     public List<BoxResponse> getBoxesByCustomer(String id) {
         return getBoxes().stream()
-                .filter(box -> box.getAssignedCustomers().contains(id))
+                .filter(box -> box.getAssignedCustomer().contains(id))
                 .map(this::mapToBoxResponse)
                 .toList();
     }

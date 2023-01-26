@@ -18,6 +18,5 @@ public class BoxResponse {
     private String address;
     private String assignedTo;
     private String assignedBy;
-    private ArrayList<String> assignedCustomers;
-    private String key;
+    private String assignedCustomer;
 }
