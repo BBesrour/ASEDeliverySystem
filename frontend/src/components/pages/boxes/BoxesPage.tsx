@@ -41,7 +41,6 @@ export default function BoxesPage() {
   const onClickDelete = (id: string | null) => {
     if (id) {
       deleteBox(id).then(() => {
-        console.log("aaa");
         alert("Delete Successful");
         setBoxes(boxes.filter((box) => box.id !== id));
       });
