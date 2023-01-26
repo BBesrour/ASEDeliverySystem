@@ -1,27 +1,18 @@
 import requests
 
-from common.config import Config
+from api.user import User
 from ase_io.card_content import CardContent
-
-
-def _is_deliverer_token(card_token: str) -> bool:
-    """Return whether the card token is a deliverer token."""
-    return card_token.startswith("D")
-
-
-def _is_customer_token(card_token: str) -> bool:
-    """Return whether the card token is a customer token."""
-    return card_token.startswith("C")
+from common.config import Config
 
 
 class DeliveryService:
     def __init__(self, config: Config):
         self.config = config
 
-    def _get(self, url: str, data=None):
+    def _get(self, url: str, params=None):
         return requests.get(
             self.config.delivery_server_address + url,
-            data=data,
+            params=params,
             headers={"Authorization": f"Bearer {self.config.delivery_server_access_token}"}
         )
 
@@ -32,30 +23,26 @@ class DeliveryService:
             headers={"Authorization": f"Bearer {self.config.delivery_server_access_token}"}
         )
 
-    def _authenticate_deliverer(self, card_token: str) -> bool:
-        """Return whether the deliverer card token is valid."""
-        resp = self._get(
-            f"/deliverer/authenticate/{self.config.box_id}",
-            data={"card_token": card_token}
+    def _put(self, url: str, data=None):
+        return requests.put(
+            self.config.delivery_server_address + url,
+            data=data,
+            headers={"Authorization": f"Bearer {self.config.delivery_server_access_token}"}
         )
-        return resp.status_code == 200
 
-    def _authenticate_customer(self, card_token: str) -> bool:
-        """Return whether the customer card token is valid."""
-        resp = self._get(
-            f"/customer/authenticate/{self.config.box_id}",
-            data={"card_token": card_token}
-        )
-        return resp.status_code == 200
+    def get_user(self, card_token: str) -> User | None:
+        """Return the user with the given card token."""
+        user_response = self._get(f"/user/token-to-user", {"token": card_token})
+        if user_response.text:
+            user_json = user_response.json()
+            return User(user_json["id"], user_json["name"], user_json["email"])
+        return None
 
     def authenticate(self, card_content: CardContent):
         """Return True whether the card token is valid."""
         card_token = card_content.token
-        if _is_deliverer_token(card_token):
-            return self._authenticate_deliverer(card_token)
-        elif _is_customer_token(card_token):
-            return self._authenticate_customer(card_token)
-        return False
+        user = self.get_user(card_token)
+        return user is not None
 
     def send_box_closed_event(self):
         """Send a box closed event to the delivery server."""
