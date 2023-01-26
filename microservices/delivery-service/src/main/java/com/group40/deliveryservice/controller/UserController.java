@@ -1,6 +1,5 @@
 package com.group40.deliveryservice.controller;
 
-import com.group40.deliveryservice.dto.PersonResponse;
 import com.group40.deliveryservice.dto.UserRequest;
 import com.group40.deliveryservice.model.*;
 import com.group40.deliveryservice.repository.UserRepository;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.List;
 
 
 @RestController
@@ -126,10 +124,12 @@ public class UserController {
         User user = userService.getUser(token);
         switch (user.getRole()){
             case ROLE_DELIVERER -> {
-                return ResponseEntity.ok(((Deliverer) user).getToken());
+                Deliverer deliverer =  userService.getDelivererFromDB(user.getEmail());
+                return ResponseEntity.ok(deliverer.getToken());
             }
             case ROLE_CUSTOMER -> {
-                return ResponseEntity.ok(((Customer) user).getToken());
+                Customer customer =  userService.getCustomerFromDB(user.getEmail());
+                return ResponseEntity.ok(customer.getToken());
             }
             default -> {
                 return ResponseEntity.badRequest()

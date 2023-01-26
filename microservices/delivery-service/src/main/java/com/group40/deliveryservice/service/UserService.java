@@ -2,10 +2,9 @@ package com.group40.deliveryservice.service;
 
 
 import com.group40.deliveryservice.exceptions.UserNotFoundException;
-import com.group40.deliveryservice.model.Customer;
-import com.group40.deliveryservice.model.ERole;
-import com.group40.deliveryservice.model.EmailDetails;
-import com.group40.deliveryservice.model.User;
+import com.group40.deliveryservice.model.*;
+import com.group40.deliveryservice.repository.CustomerRepository;
+import com.group40.deliveryservice.repository.DelivererRepository;
 import com.group40.deliveryservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,11 +30,23 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final DelivererRepository delivererRepository;
+
+    private final CustomerRepository customerRepository;
+
     private EmailService emailService;
 
 
     public User getUserFromDB(String id){
         return userRepository.findById(id).orElseThrow();
+    }
+
+    public Deliverer getDelivererFromDB(String email){
+        return delivererRepository.findByEmail(email);
+    }
+
+    public Customer getCustomerFromDB(String email){
+        return customerRepository.findByEmail(email);
     }
 
     public List<Customer> getAllCustomers() {
@@ -57,9 +68,10 @@ public class UserService {
 
 
     public User createUser(User user, String password) {
-        createInAuth(user, password);
+        User createdUser = userRepository.insert(user);
+        createInAuth(createdUser, password);
         // sendMail(deliverer);
-        return userRepository.insert(user);
+        return createdUser;
     }
 
 
@@ -76,22 +88,22 @@ public class UserService {
     }
 
     private static void createInAuth(User user, String password){
-        String response = executePost(bodyBuilder(user.getEmail(), password, user.getRole().toString()));
+        String response = executePost(bodyBuilder(user.getId(), user.getEmail(), password, user.getRole().toString()));
         //TODO: Change auth service for better response
         if (!response.contains("User registered successfully!")){
             throw new RuntimeException("Couldn't create user in auth service");
         }
     }
 
-    private static String bodyBuilder(String email, String password, String role) {
+    private static String bodyBuilder(String id, String email, String password, String role) {
         return """
                 {
+                    "id": "%s",
                     "email": "%s",
                     "password": "%s",
                     "role": "%s"
-                            
                 }
-                """.formatted(email, password, role);
+                """.formatted(id, email, password, role);
     }
 
 
@@ -100,7 +112,7 @@ public class UserService {
 
         try {
             //Create connection
-            URL url = new URL("http://api-gateway:8080/api/auth/register");
+            URL url = new URL("http://localhost:8080/api/auth/register");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
@@ -146,7 +158,7 @@ public class UserService {
 
     public User getUser(String token) throws IOException, JSONException {
 
-        URL url = new URL("http://api-gateway:8080/api/auth/current");
+        URL url = new URL("http://localhost:8080/api/auth/current");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Authorization", token);
