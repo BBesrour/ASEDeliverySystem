@@ -1,8 +1,11 @@
 package com.group40.deliveryservice.service;
 
+import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.exceptions.DeliveryNotFoundException;
 import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.model.DeliveryStatus;
+import com.group40.deliveryservice.model.EmailDetails;
+import com.group40.deliveryservice.model.User;
 import com.group40.deliveryservice.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +19,11 @@ import java.util.List;
 public class DeliveryService {
 
     private final DeliveryRepository repository;
+
+    private UserService userService;
+    private BoxService boxService;
+
+    private EmailService emailService;
 
     public List<Delivery> getDeliveriesForCustomer(String id){
         return repository.findDeliveriesForCustomer(id);
@@ -60,11 +68,22 @@ public class DeliveryService {
         return repository.findInactiveDeliveries(customer);
     }
 
-    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status){
+    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status) throws Exception {
         List<Delivery> toUpdate = repository.findDeliveriesForBox(boxID);
         for (Delivery delivery : toUpdate) {
             delivery.setStatus(status);
             repository.save(delivery);
+        }
+        BoxResponse box = boxService.getBox(boxID);
+        User user = userService.getUserFromDB(box.getAssignedCustomer());
+        EmailDetails emailDetails = new EmailDetails(user.getEmail(),
+                "Delivery status for box " + boxID + " was updated to " + status,
+                "ASE Delivery: Delivery status");
+        boolean mailStatus = emailService.sendSimpleMail(emailDetails);
+        if (mailStatus) {
+            log.info("Mail sent successfully for email: " + user.getEmail());
+        } else {
+            log.error("Mail not sent for email: " + user.getEmail());
         }
         return toUpdate;
     }
