@@ -6,3 +6,7 @@ class User:
 
     def __str__(self):
         return f"User(id={self.id}, email={self.email}, role={self.role})"
+
+    @staticmethod
+    def from_json(json: dict):
+        return User(json["id"], json["email"], json["role"])
