@@ -49,8 +49,8 @@ public class UserService {
         return customerRepository.findByEmail(email);
     }
 
-    public List<Customer> getAllCustomers() {
-        return userRepository.findByRole("ROLE_CUSTOMER").stream().map(e -> (Customer) e).collect(Collectors.toList());
+    public List<User> getAllCustomers() {
+        return userRepository.getAllUsers().stream().collect(Collectors.toList());
     }
 
     public void deleteUser(String id) {
