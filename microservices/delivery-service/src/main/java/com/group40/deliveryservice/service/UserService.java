@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -20,8 +21,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,9 @@ public class UserService {
     private final CustomerRepository customerRepository;
 
     private EmailService emailService;
+
+    @Value("${application.apiUrl}")
+    private String apiURL;
 
 
     public User getUserFromDB(String id){
@@ -50,7 +54,7 @@ public class UserService {
     }
 
     public List<User> getAllCustomers() {
-        return userRepository.getAllUsers().stream().collect(Collectors.toList());
+        return new ArrayList<>(userRepository.getAllUsers());
     }
 
     public void deleteUser(String id) {
@@ -87,7 +91,7 @@ public class UserService {
         }
     }
 
-    private static void createInAuth(User user, String password){
+    private void createInAuth(User user, String password){
         String response = executePost(bodyBuilder(user.getId(), user.getEmail(), password, user.getRole().toString()));
         //TODO: Change auth service for better response
         if (!response.contains("User registered successfully!")){
@@ -107,12 +111,12 @@ public class UserService {
     }
 
 
-    private static String executePost(String body) {
+    private String executePost(String body) {
         HttpURLConnection connection = null;
 
         try {
             //Create connection
-            URL url = new URL("http://localhost:8080/api/auth/register");
+            URL url = new URL(apiURL + "/api/auth/register");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
@@ -158,7 +162,8 @@ public class UserService {
 
     public User getUser(String token) throws IOException, JSONException {
 
-        URL url = new URL("http://localhost:8080/api/auth/current");
+        URL url = new URL(apiURL + "/api/auth/current");
+        System.out.println(apiURL + "/api/auth/current");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Authorization", token);

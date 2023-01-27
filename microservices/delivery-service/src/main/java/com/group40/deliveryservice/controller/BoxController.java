@@ -38,7 +38,7 @@ public class BoxController {
         User user = userService.getUser(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.createBox(boxRequest));
-        }else {
+        } else {
             return ResponseEntity.badRequest().body("Not authorized!");
         }
     }
@@ -49,11 +49,11 @@ public class BoxController {
         User user = userService.getUser(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.getAllBoxes());
-        }else if (user.getRole().equals(ERole.ROLE_DELIVERER)){
+        } else if (user.getRole().equals(ERole.ROLE_DELIVERER)) {
             return ResponseEntity.ok(boxService.getBoxesByDeliverer(user.getId()));
-        }else if (user.getRole().equals(ERole.ROLE_CUSTOMER)){
+        } else if (user.getRole().equals(ERole.ROLE_CUSTOMER)) {
             return ResponseEntity.ok(boxService.getBoxesByCustomer(user.getId()));
-        } else{
+        } else {
             return ResponseEntity.badRequest().body("Not authorized!");
         }
     }
@@ -94,7 +94,7 @@ public class BoxController {
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<?> replaceBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-                   @RequestBody Box newBox, @PathVariable String id) throws JSONException, IOException {
+                                 @RequestBody Box newBox, @PathVariable String id) throws JSONException, IOException {
         User user = userService.getUser(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.replaceBox(newBox, id));
