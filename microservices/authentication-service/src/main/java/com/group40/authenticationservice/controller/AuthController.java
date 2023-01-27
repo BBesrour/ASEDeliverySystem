@@ -95,9 +95,9 @@ public class AuthController {
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 		} else {
 				switch (strRole) {
-					case "dispatcher" -> role = roleRepository.findByName(ERole.ROLE_DISPATCHER)
+					case "ROLE_DISPATCHER" -> role = roleRepository.findByName(ERole.ROLE_DISPATCHER)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-					case "deliverer" -> role = roleRepository.findByName(ERole.ROLE_DELIVERER)
+					case "ROLE_DELIVERER" -> role = roleRepository.findByName(ERole.ROLE_DELIVERER)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					default -> role = roleRepository.findByName(ERole.ROLE_CUSTOMER)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
