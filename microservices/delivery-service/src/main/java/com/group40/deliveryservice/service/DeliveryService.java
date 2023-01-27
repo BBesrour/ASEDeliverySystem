@@ -8,6 +8,7 @@ import com.group40.deliveryservice.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -32,7 +33,7 @@ public class DeliveryService {
         Delivery savedDelivery = repository.save(newDelivery);
         User user = userService.getUserFromDB(newDelivery.getTargetCustomerID());
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),
-                "A new delivery was created!",
+                "A new delivery was created! Tracking code: " + savedDelivery.getId(),
                 "New delivery");
         boolean status = emailService.sendSimpleMail(emailDetails);
         if (status) {
@@ -64,7 +65,7 @@ public class DeliveryService {
         User user = userService.getUserFromDB(newDelivery.getTargetCustomerID());
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),
                 "Delivery updated!",
-                "Delivery updated.");
+                "Delivery updated. Tracking code: " + replacedDelivery.getId());
         boolean status = emailService.sendSimpleMail(emailDetails);
         if (status) {
             log.info("Mail sent successfully for email: " + user.getEmail());
