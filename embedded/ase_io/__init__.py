@@ -6,7 +6,7 @@ try:
 except ImportError as e:
     traceback.print_exc()
     print(
-        "Warning (it's fine): Could not import hardware. Using mock software for development instead." \
+        "Warning (it's fine): Could not import hardware. Using mock software for development instead. "
         "There should be a window popping up.",
         file=sys.stderr
     )

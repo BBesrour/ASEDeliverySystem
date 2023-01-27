@@ -10,4 +10,4 @@ class Config:
         self.street_address = config["street_address"]
         self.auth_server_address = config["auth_server_address"]
         self.delivery_server_address = config["delivery_server_address"]
-        self.delivery_server_access_token = config["delivery_server_access_token"]
+        self.admin_token = config["admin_token"]

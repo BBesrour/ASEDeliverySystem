@@ -4,5 +4,5 @@
   "street_address": "Testaddress",
   "auth_server_address": "http://localhost:5111",
   "delivery_server_address": "http://localhost:5112",
-  "delivery_server_access_token": "abcdefg"
+  "admin_token": "abcdefg"
 }

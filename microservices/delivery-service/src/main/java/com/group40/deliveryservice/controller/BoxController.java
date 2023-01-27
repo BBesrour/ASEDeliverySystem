@@ -2,15 +2,15 @@ package com.group40.deliveryservice.controller;
 
 import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
-import com.group40.deliveryservice.dto.PersonResponse;
 import com.group40.deliveryservice.model.Box;
+import com.group40.deliveryservice.model.DeliveryStatus;
 import com.group40.deliveryservice.model.ERole;
 import com.group40.deliveryservice.model.User;
 import com.group40.deliveryservice.service.BoxService;
+import com.group40.deliveryservice.service.DeliveryService;
 import com.group40.deliveryservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +27,8 @@ public class BoxController {
 
     private final BoxService boxService;
 
+    private final DeliveryService deliveryService;
     private final UserService userService;
-    @Value("${adminToken}")
-    private String adminToken;
-
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
@@ -47,7 +45,9 @@ public class BoxController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getAllBoxes(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
         User user = userService.getUser(token);
-        if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
+        if (userService.adminTokenIsValid(token)) {
+            return ResponseEntity.ok(boxService.getAllBoxes());
+        } else if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.getAllBoxes());
         } else if (user.getRole().equals(ERole.ROLE_DELIVERER)) {
             return ResponseEntity.ok(boxService.getBoxesByDeliverer(user.getId()));
@@ -64,7 +64,8 @@ public class BoxController {
     public ResponseEntity<?> getBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestParam String id) throws Exception {
         User user = userService.getUser(token);
         BoxResponse box = boxService.getBox(id);
-        if (user.getRole().equals(ERole.ROLE_DISPATCHER) ||
+        if (userService.adminTokenIsValid(token) ||
+                user.getRole().equals(ERole.ROLE_DISPATCHER) ||
                 (box.getAssignedTo().equals(user.getId()) && user.getRole().equals(ERole.ROLE_DELIVERER)) ||
                 (box.getAssignedCustomer().contains(user.getId()) && user.getRole().equals(ERole.ROLE_CUSTOMER))) {
             return ResponseEntity.ok(box);
@@ -78,8 +79,7 @@ public class BoxController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> updateBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                        @RequestParam String id, @RequestBody Map<String, String> obj) throws Exception {
-        String adminTokenCheck = "Bearer " + adminToken;
-        if (adminTokenCheck.equals(token)) {
+        if (userService.adminTokenIsValid(token)) {
             return ResponseEntity.ok(boxService.updateBox(id, obj));
         }
 
@@ -131,16 +131,37 @@ public class BoxController {
 
     }
 
-    @GetMapping("/current")
+    @PutMapping("/{id}/close")
     @ResponseStatus(HttpStatus.OK)
-    public PersonResponse getUserDetail(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
-        User user = userService.getUser(token);
-
-        return PersonResponse.builder()
-                .email(user.getEmail())
-                .role(user.getRole().name())
-                .id(user.getId())
-                .build();
+    public ResponseEntity<?> closeBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+                                      @PathVariable String id,
+                                      @RequestBody Map<String, String> obj) throws Exception {
+        if (!userService.adminTokenIsValid(token)) {
+            return ResponseEntity.badRequest().body("Not authorized!");
+        }
+        String userId = obj.get("userId");
+        if (userId == null) {
+            return ResponseEntity.badRequest().body("Missing userId!");
+        }
+        User user = userService.getUserFromDB(userId);
+        DeliveryStatus wantedStatus;
+        BoxResponse box = boxService.getBox(id);
+        if (user.getRole().equals(ERole.ROLE_CUSTOMER)) {
+            if (box.getAssignedCustomer().contains(user.getId())) {
+                wantedStatus = DeliveryStatus.PICKED_UP;
+            } else {
+                return ResponseEntity.badRequest().body("Not authorized (customer cannot close boxes that are not assigned to them)!");
+            }
+        } else if (user.getRole().equals(ERole.ROLE_DELIVERER)) {
+            if (box.getAssignedTo().equals(user.getId())) {
+                wantedStatus = DeliveryStatus.DELIVERED;
+            } else {
+                return ResponseEntity.badRequest().body("Not authorized (deliverer cannot close boxes that are not assigned to them)!");
+            }
+        } else {
+            return ResponseEntity.badRequest().body("Not authorized (dispatchers cannot close boxes)!");
+        }
+        return ResponseEntity.ok(deliveryService.changeDeliveriesInBoxStatus(id, wantedStatus));
     }
 
 }

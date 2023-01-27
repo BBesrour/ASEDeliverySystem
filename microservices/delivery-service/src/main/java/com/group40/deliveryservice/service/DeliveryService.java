@@ -2,10 +2,12 @@ package com.group40.deliveryservice.service;
 
 import com.group40.deliveryservice.exceptions.DeliveryNotFoundException;
 import com.group40.deliveryservice.model.Delivery;
+import com.group40.deliveryservice.model.DeliveryStatus;
 import com.group40.deliveryservice.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
@@ -56,5 +58,14 @@ public class DeliveryService {
 
     public List<Delivery> getInactiveDeliveries(String customer) {
         return repository.findInactiveDeliveries(customer);
+    }
+
+    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status){
+        List<Delivery> toUpdate = repository.findDeliveriesForBox(boxID);
+        for (Delivery delivery : toUpdate) {
+            delivery.setStatus(status);
+            repository.save(delivery);
+        }
+        return toUpdate;
     }
 }

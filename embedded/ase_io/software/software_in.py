@@ -42,6 +42,9 @@ class ASESoftwareIn:
     def add_darkness_listener(self, listener):
         self.darkness_listeners.append(listener)
 
+    def remove_darkness_listener(self, listener):
+        self.darkness_listeners.remove(listener)
+
     def _on_click(self, x, y):
         if self._dark_turtle.distance(x, y) < 10:
             self._toggle_dark()

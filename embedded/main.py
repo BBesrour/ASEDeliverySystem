@@ -9,23 +9,34 @@ delivery_service = DeliveryService(config)
 box_closed_checker = BoxClosedChecker(config, delivery_service)
 
 
-def directly_close_box(is_dark: bool):
-    if is_dark:
-        delivery_service.send_box_closed_event()
+def on_next_box_close(callback):
+    """Calls the callback once when the box is closed (is_dark False => True change)."""
+    last_darkness_state = ase_in.is_dark()
+
+    def on_darkness_changed(is_dark: bool):
+        nonlocal last_darkness_state
+        if not last_darkness_state and is_dark:
+            ase_in.remove_darkness_listener(on_darkness_changed)
+            callback()
+        last_darkness_state = is_dark
+
+    ase_in.add_darkness_listener(on_darkness_changed)
 
 
 def on_got_token(token: CardContent):
     print(f"Got token: {token}")
     if delivery_service.authenticate(token):
+        user = delivery_service.get_user(token.token)
         ase_out.light_green()
         box_closed_checker.allow_open_for(seconds=10)
-        ase_in.add_token_listener(directly_close_box)
+        on_next_box_close(lambda: delivery_service.send_box_closed_event(user.id))
     else:
         ase_out.light_red()
 
 
 if __name__ == '__main__':
     import time
+
     ase_out.light_green()
     time.sleep(1)
     ase_out.turn_off()

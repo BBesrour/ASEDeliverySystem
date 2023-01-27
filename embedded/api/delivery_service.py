@@ -14,21 +14,21 @@ class DeliveryService:
         return requests.get(
             self.config.delivery_server_address + url,
             params=params,
-            headers={"Authorization": f"Bearer {self.config.delivery_server_access_token}"}
+            headers={"Authorization": f"Bearer {self.config.admin_token}"}
         )
 
-    def _post(self, url: str, data=None) -> requests.Response:
+    def _post(self, url: str, json_data=None) -> requests.Response:
         return requests.post(
             self.config.delivery_server_address + url,
-            data=data,
-            headers={"Authorization": f"Bearer {self.config.delivery_server_access_token}"}
+            json=json_data,
+            headers={"Authorization": f"Bearer {self.config.admin_token}"}
         )
 
-    def _put(self, url: str, data=None) -> requests.Response:
+    def _put(self, url: str, json_data=None) -> requests.Response:
         return requests.put(
             self.config.delivery_server_address + url,
-            data=data,
-            headers={"Authorization": f"Bearer {self.config.delivery_server_access_token}"}
+            json=json_data,
+            headers={"Authorization": f"Bearer {self.config.admin_token}"}
         )
 
     def get_box(self, box_id: int) -> Box | None:
@@ -66,6 +66,9 @@ class DeliveryService:
             return False
         return user.id in (box.assigned_to, box.assigned_customer)
 
-    def send_box_closed_event(self):
-        """Send a box closed event to the delivery server."""
-        self._post(f"/box/{self.config.box_id}/closed")
+    def send_box_closed_event(self, user_id: str):
+        """Send a box closed event to the delivery server for a certain user."""
+        print("Sending box closed event")
+        resp = self._put(f"/boxes/{self.config.box_id}/close", {"userId": user_id})
+        if resp.status_code != 200:
+            raise Exception(f"Failed to send box closed event: {resp.text}")
