@@ -99,7 +99,7 @@ public class UserController {
                         .role(newUser.getRole())
                         .token(base64Encoder.encodeToString(randomBytes))
                         .build();
-                return ResponseEntity.ok(userService.createUser(deliverer, newUser.getPassword()));
+                return ResponseEntity.ok(userService.createDeliverer(deliverer, newUser.getPassword()));
             }
             case ROLE_DISPATCHER -> {
                 Dispatcher dispatcher = Dispatcher.builder()
@@ -114,7 +114,7 @@ public class UserController {
                         .role(newUser.getRole())
                         .token(base64Encoder.encodeToString(randomBytes))
                         .build();
-                return ResponseEntity.ok(userService.createUser(customer, newUser.getPassword()));
+                return ResponseEntity.ok(userService.createCustomer(customer, newUser.getPassword()));
             }
         }
     }

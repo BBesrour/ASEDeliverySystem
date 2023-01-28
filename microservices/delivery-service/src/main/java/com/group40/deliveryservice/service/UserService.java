@@ -74,6 +74,19 @@ public class UserService {
         return createdUser;
     }
 
+    public Deliverer createDeliverer(Deliverer deliverer, String password){
+        Deliverer createdUser = delivererRepository.insert(deliverer);
+        createInAuth(createdUser, password);
+        // sendMail(deliverer);
+        return createdUser;
+    }
+
+    public Customer createCustomer(Customer customer, String password){
+        Customer createdUser = customerRepository.insert(customer);
+        createInAuth(createdUser, password);
+        // sendMail(deliverer);
+        return createdUser;
+    }
 
     private void sendMail(User user){
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),
