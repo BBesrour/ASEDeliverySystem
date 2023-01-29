@@ -5,7 +5,6 @@ import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.model.Box;
 import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.repository.BoxRepository;
-import com.group40.deliveryservice.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

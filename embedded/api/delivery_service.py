@@ -60,11 +60,12 @@ class DeliveryService:
         if user is None:
             print(f"User with token {card_token} not found")
             return False
-        box = self.get_box(self.config.box_id)
-        if box is None:
-            print(f"Box with id {self.config.box_id} not found")
+        response = self._get(f"/boxes/{self.config.box_id}/authenticate", {"userId": user.id})
+        if response.status_code == 200:
+            print(f"User {user.id} authenticated")
+            return True
+        else:
             return False
-        return user.id in (box.assigned_to, box.assigned_customer)
 
     def send_box_closed_event(self, user_id: str):
         """Send a box closed event to the delivery server for a certain user."""

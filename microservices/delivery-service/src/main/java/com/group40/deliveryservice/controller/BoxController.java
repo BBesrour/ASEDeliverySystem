@@ -12,6 +12,7 @@ import com.group40.deliveryservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import com.group40.deliveryservice.model.Delivery;
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.List;
 
 
@@ -139,6 +139,22 @@ public class BoxController {
         }
     }
 
+    @PostMapping("/{id}/authenticate")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<?> authenticateBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
+                                             @PathVariable String boxID, @RequestBody Map<String, String> obj) throws Exception {
+        if (!userService.adminTokenIsValid(token)) {
+            return ResponseEntity.badRequest().body("Not authorized!");
+        }
+        String userId = obj.get("userId");
+        List<Delivery> deliveries = deliveryService.getAllDeliveries().stream().filter(delivery -> delivery.getDelivererID().equals(userId) || delivery.getTargetCustomerID().equals(userId)).toList();
+        if (deliveries.stream().filter(del -> del.getTargetBoxID().equals(boxID)).toList().isEmpty()) {
+            return ResponseEntity.badRequest().body("Not authorized!");
+        }
+
+        return ResponseEntity.ok("Authenticated!");
+    }
+
     @PutMapping("/{id}/close")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> closeBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
@@ -167,5 +183,4 @@ public class BoxController {
         }
         return ResponseEntity.ok(deliveryService.changeDeliveriesInBoxStatus(id, wantedStatus));
     }
-
 }

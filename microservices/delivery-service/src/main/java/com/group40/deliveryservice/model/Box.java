@@ -3,7 +3,6 @@ package com.group40.deliveryservice.model;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import java.util.ArrayList;
 
 @Document(value = "box")
 @AllArgsConstructor

@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+
 import com.group40.deliveryservice.model.Box;
 
 @Service
@@ -38,7 +40,7 @@ public class DeliveryService {
     public Delivery saveDelivery(Delivery newDelivery) {
 
         Box box = boxRepository.findById(newDelivery.getTargetBoxID()).orElseThrow(() -> new DeliveryNotFoundException("Box not found"));
-        if (box.getAssignedCustomer() == "" || box.getAssignedCustomer() === newDelivery.getTargetCustomerID()){
+        if (box.getAssignedCustomer() == "" || box.getAssignedCustomer() == newDelivery.getTargetCustomerID()){
             box.setAssignedCustomer(newDelivery.getTargetCustomerID());
             boxRepository.save(box);
             return repository.save(newDelivery);
@@ -56,7 +58,7 @@ public class DeliveryService {
 
         //create or update delivery with id, in that target box all deliveries are assigned to same customer id
         Box box = boxRepository.findById(newDelivery.getTargetBoxID()).orElseThrow(() -> new DeliveryNotFoundException("Box not found"));
-        if (box.getAssignedCustomer() == "" || box.getAssignedCustomer() === newDelivery.getTargetCustomerID()){
+        if (Objects.equals(box.getAssignedCustomer(), "") || Objects.equals(box.getAssignedCustomer(), newDelivery.getTargetCustomerID())){
             box.setAssignedCustomer(newDelivery.getTargetCustomerID());
             boxRepository.save(box);
 
