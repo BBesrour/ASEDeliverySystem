@@ -58,6 +58,7 @@ class ASEHardwareIn:
         self._check_darkness_change()
         while True:
             _, text = self.reader.read()
+            print("Got text:", text)
             try:
                 card_content = card_content_from_json(text)
             except json.JSONDecodeError as e:
