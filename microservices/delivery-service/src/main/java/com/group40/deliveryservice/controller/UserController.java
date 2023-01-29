@@ -90,7 +90,7 @@ public class UserController {
         if(newUser.getPassword() == null || newUser.getPassword().isBlank() || newUser.getPassword().trim().isBlank()){
             throw new RuntimeException("Creating a new user requires a password.");
         }
-        byte[] randomBytes = new byte[16];
+        byte[] randomBytes = new byte[12];
         secureRandom.nextBytes(randomBytes);
         switch (newUser.getRole()) {
             case ROLE_DELIVERER -> {
