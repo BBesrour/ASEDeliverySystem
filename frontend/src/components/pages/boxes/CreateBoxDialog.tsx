@@ -20,11 +20,10 @@ export default function CreateBoxDialog({
 }) {
   const [name, setName] = React.useState("");
   const [address, setAddress] = React.useState("");
-  const [status, setStatus] = React.useState("");
-  const [numberOfItems, setNumberOfItems] = React.useState("");
+  const [assignedTo, setAssignedTo] = React.useState("");
 
   async function handleCreateBox() {
-    const newBox = new Box(null, name, address, status, numberOfItems, [], "");
+    const newBox = new Box(null, name, address, 0, assignedTo, "");
     onBoxCreated(await createBox(newBox));
     handleClose();
   }
@@ -55,22 +54,11 @@ export default function CreateBoxDialog({
           variant="standard"
         />
         <TextField
-          autoFocus
           margin="dense"
-          value={status}
-          onChange={(event) => setStatus(event.target.value)}
-          label="Status"
+          value={assignedTo}
+          onChange={(event) => setAssignedTo(event.target.value)}
+          label="Assigned To"
           type="text"
-          fullWidth
-          variant="standard"
-        />
-        <TextField
-          autoFocus
-          margin="dense"
-          value={numberOfItems}
-          onChange={(event) => setNumberOfItems(event.target.value)}
-          label="Number of items"
-          type="number"
           fullWidth
           variant="standard"
         />

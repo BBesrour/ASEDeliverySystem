@@ -1,6 +1,5 @@
 package com.group40.deliveryservice.controller;
 
-import com.group40.deliveryservice.dto.PersonResponse;
 import com.group40.deliveryservice.dto.UserRequest;
 import com.group40.deliveryservice.model.*;
 import com.group40.deliveryservice.repository.UserRepository;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.Base64;
-import java.util.List;
 
 
 @RestController
@@ -34,7 +32,7 @@ public class UserController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<?> getAllCustomers(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(userService.getAllCustomers());
         }else {
@@ -44,7 +42,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String id) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             userService.deleteUser(id);
             return ResponseEntity.ok().build();
@@ -55,7 +53,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     ResponseEntity<?> updateUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody UserRequest newUser, @PathVariable String id) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (!user.getRole().equals(ERole.ROLE_DISPATCHER) && !user.getId().equals(id)) {
             return ResponseEntity.badRequest().body("Not authorized!");
         }
@@ -101,7 +99,7 @@ public class UserController {
                         .role(newUser.getRole())
                         .token(base64Encoder.encodeToString(randomBytes))
                         .build();
-                return ResponseEntity.ok(userService.createUser(deliverer, newUser.getPassword()));
+                return ResponseEntity.ok(userService.createDeliverer(deliverer, newUser.getPassword()));
             }
             case ROLE_DISPATCHER -> {
                 Dispatcher dispatcher = Dispatcher.builder()
@@ -116,20 +114,22 @@ public class UserController {
                         .role(newUser.getRole())
                         .token(base64Encoder.encodeToString(randomBytes))
                         .build();
-                return ResponseEntity.ok(userService.createUser(customer, newUser.getPassword()));
+                return ResponseEntity.ok(userService.createCustomer(customer, newUser.getPassword()));
             }
         }
     }
 
     @GetMapping("/user-to-token")
     public ResponseEntity<?> getTokenFromUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         switch (user.getRole()){
             case ROLE_DELIVERER -> {
-                return ResponseEntity.ok(((Deliverer) user).getToken());
+                Deliverer deliverer =  userService.getDelivererFromDB(user.getEmail());
+                return ResponseEntity.ok(deliverer.getToken());
             }
             case ROLE_CUSTOMER -> {
-                return ResponseEntity.ok(((Customer) user).getToken());
+                Customer customer =  userService.getCustomerFromDB(user.getEmail());
+                return ResponseEntity.ok(customer.getToken());
             }
             default -> {
                 return ResponseEntity.badRequest()

@@ -1,7 +1,7 @@
 import Box from "../../../model/Box";
 import {getBoxes} from "../../../api/delivery/box";
 import React, {useEffect, useState} from "react";
-import {Autocomplete} from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 
 
@@ -34,8 +34,15 @@ export default function BoxSelection({label, onSelect}: { label: string, onSelec
 
     return <Autocomplete
         disablePortal
-        options={boxOptions}
         sx={{width: 300}}
+        options={boxOptions}
+        renderOption={(props, option) => {
+            return (
+                <li {...props} key={option.boxID}>
+                    {option.label}
+                </li>
+            );
+        }}
         renderInput={(params) => <TextField {...params} label={label} />}
         onChange={(event, newValue) => {
             onSelect(getBoxByID(newValue?.boxID || ""));

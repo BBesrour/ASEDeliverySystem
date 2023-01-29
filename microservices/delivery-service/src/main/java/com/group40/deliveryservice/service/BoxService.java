@@ -4,6 +4,7 @@ import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.model.Box;
 import com.group40.deliveryservice.repository.BoxRepository;
+import com.group40.deliveryservice.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,6 @@ public class BoxService {
 
     private final BoxRepository boxRepository;
 
-    @Autowired
-    private RestTemplate restTemplate;
-
     private List<Box> getBoxes(){
         return boxRepository.findAll();
     }
@@ -35,10 +33,9 @@ public class BoxService {
                 .id(box.getId())
                 .address(box.getAddress())
                 .name(box.getName())
-                .key(box.getKey())
                 .assignedBy(box.getAssignedBy())
                 .assignedTo(box.getAssignedTo())
-                .assignedCustomers(box.getAssignedCustomers())
+                .assignedCustomer(box.getAssignedCustomer())
                 .build();
     }
 
@@ -47,10 +44,9 @@ public class BoxService {
                 .id(UUID.randomUUID().toString())
                 .address(boxRequest.getAddress())
                 .name(boxRequest.getName())
-                .key(boxRequest.getKey())
                 .assignedBy(boxRequest.getAssigned_by())
                 .assignedTo(boxRequest.getAssigned_to())
-                .assignedCustomers(boxRequest.getAssigned_customers())
+                .assignedCustomer(boxRequest.getAssignedCustomer())
                 .build();
 
         boxRepository.insert(box);
@@ -74,11 +70,10 @@ public class BoxService {
     private Box updateField(String key, String value, Box box) {
         switch (key) {
             case "name" -> box.setName(value);
-            case "key" -> box.setKey(value);
             case "assigned_to" -> box.setAssignedTo(value);
             case "assigned_by" -> box.setAssignedBy(value);
             case "address" -> box.setAddress(value);
-            case "assigned_customers" -> box.getAssignedCustomers().add(value);
+            case "assigned_customers" -> box.setAssignedCustomer(value);
         }
         return box;
     }
@@ -101,11 +96,10 @@ public class BoxService {
         return boxRepository.findById(id)
                 .map(box -> {
                     box.setName(newBox.getName());
-                    box.setKey(newBox.getKey());
                     box.setAssignedBy(newBox.getAssignedBy());
                     box.setAssignedTo(newBox.getAssignedTo());
                     box.setAddress(newBox.getAddress());
-                    box.setAssignedCustomers(newBox.getAssignedCustomers());
+                    box.setAssignedCustomer(newBox.getAssignedCustomer());
                     return boxRepository.save(box);
                 })
                 .orElseGet(() -> {
@@ -123,9 +117,22 @@ public class BoxService {
 
     public List<BoxResponse> getBoxesByCustomer(String id) {
         return getBoxes().stream()
-                .filter(box -> box.getAssignedCustomers().contains(id))
+                .filter(box -> box.getAssignedCustomer().contains(id))
                 .map(this::mapToBoxResponse)
                 .toList();
+    }
+
+    public void authRFID(BoxResponse box) {
+        Box newBox = Box.builder()
+                .id(box.getId())
+                .address(box.getAddress())
+                .name(box.getName())
+                .assignedBy(box.getAssignedBy())
+                .assignedTo(box.getAssignedTo())
+                .assignedCustomer("")
+                .build();
+
+        replaceBox(newBox, box.getId());
     }
 
     

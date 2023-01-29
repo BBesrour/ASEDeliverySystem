@@ -1,27 +1,26 @@
-import asyncio
-
 try:
     from ase_io.hardware import ase_in, ase_out, ase_mainloop
 except ImportError:
     from ase_io.software import ase_in, ase_out, ase_mainloop
 from threading import Timer
+import time
 
 
-async def on_off():
-    while True:
-        print("Green!")
+led = "green"
+
+def change_led():
+    global led
+    ase_out.turn_off()
+    time.sleep(1)
+    if led == "green":
         ase_out.light_green()
-        await asyncio.sleep(1)
-        ase_out.turn_off()
-        print("Red!")
+        led = "red"
+    else:
         ase_out.light_red()
-        await asyncio.sleep(1)
-        ase_out.turn_off()
+        led = "green"
+    Timer(1, change_led).start()
+
 
 if __name__ == '__main__':
-    try:
-        thread = Timer(1, lambda: asyncio.run(on_off()))
-        thread.start()
-        ase_mainloop()
-    except KeyboardInterrupt:
-        ase_out.turn_off()
+    change_led()
+    ase_mainloop()

@@ -40,6 +40,9 @@ class ASEHardwareIn:
     def add_darkness_listener(self, listener):
         self.darkness_listeners.append(listener)
 
+    def remove_darkness_listener(self, listener):
+        self.darkness_listeners.remove(listener)
+
     def is_dark(self) -> bool:
         return GPIO.input(LIGHT_SENSOR_PIN) == GPIO.HIGH
 

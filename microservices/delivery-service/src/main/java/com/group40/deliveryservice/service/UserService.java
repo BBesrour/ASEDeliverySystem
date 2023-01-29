@@ -2,15 +2,15 @@ package com.group40.deliveryservice.service;
 
 
 import com.group40.deliveryservice.exceptions.UserNotFoundException;
-import com.group40.deliveryservice.model.Customer;
-import com.group40.deliveryservice.model.ERole;
-import com.group40.deliveryservice.model.EmailDetails;
-import com.group40.deliveryservice.model.User;
+import com.group40.deliveryservice.model.*;
+import com.group40.deliveryservice.repository.CustomerRepository;
+import com.group40.deliveryservice.repository.DelivererRepository;
 import com.group40.deliveryservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -21,8 +21,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,15 +31,40 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final DelivererRepository delivererRepository;
+
+    private final CustomerRepository customerRepository;
+
     private EmailService emailService;
+
+    @Value("${application.apiUrl}")
+    private String apiURL;
+
+    @Value("${adminToken}")
+    private String adminToken;
+
+    public boolean adminTokenIsValid(String token) {
+        return token.equals("Bearer " + adminToken);
+    }
 
 
     public User getUserFromDB(String id){
+        if (id.equals("admin")) {
+            return new AdminUser();
+        }
         return userRepository.findById(id).orElseThrow();
     }
 
-    public List<Customer> getAllCustomers() {
-        return userRepository.findByRole("ROLE_CUSTOMER").stream().map(e -> (Customer) e).collect(Collectors.toList());
+    public Deliverer getDelivererFromDB(String email){
+        return delivererRepository.findByEmail(email);
+    }
+
+    public Customer getCustomerFromDB(String email){
+        return customerRepository.findByEmail(email);
+    }
+
+    public List<User> getAllCustomers() {
+        return new ArrayList<>(userRepository.getAllUsers());
     }
 
     public void deleteUser(String id) {
@@ -54,14 +79,26 @@ public class UserService {
                 }).orElseThrow(() -> new UserNotFoundException(id));
     }
 
-
-
     public User createUser(User user, String password) {
-        createInAuth(user, password);
+        User createdUser = userRepository.insert(user);
+        createInAuth(createdUser, password);
         // sendMail(deliverer);
-        return userRepository.insert(user);
+        return createdUser;
     }
 
+    public Deliverer createDeliverer(Deliverer deliverer, String password){
+        Deliverer createdUser = delivererRepository.insert(deliverer);
+        createInAuth(createdUser, password);
+        // sendMail(deliverer);
+        return createdUser;
+    }
+
+    public Customer createCustomer(Customer customer, String password){
+        Customer createdUser = customerRepository.insert(customer);
+        createInAuth(createdUser, password);
+        // sendMail(deliverer);
+        return createdUser;
+    }
 
     private void sendMail(User user){
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),
@@ -75,32 +112,32 @@ public class UserService {
         }
     }
 
-    private static void createInAuth(User user, String password){
-        String response = executePost(bodyBuilder(user.getEmail(), password, user.getRole().toString()));
+    private void createInAuth(User user, String password){
+        String response = executePost(bodyBuilder(user.getId(), user.getEmail(), password, user.getRole().toString()));
         //TODO: Change auth service for better response
         if (!response.contains("User registered successfully!")){
             throw new RuntimeException("Couldn't create user in auth service");
         }
     }
 
-    private static String bodyBuilder(String email, String password, String role) {
+    private static String bodyBuilder(String id, String email, String password, String role) {
         return """
                 {
+                    "id": "%s",
                     "email": "%s",
                     "password": "%s",
                     "role": "%s"
-                            
                 }
-                """.formatted(email, password, role);
+                """.formatted(id, email, password, role);
     }
 
 
-    private static String executePost(String body) {
+    private String executePost(String body) {
         HttpURLConnection connection = null;
 
         try {
             //Create connection
-            URL url = new URL("http://api-gateway:8080/api/auth/register");
+            URL url = new URL(apiURL + "/api/auth/register");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
@@ -145,8 +182,12 @@ public class UserService {
     }
 
     public User getUser(String token) throws IOException, JSONException {
+        if (adminTokenIsValid(token)) {
+            return new AdminUser();
+        }
 
-        URL url = new URL("http://api-gateway:8080/api/auth/current");
+        URL url = new URL(apiURL + "/api/auth/current");
+        System.out.println(apiURL + "/api/auth/current");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Authorization", token);
@@ -178,6 +219,9 @@ public class UserService {
     }
 
     public User getUserFromToken(String token){
+        if (adminTokenIsValid(token)) {
+            return new AdminUser();
+        }
         return userRepository.findByToken(token);
     }
 

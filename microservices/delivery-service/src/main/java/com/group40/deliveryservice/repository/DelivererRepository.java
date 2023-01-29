@@ -1,5 +1,8 @@
 package com.group40.deliveryservice.repository;
 
+
+import com.group40.deliveryservice.model.Customer;
+import com.group40.deliveryservice.model.Deliverer;
 import com.group40.deliveryservice.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -8,17 +11,14 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends MongoRepository<User, String> {
+public interface DelivererRepository extends MongoRepository<Deliverer, String> {
 
-    @Query("{ 'role' : ?0 }")
-    List<User> findByRole(String role);
 
     Boolean existsByEmail(String email);
 
-    @Query("{}")
-    List<User> getAllUsers();
+    Deliverer findByEmail(String email);
 
-    User findByEmail(String email);
     @Query("{'token':  ?0 }")
-    User findByToken(String token);
+    Deliverer findByToken(String token);
 }
+
