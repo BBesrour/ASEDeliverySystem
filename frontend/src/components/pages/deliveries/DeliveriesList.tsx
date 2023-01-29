@@ -10,13 +10,15 @@ import DeliveryStatusPage from "./DeliveryStatusPage";
 import {deleteDelivery} from "../../../api/delivery/deliveries";
 import TextField from "@mui/material/TextField";
 import UpdateDeliveryDialog from "./UpdateDeliveryDialog";
+import {getBoxes} from "../../../api/delivery/box";
+import Box from "../../../model/Box";
 
 
 export default function DeliveriesList({deliveries, propertiesToShow, onDeliveryUpdated, onDeliveryDeleted}: {
     deliveries: Delivery[],
     propertiesToShow: string[],
     onDeliveryUpdated: (delivery: Delivery) => void,
-    onDeliveryDeleted: (id : string | null) => void
+    onDeliveryDeleted: (id: string | null) => void
 }) {
     const [showQRDialogFor, setShowQRDialogFor] = useState<string | null>(null);
     const [showStatusDialogFor, setShowStatusDialogFor] = useState<string | null>(null);
@@ -45,6 +47,19 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
         setShownDeliveries(getDeliveriesByTrackingCode(deliveries, trackingCodeInput));
     }, [deliveries, trackingCodeInput]);
 
+
+    let names = new Map<string | null, string | null>();
+    const [boxes, setBoxes] = useState<Box[]>([]);
+    useEffect(() => {
+        getBoxes().then((boxes) => {
+            setBoxes(boxes);
+        });
+    }, []);
+    shownDeliveries.forEach((delivery) => {
+        // @ts-ignore
+        names.set(delivery.id, boxes.filter((box) => box.id === delivery.targetBoxID).pop().name)
+    })
+
     return <>
         <TextField
             id="tracking-code"
@@ -52,8 +67,8 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
             variant="outlined"
             onChange={(event) => setTrackingCodeInput(event.target.value)}
         />
-        <br />
-        <br />
+        <br/>
+        <br/>
         <Grid container spacing={4}>
             {shownDeliveries.map(delivery => (
                 <Grid item key={delivery.id} xs={12} sm={6} md={4}>
@@ -68,6 +83,10 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
                             <Typography>
                                 ID: {delivery.id}
                             </Typography>
+                            <Typography>
+                                targetBoxName: {names.get(delivery.id)}
+                            </Typography>
+
                             {propertiesToShow.map(property => (
                                 <Typography key={property}>
                                     {property}: {getDeliveryProperty(delivery, property)}
@@ -82,8 +101,9 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
                 </Grid>
             ))}
         </Grid>
-        <QRCodeDialog open={showQRDialogFor !== null} handleClose={() => setShowQRDialogFor(null)} deliveryId={showQRDialogFor ?? ""} />
-        <DeliveryStatusPage id={showStatusDialogFor} handleClose={() => setShowStatusDialogFor(null)} />
+        <QRCodeDialog open={showQRDialogFor !== null} handleClose={() => setShowQRDialogFor(null)}
+                      deliveryId={showQRDialogFor ?? ""}/>
+        <DeliveryStatusPage id={showStatusDialogFor} handleClose={() => setShowStatusDialogFor(null)}/>
         <UpdateDeliveryDialog
             open={!!showUpdateDialogFor}
             handleClose={() => setShowUpdateDialogFor(null)}

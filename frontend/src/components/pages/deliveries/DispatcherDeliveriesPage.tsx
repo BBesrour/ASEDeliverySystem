@@ -14,7 +14,7 @@ export default function DispatcherDeliveriesPage() {
         getDeliveries().then(setDeliveries);
     }, []);
     const [showCreateDialog, setShowCreateDialog] = useState(false);
-    const dispatcherDeliveriesProperties = ["targetCustomerID", "targetBoxID", "delivererID", "isActive"];
+    const dispatcherDeliveriesProperties = ["targetBoxID", "targetCustomerID", "delivererID", "isActive"];
     const actionButtons = <>
         <Button variant="contained" onClick={() => setShowCreateDialog(true)}>Create delivery</Button>
     </>;
