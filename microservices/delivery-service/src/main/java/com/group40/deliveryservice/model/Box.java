@@ -17,6 +17,6 @@ public class Box {
     private String assignedTo;
     private String assignedBy;
     private String address;
-    private ArrayList<String> assignedCustomers;
+    private String assignedCustomer;
 }
 

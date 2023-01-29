@@ -1,11 +1,12 @@
 package com.group40.authenticationservice.dto.request;
 
-import java.util.Set;
 
 import javax.validation.constraints.*;
  
 public class SignupRequest {
 
+    @NotBlank
+    private String id;
     @NotBlank
     @Size(max = 50)
     @Email
@@ -40,4 +41,13 @@ public class SignupRequest {
     public void setRole(String role) {
       this.role = role;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
 }

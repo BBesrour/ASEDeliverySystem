@@ -99,7 +99,7 @@ public class UserController {
                         .role(newUser.getRole())
                         .token(base64Encoder.encodeToString(randomBytes))
                         .build();
-                return ResponseEntity.ok(userService.createUser(deliverer, newUser.getPassword()));
+                return ResponseEntity.ok(userService.createDeliverer(deliverer, newUser.getPassword()));
             }
             case ROLE_DISPATCHER -> {
                 Dispatcher dispatcher = Dispatcher.builder()
@@ -114,7 +114,7 @@ public class UserController {
                         .role(newUser.getRole())
                         .token(base64Encoder.encodeToString(randomBytes))
                         .build();
-                return ResponseEntity.ok(userService.createUser(customer, newUser.getPassword()));
+                return ResponseEntity.ok(userService.createCustomer(customer, newUser.getPassword()));
             }
         }
     }
@@ -124,10 +124,12 @@ public class UserController {
         User user = userService.getUserFromAuth(token);
         switch (user.getRole()){
             case ROLE_DELIVERER -> {
-                return ResponseEntity.ok(((Deliverer) user).getToken());
+                Deliverer deliverer =  userService.getDelivererFromDB(user.getEmail());
+                return ResponseEntity.ok(deliverer.getToken());
             }
             case ROLE_CUSTOMER -> {
-                return ResponseEntity.ok(((Customer) user).getToken());
+                Customer customer =  userService.getCustomerFromDB(user.getEmail());
+                return ResponseEntity.ok(customer.getToken());
             }
             default -> {
                 return ResponseEntity.badRequest()

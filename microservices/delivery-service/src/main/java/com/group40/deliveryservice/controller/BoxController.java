@@ -67,7 +67,7 @@ public class BoxController {
         BoxResponse box = boxService.getBox(id);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER) ||
                 (box.getAssignedTo().equals(user.getId()) && user.getRole().equals(ERole.ROLE_DELIVERER)) ||
-                (box.getAssignedCustomers().contains(user.getId()) && user.getRole().equals(ERole.ROLE_CUSTOMER))) {
+                (box.getAssignedCustomer().contains(user.getId()) && user.getRole().equals(ERole.ROLE_CUSTOMER))) {
             return ResponseEntity.ok(box);
         } else {
             return ResponseEntity.badRequest().body("Not authorized!");
@@ -123,7 +123,9 @@ public class BoxController {
         User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             boxService.deleteBox(id);
-            return ResponseEntity.ok("Box deleted!");
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type", "application/json");
+            return new ResponseEntity<>(headers, HttpStatus.OK);
         } else {
             return ResponseEntity.badRequest().body("Not authorized!");
         }
