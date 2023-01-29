@@ -28,6 +28,7 @@ public class BoxController {
     private final BoxService boxService;
 
     private final UserService userService;
+
     @Value("${adminToken}")
     private String adminToken;
 
@@ -35,7 +36,7 @@ public class BoxController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> createBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody BoxRequest boxRequest) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.createBox(boxRequest));
         }else {
@@ -46,7 +47,7 @@ public class BoxController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getAllBoxes(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.getAllBoxes());
         }else if (user.getRole().equals(ERole.ROLE_DELIVERER)){
@@ -62,7 +63,7 @@ public class BoxController {
     @GetMapping("/box")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestParam String id) throws Exception {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         BoxResponse box = boxService.getBox(id);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER) ||
                 (box.getAssignedTo().equals(user.getId()) && user.getRole().equals(ERole.ROLE_DELIVERER)) ||
@@ -83,7 +84,7 @@ public class BoxController {
             return ResponseEntity.ok(boxService.updateBox(id, obj));
         }
 
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.updateBox(id, obj));
         } else {
@@ -95,7 +96,7 @@ public class BoxController {
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<?> replaceBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                    @RequestBody Box newBox, @PathVariable String id) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.replaceBox(newBox, id));
         } else {
@@ -107,7 +108,7 @@ public class BoxController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getBoxesByDeliverer(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                                  @PathVariable String id) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DELIVERER)) {
             return ResponseEntity.ok(boxService.getBoxesByDeliverer(id));
         } else {
@@ -119,7 +120,7 @@ public class BoxController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> deleteBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                        @PathVariable String id) throws Exception {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             boxService.deleteBox(id);
             HttpHeaders headers = new HttpHeaders();
@@ -134,7 +135,7 @@ public class BoxController {
     @GetMapping("/current")
     @ResponseStatus(HttpStatus.OK)
     public PersonResponse getUserDetail(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
 
         return PersonResponse.builder()
                 .email(user.getEmail())

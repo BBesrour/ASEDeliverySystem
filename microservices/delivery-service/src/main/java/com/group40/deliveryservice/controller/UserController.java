@@ -32,7 +32,7 @@ public class UserController {
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<?> getAllCustomers(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(userService.getAllCustomers());
         }else {
@@ -42,7 +42,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     ResponseEntity<?> deleteUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String id) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             userService.deleteUser(id);
             return ResponseEntity.ok().build();
@@ -53,7 +53,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     ResponseEntity<?> updateUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody UserRequest newUser, @PathVariable String id) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         if (!user.getRole().equals(ERole.ROLE_DISPATCHER) && !user.getId().equals(id)) {
             return ResponseEntity.badRequest().body("Not authorized!");
         }
@@ -121,7 +121,7 @@ public class UserController {
 
     @GetMapping("/user-to-token")
     public ResponseEntity<?> getTokenFromUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
-        User user = userService.getUser(token);
+        User user = userService.getUserFromAuth(token);
         switch (user.getRole()){
             case ROLE_DELIVERER -> {
                 Deliverer deliverer =  userService.getDelivererFromDB(user.getEmail());
