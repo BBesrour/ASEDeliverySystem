@@ -13,9 +13,7 @@ from ase_io.card_content import CardContent, InvalidCardContent
 
 def _card_content_input() -> CardContent:
     """Return a CardContent object with the user input."""
-    card_id = textinput("Card ID", "Enter the card ID:")
-    if card_id is None:
-        return InvalidCardContent()
+    card_id = "abcdef123"
     card_token = textinput("Card Token", "Enter the card token:")
     if card_token is None:
         return InvalidCardContent()
@@ -26,7 +24,7 @@ class ASESoftwareIn:
     def __init__(self):
         self.token_listeners = []
         self.darkness_listeners = []
-        self._dark = False
+        self._dark = True
         self._dark_turtle = Turtle()
         self._set_up_dark_turtle()
         onscreenclick(self._on_click)
@@ -36,12 +34,16 @@ class ASESoftwareIn:
         self._dark_turtle.shape("square")
         self._dark_turtle.penup()
         self._dark_turtle.color("white")
+        self._update_dark_turtle()
 
     def add_token_listener(self, listener):
         self.token_listeners.append(listener)
 
     def add_darkness_listener(self, listener):
         self.darkness_listeners.append(listener)
+
+    def remove_darkness_listener(self, listener):
+        self.darkness_listeners.remove(listener)
 
     def _on_click(self, x, y):
         if self._dark_turtle.distance(x, y) < 10:
@@ -51,12 +53,15 @@ class ASESoftwareIn:
             for listener in self.token_listeners:
                 listener(card_content)
 
-    def _toggle_dark(self):
-        self._dark = not self._dark
+    def _update_dark_turtle(self):
         if self._dark:
             self._dark_turtle.fillcolor("black")
         else:
             self._dark_turtle.fillcolor("white")
+
+    def _toggle_dark(self):
+        self._dark = not self._dark
+        self._update_dark_turtle()
         for listener in self.darkness_listeners:
             listener(self._dark)
 
