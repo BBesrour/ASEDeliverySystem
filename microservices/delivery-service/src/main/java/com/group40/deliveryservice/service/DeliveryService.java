@@ -27,7 +27,15 @@ public class DeliveryService {
     }
 
     public Delivery saveDelivery(Delivery newDelivery) {
-        return repository.save(newDelivery);
+        Box box = boxRepository.findById(newDelivery.getTargetBoxID()).orElseThrow(() -> new DeliveryNotFoundException("Box not found"));
+        if (box.getAssignedCustomer() == "" || box.getAssignedCustomer() === newDelivery.getTargetCustomerID()){
+            box.setAssignedCustomer(newDelivery.getTargetCustomerID());
+            boxRepository.save(box);
+            return repository.save(newDelivery);
+        }
+        else{
+            throw new DeliveryNotFoundException("Box is already assigned to another customer");
+        }
     }
 
     public Delivery getSingleDelivery(String id) {

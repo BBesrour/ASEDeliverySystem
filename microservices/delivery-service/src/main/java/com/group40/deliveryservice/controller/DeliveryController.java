@@ -42,12 +42,16 @@ public class DeliveryController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    ResponseEntity<?> newDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody Delivery newDelivery) throws JSONException, IOException {
-        User user = userService.getUser(token);
-        if (user.getRole().equals(ERole.ROLE_DISPATCHER) || newDelivery.getTargetCustomerID().equals(user.getId())) {
-            return ResponseEntity.ok(deliveryService.saveDelivery(newDelivery));
-        }else {
-            return ResponseEntity.badRequest().body("Not authorized!");
+    ResponseEntity<?> newDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody Delivery newDelivery) throws JSONException, IOException, DeliveryNotFoundException {
+        try{
+            User user = userService.getUser(token);
+            if (user.getRole().equals(ERole.ROLE_DISPATCHER) || newDelivery.getTargetCustomerID().equals(user.getId())) {
+                return ResponseEntity.ok(deliveryService.saveDelivery(newDelivery));
+            }else {
+                return ResponseEntity.badRequest().body("Not authorized!");
+            }
+        } catch( DeliveryNotFoundException e ){
+            return ResponseEntity.status(409).body("Box does not exist! or assigned to another Customer");
         }
     }
 
@@ -80,7 +84,7 @@ public class DeliveryController {
                 return ResponseEntity.badRequest().body("Not authorized!");
             } 
         } catch (DeliveryNotFoundException e) {
-            return ResponseEntity.status(409).body("Delivery not found!");
+            return ResponseEntity.status(409).body("Box does not exist! or assigned to another Customer");
         }
     }
 
