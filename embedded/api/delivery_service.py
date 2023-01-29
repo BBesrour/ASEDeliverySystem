@@ -1,3 +1,4 @@
+from typing import Union
 import requests
 
 from api.box import Box
@@ -31,7 +32,7 @@ class DeliveryService:
             headers={"Authorization": f"Bearer {self.config.admin_token}"}
         )
 
-    def get_box(self, box_id: int) -> Box | None:
+    def get_box(self, box_id: int) -> Union[Box, None]:
         """Return the box with the given id."""
         box_response = self._get(f"/boxes/box", {"id": box_id})
         if box_response.status_code == 404:
@@ -42,7 +43,7 @@ class DeliveryService:
             return Box.from_json(box_response.json())
         return None
 
-    def get_user(self, card_token: str) -> User | None:
+    def get_user(self, card_token: str) -> Union[User, None]:
         """Return the user with the given card token."""
         user_response = self._get(f"/user/token-to-user", {"token": card_token})
         if user_response.status_code == 404:
