@@ -24,10 +24,9 @@ public class DeliveryService {
 
     private final DeliveryRepository repository;
 
-    private UserService userService;
-    private BoxService boxService;
+    private final UserService userService;
 
-    private EmailService emailService;
+    private final EmailService emailService;
     private final BoxRepository boxRepository;
 
     public List<Delivery> getDeliveriesForCustomer(String id){
@@ -112,11 +111,11 @@ public class DeliveryService {
             delivery.setStatus(status);
             repository.save(delivery);
         }
-        BoxResponse box = boxService.getBox(boxID);
-        Box newBox = new Box(box.getId(), box.getName(), box.getAddress(), "");
-        boxService.replaceBox(newBox, newBox.getId());
+        Box box = boxRepository.findById(boxID).orElseThrow(() -> new Error("Box Not Found"));
+        box.setAssignedCustomer("");
+        boxRepository.save(box);
     
-        User user = userService.getUserFromDB(box.getAssignedCustomer());
+        User user = userService.getUserFromDB(toUpdate.get(0).getTargetCustomerID());
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),
                 "Delivery status for box " + boxID + " was updated to " + status,
                 "ASE Delivery: Delivery status");
