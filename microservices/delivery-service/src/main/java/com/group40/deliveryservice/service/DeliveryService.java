@@ -22,7 +22,6 @@ public class DeliveryService {
 
     private final DeliveryRepository repository;
 
-<<<<<<< microservices/delivery-service/src/main/java/com/group40/deliveryservice/service/DeliveryService.java
     private UserService userService;
     private BoxService boxService;
 
@@ -112,6 +111,9 @@ public class DeliveryService {
             repository.save(delivery);
         }
         BoxResponse box = boxService.getBox(boxID);
+        Box newBox = new Box(box.getId(), box.getName(), box.getAddress(), "");
+        boxService.replaceBox(newBox, newBox.getId());
+    
         User user = userService.getUserFromDB(box.getAssignedCustomer());
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),
                 "Delivery status for box " + boxID + " was updated to " + status,
@@ -123,13 +125,5 @@ public class DeliveryService {
             log.error("Mail not sent for email: " + user.getEmail());
         }
         return toUpdate;
-
-    public void deliverDeliveries(String boxId) {
-        List<Delivery> allDeliveries = repository.findAll().stream().filter(delivery -> delivery.getTargetBoxID().equals(boxId)).toList();
-
-        for (Delivery delivery : allDeliveries) {
-            delivery.setActive(false);
-            repository.save(delivery);
-        }
     }
 }

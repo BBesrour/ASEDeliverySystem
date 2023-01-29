@@ -14,8 +14,6 @@ public class Box {
     @Id
     private String id;
     private String name;
-    private String assignedTo;
-    private String assignedBy;
     private String address;
     private String assignedCustomer;
 }

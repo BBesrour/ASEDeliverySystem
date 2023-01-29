@@ -3,6 +3,7 @@ package com.group40.deliveryservice.service;
 import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.model.Box;
+import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.repository.BoxRepository;
 import com.group40.deliveryservice.model.User;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,8 @@ public class BoxService {
 
     private final BoxRepository boxRepository;
 
+    private final DeliveryService deliveryService;
+
     private List<Box> getBoxes(){
         return boxRepository.findAll();
     }
@@ -33,8 +36,6 @@ public class BoxService {
                 .id(box.getId())
                 .address(box.getAddress())
                 .name(box.getName())
-                .assignedBy(box.getAssignedBy())
-                .assignedTo(box.getAssignedTo())
                 .assignedCustomer(box.getAssignedCustomer())
                 .build();
     }
@@ -44,8 +45,6 @@ public class BoxService {
                 .id(UUID.randomUUID().toString())
                 .address(boxRequest.getAddress())
                 .name(boxRequest.getName())
-                .assignedBy(boxRequest.getAssigned_by())
-                .assignedTo(boxRequest.getAssigned_to())
                 .assignedCustomer(boxRequest.getAssignedCustomer())
                 .build();
 
@@ -70,10 +69,8 @@ public class BoxService {
     private Box updateField(String key, String value, Box box) {
         switch (key) {
             case "name" -> box.setName(value);
-            case "assigned_to" -> box.setAssignedTo(value);
-            case "assigned_by" -> box.setAssignedBy(value);
             case "address" -> box.setAddress(value);
-            case "assigned_customers" -> box.setAssignedCustomer(value);
+            case "assigned_customer" -> box.setAssignedCustomer(value);
         }
         return box;
     }
@@ -96,8 +93,6 @@ public class BoxService {
         return boxRepository.findById(id)
                 .map(box -> {
                     box.setName(newBox.getName());
-                    box.setAssignedBy(newBox.getAssignedBy());
-                    box.setAssignedTo(newBox.getAssignedTo());
                     box.setAddress(newBox.getAddress());
                     box.setAssignedCustomer(newBox.getAssignedCustomer());
                     return boxRepository.save(box);
@@ -109,8 +104,10 @@ public class BoxService {
     }
 
     public List<BoxResponse> getBoxesByDeliverer(String id) {
+        List<Delivery> deliveries = deliveryService.getAllDeliveries().stream().filter(delivery -> Objects.equals(delivery.getDelivererID(), id)).toList();
+
         return getBoxes().stream()
-                .filter(box -> Objects.equals(box.getAssignedTo(), id))
+                .filter(box -> deliveries.stream().anyMatch(delivery -> Objects.equals(delivery.getTargetBoxID(), box.getId())))
                 .map(this::mapToBoxResponse)
                 .toList();
     }
@@ -127,8 +124,6 @@ public class BoxService {
                 .id(box.getId())
                 .address(box.getAddress())
                 .name(box.getName())
-                .assignedBy(box.getAssignedBy())
-                .assignedTo(box.getAssignedTo())
                 .assignedCustomer("")
                 .build();
 
