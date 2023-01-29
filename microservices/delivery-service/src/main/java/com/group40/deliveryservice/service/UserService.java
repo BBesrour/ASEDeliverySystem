@@ -35,7 +35,7 @@ public class UserService {
 
     private final CustomerRepository customerRepository;
 
-    private EmailService emailService;
+    private final EmailService emailService;
 
     @Value("${application.apiUrl}")
     private String apiURL;

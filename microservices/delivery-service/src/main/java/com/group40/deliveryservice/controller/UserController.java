@@ -36,7 +36,7 @@ public class UserController {
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(userService.getAllCustomers());
         }else {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
     }
 
@@ -47,7 +47,7 @@ public class UserController {
             userService.deleteUser(id);
             return ResponseEntity.ok().build();
         }else {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
     }
 
@@ -55,7 +55,7 @@ public class UserController {
     ResponseEntity<?> updateUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody UserRequest newUser, @PathVariable String id) throws JSONException, IOException {
         User user = userService.getUser(token);
         if (!user.getRole().equals(ERole.ROLE_DISPATCHER) && !user.getId().equals(id)) {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
         switch (newUser.getRole()) {
             case ROLE_DELIVERER -> {

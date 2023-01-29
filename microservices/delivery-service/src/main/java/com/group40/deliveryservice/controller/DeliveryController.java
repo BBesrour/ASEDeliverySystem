@@ -23,8 +23,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DeliveryController {
     private final DeliveryService deliveryService;
-
-    private final EmailService emailService;
     private final UserService userService;
 
     @Value("${adminToken}")
@@ -48,7 +46,7 @@ public class DeliveryController {
             if (user.getRole().equals(ERole.ROLE_DISPATCHER) || newDelivery.getTargetCustomerID().equals(user.getId())) {
                 return ResponseEntity.ok(deliveryService.saveDelivery(newDelivery));
             }else {
-                return ResponseEntity.badRequest().body("Not authorized!");
+                return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
             }
         } catch( DeliveryNotFoundException e ){
             return ResponseEntity.status(409).body("{\"error\": \"Box does not exist! or assigned to another Customer\"}");
@@ -63,7 +61,7 @@ public class DeliveryController {
         if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getTargetCustomerID().equals(user.getId())) {
             return ResponseEntity.ok(deliveryService.getSingleDelivery(id));
         }else {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
     }
 
@@ -81,7 +79,7 @@ public class DeliveryController {
             if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getTargetCustomerID().equals(user.getId())) {
                 return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id));
             }else {
-                return ResponseEntity.badRequest().body("Not authorized!");
+                return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
             } 
         } catch (DeliveryNotFoundException e) {
             return ResponseEntity.status(409).body("Box does not exist! or assigned to another Customer");
@@ -96,7 +94,7 @@ public class DeliveryController {
             deliveryService.deleteDelivery(id);
             return ResponseEntity.ok("{}");
         }else {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
     }
 

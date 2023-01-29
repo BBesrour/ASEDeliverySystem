@@ -44,7 +44,7 @@ public class BoxController {
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.createBox(boxRequest));
         } else {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
     }
 
@@ -61,7 +61,7 @@ public class BoxController {
         } else if (user.getRole().equals(ERole.ROLE_CUSTOMER)) {
             return ResponseEntity.ok(boxService.getBoxesByCustomer(user.getId()));
         } else {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
     }
 
@@ -79,7 +79,7 @@ public class BoxController {
                 (box.getAssignedCustomer().contains(user.getId()) && user.getRole().equals(ERole.ROLE_CUSTOMER))) {
             return ResponseEntity.ok(box);
         } else {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
 
     }
@@ -96,7 +96,7 @@ public class BoxController {
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.updateBox(id, obj));
         } else {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
     }
 
@@ -109,7 +109,7 @@ public class BoxController {
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.replaceBox(newBox, id));
         } else {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
     }
 
@@ -117,14 +117,12 @@ public class BoxController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getBoxesByDeliverer(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                                  @PathVariable String id) throws JSONException, IOException {
-        System.out.println("AAAAAAA");
         User user = userService.getUser(token);
 
-        System.out.println(user.getRole());
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.getBoxesByDeliverer(id));
         } else {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
     }
 
@@ -135,11 +133,9 @@ public class BoxController {
         User user = userService.getUser(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             boxService.deleteBox(id);
-            HttpHeaders headers = new HttpHeaders();
-            headers.add("Content-Type", "application/json");
-            return new ResponseEntity<>(headers, HttpStatus.OK);
+            return ResponseEntity.ok("{}");
         } else {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
     }
 
@@ -148,15 +144,15 @@ public class BoxController {
     public ResponseEntity<?> authenticateBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                              @PathVariable String boxID, @RequestBody Map<String, String> obj) throws Exception {
         if (!userService.adminTokenIsValid(token)) {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
         String userId = obj.get("userId");
         List<Delivery> deliveries = deliveryService.getAllDeliveries().stream().filter(delivery -> delivery.getDelivererID().equals(userId) || delivery.getTargetCustomerID().equals(userId)).toList();
         if (deliveries.stream().filter(del -> del.getTargetBoxID().equals(boxID)).toList().isEmpty()) {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
 
-        return ResponseEntity.ok("Authenticated!");
+        return ResponseEntity.ok("{\"msg\": \"Authenticated!\"}");
     }
 
     @PutMapping("/{id}/close")
@@ -165,7 +161,7 @@ public class BoxController {
                                       @PathVariable String id,
                                       @RequestBody Map<String, String> obj) throws Exception {
         if (!userService.adminTokenIsValid(token)) {
-            return ResponseEntity.badRequest().body("Not authorized!");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
         String userId = obj.get("userId");
         if (userId == null) {
@@ -178,7 +174,7 @@ public class BoxController {
             if (box.getAssignedCustomer().contains(user.getId())) {
                 wantedStatus = DeliveryStatus.PICKED_UP;
             } else {
-                return ResponseEntity.badRequest().body("Not authorized (customer cannot close boxes that are not assigned to them)!");
+                return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (customer cannot close boxes that are not assigned to them)!\"}");
             }
         } else if (user.getRole().equals(ERole.ROLE_DELIVERER)) {
             wantedStatus = DeliveryStatus.DELIVERED;
