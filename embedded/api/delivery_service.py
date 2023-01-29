@@ -43,27 +43,12 @@ class DeliveryService:
             return Box.from_json(box_response.json())
         return None
 
-    def get_user(self, card_token: str) -> Union[User, None]:
-        """Return the user with the given card token."""
-        user_response = self._get(f"/user/token-to-user", {"token": card_token})
-        if user_response.status_code == 404:
-            return None
-        if user_response.status_code != 200:
-            raise Exception(f"Failed to get user: {user_response.text}")
-        if user_response.text:
-            return User.from_json(user_response.json())
-        return None
-
     def authenticate(self, card_content: CardContent):
         """Return True whether the card token is valid for this box."""
         card_token = card_content.token
-        user = self.get_user(card_token)
-        if user is None:
-            print(f"User with token {card_token} not found")
-            return False
-        response = self._get(f"/boxes/{self.config.box_id}/authenticate", {"userId": user.id})
+        response = self._get(f"/boxes/{self.config.box_id}/authenticate", {"userToken": card_token})
         if response.status_code == 200:
-            print(f"User {user.id} authenticated")
+            print(f"User with token {card_token} authenticated")
             return True
         else:
             return False

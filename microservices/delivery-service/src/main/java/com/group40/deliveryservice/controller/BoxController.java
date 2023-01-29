@@ -2,25 +2,20 @@ package com.group40.deliveryservice.controller;
 
 import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
-import com.group40.deliveryservice.model.Box;
-import com.group40.deliveryservice.model.DeliveryStatus;
-import com.group40.deliveryservice.model.ERole;
-import com.group40.deliveryservice.model.User;
+import com.group40.deliveryservice.model.*;
 import com.group40.deliveryservice.service.BoxService;
 import com.group40.deliveryservice.service.DeliveryService;
 import com.group40.deliveryservice.service.UserService;
 import lombok.RequiredArgsConstructor;
-import com.group40.deliveryservice.model.Delivery;
 import org.json.JSONException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -33,9 +28,6 @@ public class BoxController {
     private final DeliveryService deliveryService;
 
     private final UserService userService;
-
-    @Value("${adminToken}")
-    private String adminToken;
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
@@ -139,14 +131,19 @@ public class BoxController {
         }
     }
 
-    @PostMapping("/{id}/authenticate")
+    @PostMapping("/{boxID}/authenticate")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> authenticateBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-                                             @PathVariable String boxID, @RequestBody Map<String, String> obj) throws Exception {
+                                             @PathVariable String boxID, @RequestBody Map<String, String> obj) {
         if (!userService.adminTokenIsValid(token)) {
             return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
-        String userId = obj.get("userId");
+        String userToken = obj.get("userToken");
+        User user = userService.getUserFromToken(userToken);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("{\"error\": \"Wrong RFID token!\"}");
+        }
+        String userId = user.getId();
         List<Delivery> deliveries = deliveryService.getAllDeliveries().stream().filter(delivery -> delivery.getDelivererID().equals(userId) || delivery.getTargetCustomerID().equals(userId)).toList();
         if (deliveries.stream().filter(del -> del.getTargetBoxID().equals(boxID)).toList().isEmpty()) {
             return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
