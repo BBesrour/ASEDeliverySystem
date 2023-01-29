@@ -1,5 +1,6 @@
 package com.group40.deliveryservice.controller;
 
+import com.group40.deliveryservice.exceptions.DeliveryNotFoundException;
 import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.model.ERole;
 import com.group40.deliveryservice.model.User;
@@ -64,7 +65,7 @@ public class DeliveryController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    ResponseEntity<?> replaceDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody Delivery newDelivery, @PathVariable String id) throws JSONException, IOException {
+    ResponseEntity<?> replaceDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody Delivery newDelivery, @PathVariable String id) throws JSONException, IOException, DeliveryNotFoundException {
         Delivery delivery = deliveryService.getSingleDelivery(id);
         String adminTokenCheck = "Bearer " + adminToken;
         if (adminTokenCheck.equals(token)){
@@ -72,10 +73,14 @@ public class DeliveryController {
         }
 
         User user = userService.getUser(token);
-        if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getTargetCustomerID().equals(user.getId())) {
-            return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id));
-        }else {
-            return ResponseEntity.badRequest().body("Not authorized!");
+        try{
+            if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getTargetCustomerID().equals(user.getId())) {
+                return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id));
+            }else {
+                return ResponseEntity.badRequest().body("Not authorized!");
+            } 
+        } catch (DeliveryNotFoundException e) {
+            return ResponseEntity.status(409).body("Delivery not found!");
         }
     }
 
