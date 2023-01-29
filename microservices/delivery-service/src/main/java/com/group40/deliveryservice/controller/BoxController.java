@@ -7,6 +7,7 @@ import com.group40.deliveryservice.model.Box;
 import com.group40.deliveryservice.model.ERole;
 import com.group40.deliveryservice.model.User;
 import com.group40.deliveryservice.service.BoxService;
+import com.group40.deliveryservice.service.DeliveryService;
 import com.group40.deliveryservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONException;
@@ -26,6 +27,8 @@ import java.util.Map;
 public class BoxController {
 
     private final BoxService boxService;
+
+    private final DeliveryService deliveryService;
 
     private final UserService userService;
     @Value("${adminToken}")
@@ -103,6 +106,22 @@ public class BoxController {
         }
     }
 
+    @PostMapping("/authenticate/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    ResponseEntity<?> authRFID(@PathVariable String boxId, @RequestBody String rfidToken) throws Exception {
+        BoxResponse box = boxService.getBox(boxId);
+        User user = userService.getUserFromToken(rfidToken);
+
+        if (box.getAssignedCustomer() == user.getId()) {
+            boxService.authRFID(box);
+            deliveryService.deliverDeliveries(boxId);
+            return ResponseEntity.ok().body("Authorized");
+        } else {
+            return ResponseEntity.badRequest().body("Not authorized!");
+        }
+
+    }
+
     @GetMapping("/deliverer/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getBoxesByDeliverer(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
@@ -128,7 +147,6 @@ public class BoxController {
         } else {
             return ResponseEntity.badRequest().body("Not authorized!");
         }
-
     }
 
     @GetMapping("/current")

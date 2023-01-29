@@ -4,6 +4,7 @@ import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.model.Box;
 import com.group40.deliveryservice.repository.BoxRepository;
+import com.group40.deliveryservice.model.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,6 @@ import java.util.UUID;
 public class BoxService {
 
     private final BoxRepository boxRepository;
-
-    @Autowired
-    private RestTemplate restTemplate;
 
     private List<Box> getBoxes(){
         return boxRepository.findAll();
@@ -122,6 +120,19 @@ public class BoxService {
                 .filter(box -> box.getAssignedCustomer().contains(id))
                 .map(this::mapToBoxResponse)
                 .toList();
+    }
+
+    public void authRFID(BoxResponse box) {
+        Box newBox = Box.builder()
+                .id(box.getId())
+                .address(box.getAddress())
+                .name(box.getName())
+                .assignedBy(box.getAssignedBy())
+                .assignedTo(box.getAssignedTo())
+                .assignedCustomer("")
+                .build();
+
+        replaceBox(newBox, box.getId());
     }
 
     
