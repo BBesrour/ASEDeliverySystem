@@ -20,10 +20,9 @@ export default function CreateBoxDialog({
 }) {
   const [name, setName] = React.useState("");
   const [address, setAddress] = React.useState("");
-  const [assignedTo, setAssignedTo] = React.useState("");
 
   async function handleCreateBox() {
-    const newBox = new Box(null, name, address, 0, assignedTo, "");
+    const newBox = new Box(null, name, address, "");
     onBoxCreated(await createBox(newBox));
     handleClose();
   }
@@ -50,15 +49,6 @@ export default function CreateBoxDialog({
           onChange={(event) => setAddress(event.target.value)}
           label="Address"
           type="address"
-          fullWidth
-          variant="standard"
-        />
-        <TextField
-          margin="dense"
-          value={assignedTo}
-          onChange={(event) => setAssignedTo(event.target.value)}
-          label="Assigned To"
-          type="text"
           fullWidth
           variant="standard"
         />

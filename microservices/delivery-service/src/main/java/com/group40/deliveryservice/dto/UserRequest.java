@@ -1,11 +1,7 @@
 package com.group40.deliveryservice.dto;
-
-import com.group40.deliveryservice.model.Box;
-import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.model.ERole;
 import lombok.*;
 
-import java.util.List;
 
 @Data
 @Builder

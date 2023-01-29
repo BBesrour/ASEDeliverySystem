@@ -187,7 +187,6 @@ public class UserService {
         }
 
         URL url = new URL(apiURL + "/api/auth/current");
-        System.out.println(apiURL + "/api/auth/current");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Authorization", token);
@@ -206,9 +205,6 @@ public class UserService {
             response.append(inputLine);
         }
         in.close();
-        //print in String
-        System.out.println(response);
-        //Read JSON response and print
         JSONObject myResponse = new JSONObject(response.toString());
 
         String id = myResponse.getString("id");

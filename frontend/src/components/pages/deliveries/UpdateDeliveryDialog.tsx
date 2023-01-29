@@ -29,6 +29,7 @@ export default function UpdateDeliveryDialog({
         handleClose();
       })
       .catch((err) => {
+        console.log(err);
         if (err.response.status === 409) {
           alert("Box does not exist! or assigned to another Customer");
         }
@@ -39,7 +40,9 @@ export default function UpdateDeliveryDialog({
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Update Delivery</DialogTitle>
       <DialogContent>
-        <DialogContentText>Enter new delivery details here:</DialogContentText>
+        <DialogContentText marginBottom={1}>
+          Enter new delivery details here:
+        </DialogContentText>
         <DeliveryFields
           delivery={delivery}
           onDeliveryUpdate={setChangedDelivery}

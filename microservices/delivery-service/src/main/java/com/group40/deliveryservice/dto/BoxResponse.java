@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 
 
 @Data
@@ -16,7 +15,5 @@ public class BoxResponse {
     private String id;
     private String name;
     private String address;
-    private String assignedTo;
-    private String assignedBy;
     private String assignedCustomer;
 }

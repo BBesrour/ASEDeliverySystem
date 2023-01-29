@@ -16,9 +16,7 @@ export default function BoxesPage() {
   const [boxes, setBoxes] = useState<Box[]>([]);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
-  const [currentBox, setCurrentBox] = useState(
-    new Box(null, "", "", 0, "", "")
-  );
+  const [currentBox, setCurrentBox] = useState(new Box(null, "", "", ""));
   useEffect(() => {
     getBoxes().then((boxes) => {
       setBoxes(boxes);
@@ -60,7 +58,6 @@ export default function BoxesPage() {
               </Typography>
               <Typography>Name: </Typography>
               <Typography>Address: {box.address}</Typography>
-              <Typography>Assigned Deliverer: {box.assignedTo}</Typography>
               <Typography>Assigned Customer: {box.assignedCustomer}</Typography>
             </CardContent>
             <CardActions>

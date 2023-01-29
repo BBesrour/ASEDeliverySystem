@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+
 import com.group40.deliveryservice.model.Box;
 
 @Service
@@ -22,7 +24,6 @@ public class DeliveryService {
 
     private final DeliveryRepository repository;
 
-<<<<<<< microservices/delivery-service/src/main/java/com/group40/deliveryservice/service/DeliveryService.java
     private UserService userService;
     private BoxService boxService;
 
@@ -39,7 +40,7 @@ public class DeliveryService {
     public Delivery saveDelivery(Delivery newDelivery) {
 
         Box box = boxRepository.findById(newDelivery.getTargetBoxID()).orElseThrow(() -> new DeliveryNotFoundException("Box not found"));
-        if (box.getAssignedCustomer() == "" || box.getAssignedCustomer() === newDelivery.getTargetCustomerID()){
+        if (Objects.equals(box.getAssignedCustomer(), "") || Objects.equals(box.getAssignedCustomer(), newDelivery.getTargetCustomerID())){
             box.setAssignedCustomer(newDelivery.getTargetCustomerID());
             boxRepository.save(box);
             return repository.save(newDelivery);
@@ -57,7 +58,7 @@ public class DeliveryService {
 
         //create or update delivery with id, in that target box all deliveries are assigned to same customer id
         Box box = boxRepository.findById(newDelivery.getTargetBoxID()).orElseThrow(() -> new DeliveryNotFoundException("Box not found"));
-        if (box.getAssignedCustomer() == "" || box.getAssignedCustomer() === newDelivery.getTargetCustomerID()){
+        if (Objects.equals(box.getAssignedCustomer(), "") || Objects.equals(box.getAssignedCustomer(), newDelivery.getTargetCustomerID())){
             box.setAssignedCustomer(newDelivery.getTargetCustomerID());
             boxRepository.save(box);
 
@@ -112,6 +113,9 @@ public class DeliveryService {
             repository.save(delivery);
         }
         BoxResponse box = boxService.getBox(boxID);
+        Box newBox = new Box(box.getId(), box.getName(), box.getAddress(), "");
+        boxService.replaceBox(newBox, newBox.getId());
+    
         User user = userService.getUserFromDB(box.getAssignedCustomer());
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),
                 "Delivery status for box " + boxID + " was updated to " + status,
@@ -123,13 +127,5 @@ public class DeliveryService {
             log.error("Mail not sent for email: " + user.getEmail());
         }
         return toUpdate;
-
-    public void deliverDeliveries(String boxId) {
-        List<Delivery> allDeliveries = repository.findAll().stream().filter(delivery -> delivery.getTargetBoxID().equals(boxId)).toList();
-
-        for (Delivery delivery : allDeliveries) {
-            delivery.setActive(false);
-            repository.save(delivery);
-        }
     }
 }
