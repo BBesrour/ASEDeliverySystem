@@ -51,7 +51,7 @@ public class DeliveryController {
                 return ResponseEntity.badRequest().body("Not authorized!");
             }
         } catch( DeliveryNotFoundException e ){
-            return ResponseEntity.status(409).body("Box does not exist! or assigned to another Customer");
+            return ResponseEntity.status(409).body("{\"error\": \"Box does not exist! or assigned to another Customer\"}");
         }
     }
 

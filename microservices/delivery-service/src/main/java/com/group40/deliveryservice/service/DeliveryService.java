@@ -40,7 +40,7 @@ public class DeliveryService {
     public Delivery saveDelivery(Delivery newDelivery) {
 
         Box box = boxRepository.findById(newDelivery.getTargetBoxID()).orElseThrow(() -> new DeliveryNotFoundException("Box not found"));
-        if (box.getAssignedCustomer() == "" || box.getAssignedCustomer() == newDelivery.getTargetCustomerID()){
+        if (Objects.equals(box.getAssignedCustomer(), "") || Objects.equals(box.getAssignedCustomer(), newDelivery.getTargetCustomerID())){
             box.setAssignedCustomer(newDelivery.getTargetCustomerID());
             boxRepository.save(box);
             return repository.save(newDelivery);

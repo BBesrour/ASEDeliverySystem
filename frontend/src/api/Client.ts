@@ -1,39 +1,48 @@
-import {getAccessToken} from "../storage/user";
+import { getAccessToken } from "../storage/user";
 
 export default class Client {
-    private readonly urlBase: string
+  private readonly urlBase: string;
 
-    constructor(urlBase: string) {
-        this.urlBase = urlBase;
-    }
+  constructor(urlBase: string) {
+    this.urlBase = urlBase;
+  }
 
-    async request(method: string, url: string, params: any, body: any) {
-        const urlWithParams = url + (Object.keys(params).length ? `?${new URLSearchParams(params)}` : '');
-        const response = await fetch(this.urlBase + urlWithParams, {
-            method: method,
-            headers: {
-                'Content-Type': 'application/json',
-                // add authorization header with access token
-                'Authorization': `Bearer ${getAccessToken()}`
-            },
-            body: body ? JSON.stringify(body) : undefined
-        });
-        return await response.json();
-    }
+  async request(method: string, url: string, params: any, body: any) {
+    const urlWithParams =
+      url +
+      (Object.keys(params).length ? `?${new URLSearchParams(params)}` : "");
+    const response = await fetch(this.urlBase + urlWithParams, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+        // add authorization header with access token
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    if (!response.ok) {
+      const error = new Error("Failed Request");
+      // @ts-ignore
+      error.response = response;
 
-    getRequest(url: string, params: any = {}) {
-        return this.request('GET', url, params, null);
+      throw error;
     }
+    return await response.json();
+  }
 
-    postRequest(url: string, params: any = {}, body: any = {}) {
-        return this.request('POST', url, params, body);
-    }
+  getRequest(url: string, params: any = {}) {
+    return this.request("GET", url, params, null);
+  }
 
-    putRequest(url: string, params: any = {}, body: any = {}) {
-        return this.request('PUT', url, params, body);
-    }
+  postRequest(url: string, params: any = {}, body: any = {}) {
+    return this.request("POST", url, params, body);
+  }
 
-    deleteRequest(url: string, params: any = {}, body: any = {}) {
-        return this.request('DELETE', url, params, body);
-    }
+  putRequest(url: string, params: any = {}, body: any = {}) {
+    return this.request("PUT", url, params, body);
+  }
+
+  deleteRequest(url: string, params: any = {}, body: any = {}) {
+    return this.request("DELETE", url, params, body);
+  }
 }

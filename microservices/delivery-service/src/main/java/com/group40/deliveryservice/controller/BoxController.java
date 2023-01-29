@@ -105,6 +105,7 @@ public class BoxController {
     ResponseEntity<?> replaceBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                  @RequestBody Box newBox, @PathVariable String id) throws JSONException, IOException {
         User user = userService.getUser(token);
+        System.out.println(user.getRole() == ERole.ROLE_DISPATCHER);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.replaceBox(newBox, id));
         } else {
@@ -116,8 +117,11 @@ public class BoxController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> getBoxesByDeliverer(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
                                                  @PathVariable String id) throws JSONException, IOException {
+        System.out.println("AAAAAAA");
         User user = userService.getUser(token);
-        if (user.getRole().equals(ERole.ROLE_DELIVERER)) {
+
+        System.out.println(user.getRole());
+        if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(boxService.getBoxesByDeliverer(id));
         } else {
             return ResponseEntity.badRequest().body("Not authorized!");

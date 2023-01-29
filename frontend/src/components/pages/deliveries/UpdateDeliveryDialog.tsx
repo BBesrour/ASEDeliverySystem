@@ -29,6 +29,7 @@ export default function UpdateDeliveryDialog({
         handleClose();
       })
       .catch((err) => {
+        console.log(err);
         if (err.response.status === 409) {
           alert("Box does not exist! or assigned to another Customer");
         }

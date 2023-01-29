@@ -25,10 +25,12 @@ export default function CreateDeliveryDialog({
   const handleCreateDelivery = () => {
     createDelivery(delivery)
       .then((res) => {
+        console.log(res);
         onDeliveryCreated(res);
         handleClose();
       })
       .catch((err) => {
+        console.log(err);
         if (err.response.status === 409) {
           alert("Box does not exist! or assigned to another Customer");
         }
