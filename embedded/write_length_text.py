@@ -9,8 +9,8 @@ for i in range(1, 100):
         mfrc.write("x" * i)
         # verify
         _, text = mfrc.read()
-        print("Text", text, type(text))
-        if text.decode() != "x" * i:
+        text = text.strip()
+        if text != "x" * i:
             print("Failed to write length", i)
             break
     except KeyboardInterrupt:
