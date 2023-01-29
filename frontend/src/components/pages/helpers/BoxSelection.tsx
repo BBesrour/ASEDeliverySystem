@@ -44,7 +44,7 @@ export default function BoxSelection({
   return (
     <Autocomplete
       disablePortal
-      sx={{ width: 300 }}
+      sx={{ width: 300, marginBottom: 1 }}
       options={boxOptions}
       isOptionEqualToValue={(option, value) => option.boxID === value.boxID}
       defaultValue={boxID ? { boxID: boxID, label: boxID } : { boxID: "" }}
