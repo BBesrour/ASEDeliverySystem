@@ -21,12 +21,6 @@ LIGHT_SENSOR_ONLY_UP_PIN = 21
 GPIO.setup(LIGHT_SENSOR_ONLY_UP_PIN, GPIO.OUT, initial=GPIO.HIGH)
 
 
-def card_content_from_json(json_str: str) -> CardContent:
-    """Return a CardContent object from a JSON string."""
-    json_dict = json.loads(json_str)
-    return CardContent(json_dict["id"], json_dict["card_token"])
-
-
 class ASEHardwareIn:
     def __init__(self):
         self.reader = SimpleMFRC522()
@@ -61,7 +55,7 @@ class ASEHardwareIn:
             text = text.strip()
             print("Got text:", text)
             try:
-                card_content = card_content_from_json(text)
+                card_content = CardContent(text)
             except json.JSONDecodeError as e:
                 print(e)
                 card_content = InvalidCardContent()

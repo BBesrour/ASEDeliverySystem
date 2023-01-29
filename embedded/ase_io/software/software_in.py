@@ -13,12 +13,11 @@ from ase_io.card_content import CardContent, InvalidCardContent
 
 def _card_content_input() -> CardContent:
     """Return a CardContent object with the user input."""
-    card_id = "abcdef123"
     card_token = textinput("Card Token", "Enter the card token:")
     if card_token is None:
         print("No card token")
         return InvalidCardContent()
-    return CardContent(card_id, card_token)
+    return CardContent(card_token)
 
 
 class ASESoftwareIn:
