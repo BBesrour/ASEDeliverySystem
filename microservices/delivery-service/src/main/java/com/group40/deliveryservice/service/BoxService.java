@@ -7,9 +7,7 @@ import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -69,7 +67,7 @@ public class BoxService {
         switch (key) {
             case "name" -> box.setName(value);
             case "address" -> box.setAddress(value);
-            case "assigned_customer" -> box.setAssignedCustomer(value);
+            case "assignedCustomer" -> box.setAssignedCustomer(value);
         }
         return box;
     }
