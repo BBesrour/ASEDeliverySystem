@@ -5,7 +5,6 @@ import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.model.ERole;
 import com.group40.deliveryservice.model.User;
 import com.group40.deliveryservice.service.DeliveryService;
-import com.group40.deliveryservice.service.EmailService;
 import com.group40.deliveryservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONException;
@@ -76,7 +75,7 @@ public class DeliveryController {
 
         User user = userService.getUser(token);
         try{
-            if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getTargetCustomerID().equals(user.getId())) {
+            if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getDelivererID().equals(user.getId()) || delivery.getTargetCustomerID().equals(user.getId())) {
                 return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id));
             }else {
                 return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
