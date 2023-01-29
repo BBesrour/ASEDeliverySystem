@@ -16,6 +16,7 @@ def _card_content_input() -> CardContent:
     card_id = "abcdef123"
     card_token = textinput("Card Token", "Enter the card token:")
     if card_token is None:
+        print("No card token")
         return InvalidCardContent()
     return CardContent(card_id, card_token)
 

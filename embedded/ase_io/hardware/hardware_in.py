@@ -60,7 +60,8 @@ class ASEHardwareIn:
             _, text = self.reader.read()
             try:
                 card_content = card_content_from_json(text)
-            except json.JSONDecodeError:
+            except json.JSONDecodeError as e:
+                print(e)
                 card_content = InvalidCardContent()
             except KeyError as e:
                 print("KeyError", e)
