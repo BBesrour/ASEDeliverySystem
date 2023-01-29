@@ -1,12 +1,8 @@
 package com.group40.deliveryservice.service;
 
-import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.exceptions.DeliveryNotFoundException;
-import com.group40.deliveryservice.model.Delivery;
-import com.group40.deliveryservice.model.DeliveryStatus;
+import com.group40.deliveryservice.model.*;
 import com.group40.deliveryservice.repository.BoxRepository;
-import com.group40.deliveryservice.model.EmailDetails;
-import com.group40.deliveryservice.model.User;
 import com.group40.deliveryservice.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-
-import com.group40.deliveryservice.model.Box;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +25,10 @@ public class DeliveryService {
 
     public List<Delivery> getDeliveriesForCustomer(String id){
         return repository.findDeliveriesForCustomer(id);
+    }
+
+    public List<Delivery> getDeliveriesForDeliverer(String id){
+        return repository.findDeliveriesForDeliverer(id);
     }
     public List<Delivery> getAllDeliveries() {
         return repository.findAll();

@@ -144,9 +144,16 @@ public class BoxController {
             return ResponseEntity.badRequest().body("{\"error\": \"Wrong RFID token!\"}");
         }
         String userId = user.getId();
-        List<Delivery> deliveries = deliveryService.getAllDeliveries().stream().filter(delivery -> delivery.getDelivererID().equals(userId) || delivery.getTargetCustomerID().equals(userId)).toList();
+        List<Delivery> deliveries;
+        if (user.getRole().equals(ERole.ROLE_CUSTOMER)) {
+            deliveries = deliveryService.getDeliveriesForCustomer(userId);
+        } else if (user.getRole().equals(ERole.ROLE_DELIVERER)) {
+            deliveries = deliveryService.getDeliveriesForDeliverer(userId);
+        } else {
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (wrong role)!\"}");
+        }
         if (deliveries.stream().filter(del -> del.getTargetBoxID().equals(boxID)).toList().isEmpty()) {
-            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
+            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (no matching deliveries)!\"}");
         }
 
         return ResponseEntity.ok("{\"msg\": \"Authenticated!\"}");

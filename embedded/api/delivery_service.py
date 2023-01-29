@@ -46,7 +46,7 @@ class DeliveryService:
     def authenticate(self, card_content: CardContent):
         """Return True whether the card token is valid for this box."""
         card_token = card_content.token
-        response = self._get(f"/boxes/{self.config.box_id}/authenticate", {"userToken": card_token})
+        response = self._post(f"/boxes/{self.config.box_id}/authenticate", {"userToken": card_token})
         if response.status_code == 200:
             print(f"User with token {card_token} authenticated")
             return True
