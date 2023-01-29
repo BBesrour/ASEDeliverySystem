@@ -42,7 +42,6 @@ class ASEHardwareIn:
         self.darkness_listeners.remove(listener)
 
     def is_dark(self) -> bool:
-        print("Light sensor: {}".format(GPIO.input(LIGHT_SENSOR_PIN)))
         return GPIO.input(LIGHT_SENSOR_PIN) == GPIO.HIGH
 
     def _check_darkness_change(self):
