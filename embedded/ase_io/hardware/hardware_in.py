@@ -15,7 +15,7 @@ from ase_io.card_content import CardContent, InvalidCardContent
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
-LIGHT_SENSOR_PIN = 20
+LIGHT_SENSOR_PIN = 19
 GPIO.setup(LIGHT_SENSOR_PIN, GPIO.IN)
 LIGHT_SENSOR_ONLY_UP_PIN = 26
 GPIO.setup(LIGHT_SENSOR_ONLY_UP_PIN, GPIO.OUT, initial=GPIO.HIGH)
