@@ -74,14 +74,14 @@ public class DeliveryController {
         }
 
         User user = userService.getUser(token);
-        try{
+        try {
             if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getDelivererID().equals(user.getId()) || delivery.getTargetCustomerID().equals(user.getId())) {
                 return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id));
-            }else {
+            } else {
                 return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
             } 
         } catch (DeliveryNotFoundException e) {
-            return ResponseEntity.status(409).body("Box does not exist! or assigned to another Customer");
+            return ResponseEntity.status(409).body("Box does not exist! or assigned to another Customer: " + e.getMessage());
         }
     }
 

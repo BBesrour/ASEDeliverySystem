@@ -57,6 +57,6 @@ class DeliveryService:
     def send_box_closed_event(self, user_token: str):
         """Send a box closed event to the delivery server for a certain user."""
         print("Sending box closed event")
-        resp = self._put(f"/api/delivery/boxes/{self.config.box_id}/close", {"userToken": user_token})
+        resp = self._post(f"/api/delivery/boxes/{self.config.box_id}/close", {"userToken": user_token})
         if resp.status_code != 200:
             raise Exception(f"Failed to send box closed event: {resp.text}")
