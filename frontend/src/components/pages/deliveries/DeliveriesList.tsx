@@ -48,7 +48,7 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
     }, [deliveries, trackingCodeInput]);
 
 
-    let names = new Map<string | null, string | null>();
+    const [boxNames, setBoxNames] = useState<Map<string, string>>(new Map());
     const [boxes, setBoxes] = useState<Box[]>([]);
     useEffect(() => {
         getBoxes().then((boxes) => {
@@ -56,9 +56,10 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
         });
     }, []);
     shownDeliveries.forEach((delivery) => {
-        // @ts-ignore
-        names.set(delivery.id, boxes.filter((box) => box.id === delivery.targetBoxID).pop().name)
-    })
+        const newBoxNames = boxNames;
+        newBoxNames.set(delivery.id ?? "", boxes.filter((box) => box.id === delivery.targetBoxID)[0]?.name || "no box");
+        setBoxNames(newBoxNames);
+    });
 
     return <>
         <TextField
@@ -84,7 +85,7 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
                                 ID: {delivery.id}
                             </Typography>
                             <Typography>
-                                targetBoxName: {names.get(delivery.id)}
+                                targetBoxName: {boxNames.get(delivery.id ?? "")}
                             </Typography>
 
                             {propertiesToShow.map(property => (
