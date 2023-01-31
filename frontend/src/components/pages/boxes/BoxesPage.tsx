@@ -56,7 +56,6 @@ export default function BoxesPage() {
               <Typography gutterBottom variant="h5" component="h2">
                 {box.name}
               </Typography>
-              <Typography>Name: </Typography>
               <Typography>Address: {box.address}</Typography>
               <Typography>Assigned Customer: {box.assignedCustomer}</Typography>
             </CardContent>
@@ -86,14 +85,16 @@ export default function BoxesPage() {
         handleClose={() => setShowCreateDialog(false)}
         onBoxCreated={(box) => setBoxes([box, ...boxes])}
       />
-      <UpdateBoxDialog
-        open={showUpdateDialog}
-        handleClose={() => setShowUpdateDialog(false)}
-        onBoxUpdated={(box) => {
-          setBoxes(boxes.map((b) => (b.id === box.id ? box : b)));
-        }}
-        box={currentBox}
-      />
+        {showUpdateDialog &&
+          <UpdateBoxDialog
+            open={showUpdateDialog}
+            handleClose={() => setShowUpdateDialog(false)}
+            onBoxUpdated={(box) => {
+              setBoxes(boxes.map((b) => (b.id === box.id ? box : b)));
+            }}
+            box={currentBox}
+          />
+        }
     </>
   );
 }

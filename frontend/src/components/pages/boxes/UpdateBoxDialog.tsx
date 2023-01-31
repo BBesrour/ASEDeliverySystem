@@ -36,7 +36,7 @@ export default function UpdateBoxDialog({open, handleClose, onBoxUpdated, box}: 
                     <TextField
                         autoFocus
                         margin="dense"
-                        defaultValue={box.name}
+                        defaultValue={name}
                         onChange={(event) => setName(event.target.value)}
                         label="Name"
                         type="text"
@@ -46,7 +46,7 @@ export default function UpdateBoxDialog({open, handleClose, onBoxUpdated, box}: 
                     <TextField
                         autoFocus
                         margin="dense"
-                        defaultValue={box.address}
+                        defaultValue={address}
                         onChange={(event) => setAddress(event.target.value)}
                         label="Address"
                         type="address"
