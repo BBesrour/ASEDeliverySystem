@@ -52,6 +52,7 @@ class ASEHardwareIn:
 
     def _read_token(self):
         while True:
+            print("Trying to read...")
             _, text = self.reader.read()
             text = text.strip()
             print("Got text:", text)
