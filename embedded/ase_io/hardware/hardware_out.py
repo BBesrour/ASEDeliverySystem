@@ -14,9 +14,6 @@ RED_PIN = 16
 GPIO.setup(GREEN_PIN, GPIO.OUT, initial=GPIO.LOW)
 GPIO.setup(RED_PIN, GPIO.OUT, initial=GPIO.LOW)
 
-NEED_TO_SOMEHOW_BE_ALWAYS_ON_PIN = 7
-GPIO.setup(NEED_TO_SOMEHOW_BE_ALWAYS_ON_PIN, GPIO.OUT, initial=GPIO.HIGH)
-
 
 class ASEHardwareOut:
     def __init__(self):
