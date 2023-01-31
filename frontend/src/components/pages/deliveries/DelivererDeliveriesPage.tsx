@@ -9,7 +9,7 @@ export default function DelivererDeliveriesPage() {
     useEffect(() => {
         getDeliveries().then(setDeliveries);
     }, []);
-    const dispatcherDeliveriesProperties = ["targetCustomerID", "targetBoxID", "delivererID", "status", "isActive"];
+    const dispatcherDeliveriesProperties = ["targetBoxID", "targetCustomerID", "delivererID", "status", "isActive"];
     return <>
         <Typography variant="h2">All Deliveries</Typography>
         <DeliveriesList deliveries={deliveries}
