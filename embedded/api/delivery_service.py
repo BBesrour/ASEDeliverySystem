@@ -60,3 +60,5 @@ class DeliveryService:
         resp = self._post(f"/api/delivery/boxes/{self.config.box_id}/close", {"userToken": user_token})
         if resp.status_code != 200:
             raise Exception(f"Failed to send box closed event: {resp.text}")
+        else:
+            print("Box closed event sent")
