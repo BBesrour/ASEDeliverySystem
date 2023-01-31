@@ -51,22 +51,20 @@ class ASEHardwareIn:
         t.join()
 
     def _read_token(self):
-        _, text = self.reader.read()
-        text = text.strip()
-        print("Got text:", text)
-        try:
-            card_content = CardContent(text)
-        except json.JSONDecodeError as e:
-            print(e)
-            card_content = InvalidCardContent()
-        except KeyError as e:
-            print("KeyError", e)
-            card_content = InvalidCardContent()
-        for listener in self.token_listeners:
-            listener(card_content)
-        t = Timer(0.1, self._read_token)
-        t.start()
-        t.join()
+        while True:
+            _, text = self.reader.read()
+            text = text.strip()
+            print("Got text:", text)
+            try:
+                card_content = CardContent(text)
+            except json.JSONDecodeError as e:
+                print(e)
+                card_content = InvalidCardContent()
+            except KeyError as e:
+                print("KeyError", e)
+                card_content = InvalidCardContent()
+            for listener in self.token_listeners:
+                listener(card_content)
 
     def mainloop(self):
         t1 = Timer(0.1, self._read_token)
