@@ -22,6 +22,7 @@ class BoxClosedChecker:
         while True:
             if not ase_in.is_dark() and time.time() > self.allowed_open_until:
                 _blink_red()
+            time.sleep(0.1)
 
     def start_check(self):
         """Starts a thread that checks if the box is closed, continuously."""
