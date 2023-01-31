@@ -42,6 +42,7 @@ class ASEHardwareIn:
 
     def _check_darkness_change(self):
         while True:
+            print("...")
             if self.is_dark() != self._dark:
                 print("Darkness changed to", self.is_dark())
                 self._dark = not self._dark
