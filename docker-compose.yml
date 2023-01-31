@@ -49,6 +49,8 @@ services:
   ui-service:
     image: ase40/ui-service:latest
     container_name: ui-service
+    depends_on:
+      - api-gateway
     pull_policy: always
     ports:
       - 2001:80
