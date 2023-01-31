@@ -1,5 +1,6 @@
 import json
 from threading import Timer
+import time
 
 try:
     import RPi.GPIO as GPIO
@@ -42,12 +43,12 @@ class ASEHardwareIn:
 
     def _check_darkness_change(self):
         while True:
-            print("...")
             if self.is_dark() != self._dark:
                 print("Darkness changed to", self.is_dark())
                 self._dark = not self._dark
                 for listener in self.darkness_listeners:
                     listener(self._dark)
+            time.sleep(0.1)
 
     def _read_token(self):
         while True:
@@ -67,9 +68,7 @@ class ASEHardwareIn:
                 listener(card_content)
 
     def mainloop(self):
-        t1 = Timer(0.1, self._read_token)
-        t2 = Timer(0.1, self._check_darkness_change)
-        t1.start()
-        t2.start()
-        t1.join()
-        t2.join()
+        t = Timer(0.1, self._check_darkness_change)
+        t.start()
+        self._read_token()
+        t.join()
