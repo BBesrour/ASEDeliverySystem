@@ -34,7 +34,7 @@ class DeliveryService:
 
     def get_box(self, box_id: int) -> Union[Box, None]:
         """Return the box with the given id."""
-        box_response = self._get(f"/boxes/box", {"id": box_id})
+        box_response = self._get(f"/api/delivery/boxes/box", {"id": box_id})
         if box_response.status_code == 404:
             return None
         if box_response.status_code != 200:
@@ -46,7 +46,7 @@ class DeliveryService:
     def authenticate(self, card_content: CardContent):
         """Return True whether the card token is valid for this box."""
         card_token = card_content.token
-        response = self._post(f"/boxes/{self.config.box_id}/authenticate", {"userToken": card_token})
+        response = self._post(f"/api/delivery/boxes/{self.config.box_id}/authenticate", {"userToken": card_token})
         if response.status_code == 200:
             print(f"User with token {card_token} authenticated")
             return True
@@ -57,6 +57,6 @@ class DeliveryService:
     def send_box_closed_event(self, user_token: str):
         """Send a box closed event to the delivery server for a certain user."""
         print("Sending box closed event")
-        resp = self._put(f"/boxes/{self.config.box_id}/close", {"userToken": user_token})
+        resp = self._put(f"/api/delivery/boxes/{self.config.box_id}/close", {"userToken": user_token})
         if resp.status_code != 200:
             raise Exception(f"Failed to send box closed event: {resp.text}")
