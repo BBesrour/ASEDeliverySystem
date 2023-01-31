@@ -42,13 +42,13 @@ class ASEHardwareIn:
         return GPIO.input(LIGHT_SENSOR_PIN) == GPIO.HIGH
 
     def _check_darkness_change(self):
-        while True:
-            if self.is_dark() != self._dark:
-                print("Darkness changed to", self.is_dark())
-                self._dark = self.is_dark()
-                for listener in self.darkness_listeners:
-                    listener(self._dark)
-            time.sleep(0.1)
+        if self.is_dark() != self._dark:
+            print("Darkness changed to", self.is_dark())
+            self._dark = self.is_dark()
+            for listener in self.darkness_listeners:
+                listener(self._dark)
+        t = Timer(0.1, self._check_darkness_change)
+        t.start()
 
     def _read_token(self):
         while True:
@@ -68,7 +68,5 @@ class ASEHardwareIn:
                 listener(card_content)
 
     def mainloop(self):
-        t = Timer(0.1, self._check_darkness_change)
-        t.start()
+        Timer(0.1, self._check_darkness_change).start()
         self._read_token()
-        t.join()
