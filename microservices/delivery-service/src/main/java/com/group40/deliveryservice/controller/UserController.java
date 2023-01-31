@@ -45,7 +45,7 @@ public class UserController {
         User user = userService.getUser(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             userService.deleteUser(id);
-            return ResponseEntity.ok().build();
+            return ResponseEntity.ok("{}");
         }else {
             return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
