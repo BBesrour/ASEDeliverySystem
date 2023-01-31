@@ -39,13 +39,14 @@ class ASEHardwareIn:
         self.darkness_listeners.remove(listener)
 
     def is_dark(self) -> bool:
+        return int(time.time()) % 2 == 0
         return GPIO.input(LIGHT_SENSOR_PIN) == GPIO.HIGH
 
     def _check_darkness_change(self):
         while True:
             if self.is_dark() != self._dark:
                 print("Darkness changed to", self.is_dark())
-                self._dark = not self._dark
+                self._dark = self.is_dark()
                 for listener in self.darkness_listeners:
                     listener(self._dark)
             time.sleep(0.1)
