@@ -15,10 +15,8 @@ export default function UpdateBoxDialog({open, handleClose, onBoxUpdated, box}: 
     onBoxUpdated: (box: Box) => void,
     box: Box
 }) {
-    // TODO: enable updating all fields
-
-    const [name, setName] = React.useState('');
-    const [address, setAddress] = React.useState('');
+    const [name, setName] = React.useState(box.name);
+    const [address, setAddress] = React.useState(box.address);
 
     async function handleUpdateBox() {
         box.name = name;
