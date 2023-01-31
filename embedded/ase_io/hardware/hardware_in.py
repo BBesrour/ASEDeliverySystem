@@ -46,21 +46,32 @@ class ASEHardwareIn:
             self._dark = not self._dark
             for listener in self.darkness_listeners:
                 listener(self._dark)
-        Timer(0.1, self._check_darkness_change).start()
+        t = Timer(0.1, self._check_darkness_change)
+        t.start()
+        t.join()
+
+    def _read_token(self):
+        _, text = self.reader.read()
+        text = text.strip()
+        print("Got text:", text)
+        try:
+            card_content = CardContent(text)
+        except json.JSONDecodeError as e:
+            print(e)
+            card_content = InvalidCardContent()
+        except KeyError as e:
+            print("KeyError", e)
+            card_content = InvalidCardContent()
+        for listener in self.token_listeners:
+            listener(card_content)
+        t = Timer(0.1, self._read_token)
+        t.start()
+        t.join()
 
     def mainloop(self):
-        self._check_darkness_change()
-        while True:
-            _, text = self.reader.read()
-            text = text.strip()
-            print("Got text:", text)
-            try:
-                card_content = CardContent(text)
-            except json.JSONDecodeError as e:
-                print(e)
-                card_content = InvalidCardContent()
-            except KeyError as e:
-                print("KeyError", e)
-                card_content = InvalidCardContent()
-            for listener in self.token_listeners:
-                listener(card_content)
+        t1 = Timer(0.1, self._read_token)
+        t2 = Timer(0.1, self._check_darkness_change)
+        t1.start()
+        t2.start()
+        t1.join()
+        t2.join()
