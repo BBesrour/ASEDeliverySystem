@@ -41,14 +41,12 @@ class ASEHardwareIn:
         return GPIO.input(LIGHT_SENSOR_PIN) == GPIO.HIGH
 
     def _check_darkness_change(self):
-        if self.is_dark() != self._dark:
-            print("Darkness changed to", self.is_dark())
-            self._dark = not self._dark
-            for listener in self.darkness_listeners:
-                listener(self._dark)
-        t = Timer(0.1, self._check_darkness_change)
-        t.start()
-        t.join()
+        while True:
+            if self.is_dark() != self._dark:
+                print("Darkness changed to", self.is_dark())
+                self._dark = not self._dark
+                for listener in self.darkness_listeners:
+                    listener(self._dark)
 
     def _read_token(self):
         while True:
