@@ -15,7 +15,6 @@ export default function CreateUserDialog({open, handleClose, onUserCreated}: {
     handleClose: () => void;
     onUserCreated: (user: User) => void;
 }) {
-    const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [role, setRole] = useState<UserRole>("ROLE_CUSTOMER");
@@ -29,11 +28,7 @@ export default function CreateUserDialog({open, handleClose, onUserCreated}: {
             alert("Password is required");
             return;
         }
-        if (!name) {
-            alert("Name is required");
-            return;
-        }
-        const newUser = new User(null, email, password, name, role);
+        const newUser = new User(null, email, password, role);
         try {
             const createdUser = await createUser(newUser);
             onUserCreated(createdUser);
@@ -50,16 +45,6 @@ export default function CreateUserDialog({open, handleClose, onUserCreated}: {
             <DialogTitle>Create New User</DialogTitle>
             <DialogContent>
                 <DialogContentText>Enter new user details here:</DialogContentText>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                    label="Name"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                />
                 <TextField
                     margin="dense"
                     value={email}

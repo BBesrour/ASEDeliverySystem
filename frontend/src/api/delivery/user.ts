@@ -22,7 +22,6 @@ export async function updateUser(user: User): Promise<void> {
 
 export async function createUser(user: User): Promise<User> {
     const userJSON = {
-        name: user.name,
         email: user.email,
         password: user.password,
         role: user.role

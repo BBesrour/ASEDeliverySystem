@@ -19,7 +19,6 @@ export default function UpdateUserDialog({open, user, handleClose, onUserUpdated
     handleClose: () => void;
     onUserUpdated: (user: User) => void;
 }) {
-    const [name, setName] = useState(user.name || "");
     const [email, setEmail] = useState(user.email || "");
     const [changePassword, setChangePassword] = useState(false);
     const [password, setPassword] = useState<string | null>(null);
@@ -34,11 +33,7 @@ export default function UpdateUserDialog({open, user, handleClose, onUserUpdated
             alert("Password is required");
             return;
         }
-        if (!name) {
-            alert("Name is required");
-            return;
-        }
-        const newUser = new User(user.id, email, null, name, role);
+        const newUser = new User(user.id, email, null, role);
         await updateUser(newUser);
         onUserUpdated(newUser);
         handleClose();
@@ -49,16 +44,6 @@ export default function UpdateUserDialog({open, user, handleClose, onUserUpdated
             <DialogTitle>Update User</DialogTitle>
             <DialogContent>
                 <DialogContentText>Change user details here:</DialogContentText>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                    label="Name"
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                />
                 <TextField
                     margin="dense"
                     value={email}
