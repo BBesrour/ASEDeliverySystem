@@ -20,7 +20,7 @@ class BoxClosedChecker:
     def _check(self):
         """Performs the actual check if the box is closed and lights up red if not (continuously)."""
         while True:
-            if not ase_in.is_dark() and time.time() > self.allowed_open_until:
+            if True: # not ase_in.is_dark() and time.time() > self.allowed_open_until:
                 _blink_red()
 
     def start_check(self):
