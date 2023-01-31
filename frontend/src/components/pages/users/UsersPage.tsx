@@ -50,9 +50,6 @@ export default function UsersPage() {
                         sx={{height: "100%", display: "flex", flexDirection: "column"}}
                     >
                         <CardContent sx={{flexGrow: 1}}>
-                            <Typography gutterBottom variant="h5" component="h2">
-                                {user.name}
-                            </Typography>
                             <Typography>ID: {user.id}</Typography>
                             <Typography>Email: {user.email}</Typography>
                         </CardContent>
