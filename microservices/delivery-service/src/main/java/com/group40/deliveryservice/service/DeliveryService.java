@@ -109,9 +109,7 @@ public class DeliveryService {
             repository.save(delivery);
         }
         Box box = boxRepository.findById(boxID).orElseThrow(() -> new Error("Box Not Found"));
-        box.setAssignedCustomer("");
-        boxRepository.save(box);
-    
+
         User user = userService.getUserFromDB(toUpdate.get(0).getTargetCustomerID());
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),
                 "Delivery status for box " + boxID + " was updated to " + status,
