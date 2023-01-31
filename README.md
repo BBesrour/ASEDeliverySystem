@@ -11,7 +11,7 @@ Readme structure:
 
 ## Overview
 ### Architecture
-![Screenshot_2023-01-31_at_11.55.10](uploads/ba1eeef827213db79c204dbdd27cc4d3/Screenshot_2023-01-31_at_11.55.10.png)
+![architecture](material/architecture.png)
 ### Requirements
 Please make sure you have the following Requirements already installed on your computer before attempting to run the application:
 - Docker
@@ -25,4 +25,9 @@ Our mongo database is hosted in [Mongodb atlas](https://www.mongodb.com/atlas/da
 All of our microservices and react app are running on [Linode cloud hosting service](https://www.linode.com)
 Our Linode server has 4 CPU Cores and 8GB RAM. It is located in Frankfurt Germany.
 ## Pipeline
-![Screenshot_2023-01-31_at_12.13.06](uploads/963f2a8b4eb12f027dd85f0ee5d8d1eb/Screenshot_2023-01-31_at_12.13.06.png)
+![pipeline](material/pipeline.png)
+Our pipeline runs as follows:
+1. at the build stage, the `build` job runs a clean build on all of our spring boot microservices. This job only runs if changes were detected in our microservices folder. This is also the only job that runs in feature branches and not just on the main branch.
+2. at the docker-frontend stage, the `docker-frontend` job builds the frontend image and pushes it to docker hub. This job will only run when changes are detected on the main branch.
+3. at the docker-backend stage, the `docker-backend` job uses jib to build the backend images and pushes them to Docker hub. This job will only run when changes are detected on the main branch.
+4. at the deploy stage, the `deploy` job copies the latest version of our docker-compose file to our Linode server and then runs `docker compose up -d` on our server using ssh. the docker compose file will pull all latest images from docker hub and run them thus having all of our latest changes live.
