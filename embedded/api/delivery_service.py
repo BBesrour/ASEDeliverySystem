@@ -51,11 +51,12 @@ class DeliveryService:
             print(f"User with token {card_token} authenticated")
             return True
         else:
+            print(f"User with token {card_token} not authenticated: {response.text}")
             return False
 
-    def send_box_closed_event(self, user_id: str):
+    def send_box_closed_event(self, user_token: str):
         """Send a box closed event to the delivery server for a certain user."""
         print("Sending box closed event")
-        resp = self._put(f"/boxes/{self.config.box_id}/close", {"userId": user_id})
+        resp = self._put(f"/boxes/{self.config.box_id}/close", {"userToken": user_token})
         if resp.status_code != 200:
             raise Exception(f"Failed to send box closed event: {resp.text}")

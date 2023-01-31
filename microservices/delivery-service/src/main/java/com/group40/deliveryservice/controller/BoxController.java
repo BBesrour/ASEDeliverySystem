@@ -167,11 +167,11 @@ public class BoxController {
         if (!userService.adminTokenIsValid(token)) {
             return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
-        String userId = obj.get("userId");
-        if (userId == null) {
-            return ResponseEntity.badRequest().body("Missing userId!");
+        String userToken = obj.get("userToken");
+        User user = userService.getUserFromToken(userToken);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Wrong userToken!");
         }
-        User user = userService.getUserFromDB(userId);
         DeliveryStatus wantedStatus;
         BoxResponse box = boxService.getBox(id);
         if (user.getRole().equals(ERole.ROLE_CUSTOMER)) {

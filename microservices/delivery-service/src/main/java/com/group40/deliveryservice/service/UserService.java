@@ -21,7 +21,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -63,8 +62,8 @@ public class UserService {
         return customerRepository.findByEmail(email);
     }
 
-    public List<User> getAllCustomers() {
-        return new ArrayList<>(userRepository.getAllUsers());
+    public List<User> getAllUsers() {
+        return userRepository.getAllUsers();
     }
 
     public void deleteUser(String id) {

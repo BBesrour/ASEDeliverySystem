@@ -34,7 +34,7 @@ public class UserController {
     ResponseEntity<?> getAllCustomers(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
         User user = userService.getUser(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
-            return ResponseEntity.ok(userService.getAllCustomers());
+            return ResponseEntity.ok(userService.getAllUsers());
         }else {
             return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }

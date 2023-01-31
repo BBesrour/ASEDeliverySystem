@@ -26,10 +26,9 @@ def on_next_box_close(callback):
 def on_got_token(token: CardContent):
     print(f"Got token: {token}")
     if delivery_service.authenticate(token):
-        user = delivery_service.get_user(token.token)
         ase_out.light_green()
         box_closed_checker.allow_open_for(seconds=10)
-        on_next_box_close(lambda: delivery_service.send_box_closed_event(user.id))
+        on_next_box_close(lambda: delivery_service.send_box_closed_event(token.token))
     else:
         ase_out.light_red()
 
