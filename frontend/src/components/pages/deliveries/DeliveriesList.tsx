@@ -55,11 +55,13 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
             setBoxes(boxes);
         });
     }, []);
-    shownDeliveries.forEach((delivery) => {
+    useEffect(() => {
         const newBoxNames = boxNames;
-        newBoxNames.set(delivery.id ?? "", boxes.filter((box) => box.id === delivery.targetBoxID)[0]?.name || "no box");
+        shownDeliveries.forEach((delivery) => {
+            newBoxNames.set(delivery.id ?? "", boxes.filter((box) => box.id === delivery.targetBoxID)[0]?.name || "no box");
+        });
         setBoxNames(newBoxNames);
-    });
+    }, [shownDeliveries, boxes]);
 
     return <>
         <TextField
