@@ -49,6 +49,7 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
 
 
     const [boxNames, setBoxNames] = useState<Map<string, string>>(new Map());
+    const [boxAddresses, setBoxAddresses] = useState<Map<string, string>>(new Map());
     const [boxes, setBoxes] = useState<Box[]>([]);
     useEffect(() => {
         getBoxes().then((boxes) => {
@@ -57,10 +58,13 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
     }, []);
     useEffect(() => {
         const newBoxNames = boxNames;
+        const newBoxAddresses = boxAddresses;
         shownDeliveries.forEach((delivery) => {
             newBoxNames.set(delivery.id ?? "", boxes.filter((box) => box.id === delivery.targetBoxID)[0]?.name || "no box");
+            newBoxAddresses.set(delivery.id ?? "", boxes.filter((box) => box.id === delivery.targetBoxID)[0]?.address || "no box");
         });
         setBoxNames(newBoxNames);
+        setBoxAddresses(newBoxAddresses);
     }, [shownDeliveries, boxes]);
 
     return <>
@@ -88,6 +92,9 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
                             </Typography>
                             <Typography>
                                 targetBoxName: {boxNames.get(delivery.id ?? "")}
+                            </Typography>
+                            <Typography>
+                                targetBoxAddress: {boxAddresses.get(delivery.id ?? "")}
                             </Typography>
 
                             {propertiesToShow.map(property => (

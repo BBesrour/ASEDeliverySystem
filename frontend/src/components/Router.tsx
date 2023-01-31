@@ -5,7 +5,7 @@ import UsersPage from './pages/users/UsersPage';
 import BoxesPage from "./pages/boxes/BoxesPage";
 import DeliveriesPage from "./pages/deliveries/DeliveriesPage";
 import {getRole} from "../storage/user";
-import {ROLE_DISPATCHER} from "../model/roles";
+import {ROLE_DELIVERER, ROLE_DISPATCHER} from "../model/roles";
 import DeliveryStatusPage from "./pages/deliveries/DeliveryStatusPage";
 import WelcomePage from "./pages/welcome/WelcomePage";
 
@@ -30,6 +30,9 @@ export default function Router() {
             <div>
                 {role === ROLE_DISPATCHER && <>
                     <Button onClick={navigateToUsers}>Users</Button>
+                    <Button onClick={navigateToBoxes}>Boxes</Button>
+                </>}
+                {role === ROLE_DELIVERER && <>
                     <Button onClick={navigateToBoxes}>Boxes</Button>
                 </>}
                 <Button onClick={navigateToDeliveries}>Deliveries</Button>
