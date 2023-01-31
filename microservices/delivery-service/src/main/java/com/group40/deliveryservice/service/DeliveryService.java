@@ -34,19 +34,6 @@ public class DeliveryService {
         return repository.findAll();
     }
 
-    public Delivery saveDelivery(Delivery newDelivery) {
-
-        Box box = boxRepository.findById(newDelivery.getTargetBoxID()).orElseThrow(() -> new DeliveryNotFoundException("Box not found"));
-        if (Objects.equals(box.getAssignedCustomer(), "") || Objects.equals(box.getAssignedCustomer(), newDelivery.getTargetCustomerID())){
-            box.setAssignedCustomer(newDelivery.getTargetCustomerID());
-            boxRepository.save(box);
-            return repository.save(newDelivery);
-        }
-        else{
-            throw new DeliveryNotFoundException("Box is already assigned to another customer");
-        }
-    }
-
     public Delivery getSingleDelivery(String id) {
         return repository.findById(id).orElseThrow(() -> new DeliveryNotFoundException(id));
     }
@@ -83,8 +70,7 @@ public class DeliveryService {
                 log.error("Mail not sent for email: " + user.getEmail());
             }
             return replacedDelivery;
-        }
-        else{
+        } else {
             throw new DeliveryNotFoundException("Box is already assigned to another customer");
         }
 
@@ -103,7 +89,7 @@ public class DeliveryService {
         return repository.findInactiveDeliveries(customer);
     }
 
-    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status) throws Exception {
+    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status) {
         List<Delivery> toUpdate = repository.findDeliveriesForBox(boxID);
         for (Delivery delivery : toUpdate) {
             delivery.setStatus(status);

@@ -116,7 +116,7 @@ public class BoxService {
                 .toList();
     }
 
-    public void authRFID(BoxResponse box) {
+    public void resetBox(BoxResponse box) {
         Box newBox = Box.builder()
                 .id(box.getId())
                 .address(box.getAddress())
