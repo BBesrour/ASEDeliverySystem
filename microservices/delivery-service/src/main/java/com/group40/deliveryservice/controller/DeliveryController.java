@@ -43,8 +43,8 @@ public class DeliveryController {
         try{
             User user = userService.getUser(token);
             if (user.getRole().equals(ERole.ROLE_DISPATCHER) || newDelivery.getTargetCustomerID().equals(user.getId())) {
-                return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, newDelivery.getId()));
-            }else {
+                return ResponseEntity.ok(deliveryService.saveDelivery(newDelivery));
+            } else {
                 return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
             }
         } catch( DeliveryNotFoundException e ){
