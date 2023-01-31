@@ -33,8 +33,13 @@ public class DeliveryController {
         User user = userService.getUser(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)){
             return deliveryService.getAllDeliveries();
+        } else if (user.getRole().equals(ERole.ROLE_DELIVERER)){
+            return deliveryService.getDeliveriesForDeliverer(user.getId());
+        } else if (user.getRole().equals(ERole.ROLE_CUSTOMER)){
+            return deliveryService.getDeliveriesForCustomer(user.getId());
+        } else {
+            return null;
         }
-        return deliveryService.getDeliveriesForCustomer(user.getId());
     }
 
     @PostMapping
