@@ -47,7 +47,6 @@ export default function BoxSelection({
       sx={{ width: 300, marginBottom: 1 }}
       options={boxOptions}
       isOptionEqualToValue={(option, value) => option.boxID === value.boxID}
-      defaultValue={boxID ? { boxID: boxID, label: boxID } : { boxID: "" }}
       renderOption={(props, option) => {
         return (
           <li {...props} key={option.boxID}>
