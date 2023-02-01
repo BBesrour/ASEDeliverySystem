@@ -51,7 +51,7 @@ public class BoxController {
         } else if (user.getRole().equals(ERole.ROLE_DELIVERER)) {
             return ResponseEntity.ok(boxService.getBoxesByDeliverer(user.getId()));
         } else if (user.getRole().equals(ERole.ROLE_CUSTOMER)) {
-            return ResponseEntity.ok(boxService.getBoxesByCustomer(user.getId()));
+            return ResponseEntity.ok(boxService.getAllBoxes());
         } else {
             return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
