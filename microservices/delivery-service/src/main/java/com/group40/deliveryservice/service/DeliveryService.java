@@ -115,8 +115,10 @@ public class DeliveryService {
             repository.save(delivery);
         }
         User user = userService.getUserFromDB(toUpdate.get(0).getTargetCustomerID());
+        String activeMessage = active == null ? "" : "Active status was updated to " + active;
+        String statusMessage = status == null ? "" : "Delivery status was updated to " + status;
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),
-                "Delivery status for box " + boxID + " was updated to " + status,
+                "Delivery status for box " + boxID + " was updated: " + activeMessage + " " + statusMessage,
                 "ASE Delivery: Delivery status");
         boolean mailStatus = emailService.sendSimpleMail(emailDetails);
         if (mailStatus) {

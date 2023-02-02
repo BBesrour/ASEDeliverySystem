@@ -6,7 +6,7 @@ public class Delivery {
     @Id
     private String id;
 
-    private boolean isActive;
+    private boolean active;
     private String targetCustomerID;
     private String targetBoxID;
     private String delivererID;
@@ -21,11 +21,11 @@ public class Delivery {
     }
 
     public boolean isActive() {
-        return isActive;
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.active = active;
     }
 
     public String getTargetCustomerID() {
