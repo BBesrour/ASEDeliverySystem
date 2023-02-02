@@ -102,10 +102,16 @@ public class DeliveryService {
         return repository.findInactiveDeliveries(customer);
     }
 
-    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status) {
+    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status, Boolean active) {
+        // each of status and active can be null to indicate no change
         List<Delivery> toUpdate = repository.findDeliveriesForBox(boxID);
         for (Delivery delivery : toUpdate) {
-            delivery.setStatus(status);
+            if (active != null) {
+                delivery.setActive(active);
+            }
+            if (status != null) {
+                delivery.setStatus(status);
+            }
             repository.save(delivery);
         }
         User user = userService.getUserFromDB(toUpdate.get(0).getTargetCustomerID());
