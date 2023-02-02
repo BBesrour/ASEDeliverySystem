@@ -31,7 +31,7 @@ public class UserController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    ResponseEntity<?> getAllCustomers(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
+    ResponseEntity<?> getAllUsers(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) throws JSONException, IOException {
         User user = userService.getUser(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             return ResponseEntity.ok(userService.getAllUsers());

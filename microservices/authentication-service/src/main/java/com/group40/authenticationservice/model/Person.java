@@ -23,4 +23,6 @@ public class Person {
     @DBRef
     private Role role;
 
+    private String token;
+
 }

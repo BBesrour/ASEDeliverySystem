@@ -63,7 +63,21 @@ public class UserService {
     }
 
     public List<User> getAllUsers() {
-        return userRepository.getAllUsers();
+        //get all users from user
+        List<User> users = userRepository.findAll();
+        // get all users from deliverer and customer
+        List<Deliverer> deliverers = delivererRepository.findAll();
+        List<Customer> customers = customerRepository.findAll();
+        // replace the users with the deliverers and customers by id
+        users.replaceAll(user -> {
+            if (user.getRole().equals(ERole.ROLE_DELIVERER)) {
+                return deliverers.stream().filter(deliverer -> deliverer.getId().equals(user.getId())).findFirst().orElse((Deliverer) user);
+            } else if (user.getRole().equals(ERole.ROLE_CUSTOMER)) {
+                return customers.stream().filter(customer -> customer.getId().equals(user.getId())).findFirst().orElse((Customer) user);
+            }
+            return user;
+        });
+        return users;
     }
 
     public void deleteUser(String id) {
