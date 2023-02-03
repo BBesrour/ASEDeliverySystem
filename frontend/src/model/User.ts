@@ -22,7 +22,6 @@ export default class User {
   }
 
   static fromJson(json: any): User {
-    console.log(json.token);
     return new User(json.id, json.email, null, json.role, json.token);
   }
 }

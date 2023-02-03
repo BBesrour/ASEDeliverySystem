@@ -37,7 +37,13 @@ public class BoxService {
                 .build();
     }
 
-    public BoxResponse createBox(BoxRequest boxRequest) {
+    private void checkBoxNameDuplicate(Box newBox) throws BoxNameDuplicateException {
+        Box existingBoxWithSameName = boxRepository.findByName(newBox.getName());
+        if (existingBoxWithSameName != null && !existingBoxWithSameName.getId().equals(newBox.getId()))
+            throw new BoxNameDuplicateException("Box name already exists! " + newBox.getName());
+    }
+
+    public BoxResponse createBox(BoxRequest boxRequest) throws BoxNameDuplicateException {
         Box box = Box.builder()
                 .id(UUID.randomUUID().toString())
                 .address(boxRequest.getAddress())
@@ -45,6 +51,7 @@ public class BoxService {
                 .assignedCustomer(boxRequest.getAssignedCustomer())
                 .build();
 
+        checkBoxNameDuplicate(box);
         boxRepository.insert(box);
         return mapToBoxResponse(box);
     }
@@ -63,12 +70,13 @@ public class BoxService {
         return mapToBoxResponse(box);
     }
 
-    private Box updateField(String key, String value, Box box) {
+    private Box updateField(String key, String value, Box box) throws BoxNameDuplicateException {
         switch (key) {
             case "name" -> box.setName(value);
             case "address" -> box.setAddress(value);
             case "assignedCustomer" -> box.setAssignedCustomer(value);
         }
+        checkBoxNameDuplicate(box);
         return box;
     }
 
@@ -86,7 +94,8 @@ public class BoxService {
         throw new Exception("Box ID does not exist!!!");
     }
 
-    public Box replaceBox(Box newBox, String id) {
+    public Box replaceBox(Box newBox, String id) throws BoxNameDuplicateException {
+        checkBoxNameDuplicate(newBox);
         return boxRepository.findById(id)
                 .map(box -> {
                     box.setName(newBox.getName());
@@ -124,7 +133,12 @@ public class BoxService {
                 .assignedCustomer("")
                 .build();
 
-        replaceBox(newBox, box.getId());
+        try {
+            replaceBox(newBox, box.getId());
+        } catch (BoxNameDuplicateException e) {
+            // should not happen
+            e.printStackTrace();
+        }
     }
 
     
