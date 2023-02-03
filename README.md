@@ -5,6 +5,15 @@ In this repository is code of the delivery system implemented for the lecture Ad
 To test and play around with the latest version of our application please visit:
 ### - https://ase.pschwind.de
 
+If you also want to test the embedded system, set it up as described in the first ASE exercise, then clone the repository and run:
+```
+cd embedded
+./setup.sh
+python main.py
+```
+
+This will install and run the embedded system.
+
 Readme structure:
 1. Overview
 2. Quick start
