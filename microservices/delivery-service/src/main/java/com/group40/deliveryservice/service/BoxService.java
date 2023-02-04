@@ -6,6 +6,7 @@ import com.group40.deliveryservice.model.Box;
 import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.model.DeliveryStatus;
 import com.group40.deliveryservice.repository.BoxRepository;
+import com.group40.deliveryservice.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class BoxService {
 
     private final BoxRepository boxRepository;
 
-    private final DeliveryService deliveryService;
+    private final DeliveryRepository deliveryRepository;
 
     private List<Box> getBoxes(){
         return boxRepository.findAll();
@@ -111,7 +112,7 @@ public class BoxService {
     }
 
     public List<BoxResponse> getBoxesByDeliverer(String id) {
-        List<Delivery> deliveries = deliveryService.getAllDeliveries().stream().filter(delivery -> Objects.equals(delivery.getDelivererID(), id)).toList();
+        List<Delivery> deliveries = deliveryRepository.findAll().stream().filter(delivery -> Objects.equals(delivery.getDelivererID(), id)).toList();
 
         return getBoxes().stream()
                 .filter(box -> deliveries.stream().anyMatch(delivery -> Objects.equals(delivery.getTargetBoxID(), box.getId())))
@@ -154,7 +155,9 @@ public class BoxService {
                 .orElseThrow(() -> new Exception("Box cannot found"));
 
         //GET ALL DELIVERIES
-        List<Delivery> deliveries = deliveryService.getAllDeliveries().stream().filter(delivery -> Objects.equals(delivery.getTargetBoxID(), id)).toList();
+        //get all deliveries from deliveryRepository that have the same target box id
+
+        List<Delivery> deliveries = deliveryRepository.findAll().stream().filter(delivery -> Objects.equals(delivery.getTargetBoxID(), id)).toList();
         if (deliveries.stream().anyMatch(delivery -> delivery.getStatus().equals(DeliveryStatus.ORDERED) || delivery.getStatus().equals(DeliveryStatus.PICKED_UP))) {
             throw new Exception("Cannot update the box because there is a delivery on this box with status ORDERED or PICKED_UP");
         } else {
