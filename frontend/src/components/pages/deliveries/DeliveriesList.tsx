@@ -12,6 +12,8 @@ import TextField from "@mui/material/TextField";
 import UpdateDeliveryDialog from "./UpdateDeliveryDialog";
 import {getBoxes} from "../../../api/delivery/box";
 import Box from "../../../model/Box";
+import {getRole} from "../../../storage/user";
+import {ROLE_DELIVERER, ROLE_DISPATCHER} from "../../../model/roles";
 
 
 export default function DeliveriesList({deliveries, propertiesToShow, onDeliveryUpdated, onDeliveryDeleted}: {
@@ -25,6 +27,7 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
     const [trackingCodeInput, setTrackingCodeInput] = useState<string>("");
     const [shownDeliveries, setShownDeliveries] = useState<Delivery[]>(deliveries);
     const [showUpdateDialogFor, setShowUpdateDialogFor] = useState<string | null>(null);
+    const roles = getRole();
 
     function getDeliveryProperty(delivery: Delivery, property: string) {
         // @ts-ignore
@@ -102,10 +105,19 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
                                     {property}: {getDeliveryProperty(delivery, property)}
                                 </Typography>
                             ))}
-                            <Button size="small" onClick={() => setShowStatusDialogFor(delivery.id)}>Status</Button>
-                            <Button size="small" onClick={() => setShowQRDialogFor(delivery.id)}>QR</Button>
-                            <Button size="small" onClick={() => setShowUpdateDialogFor(delivery.id)}>Edit</Button>
-                            <Button size="small" onClick={() => handleDeleteDelivery(delivery.id)}>Delete</Button>
+
+                            {roles === ROLE_DELIVERER ?
+                                <Button size="small" onClick={() => setShowStatusDialogFor(delivery.id)}>Status</Button> :
+                                null}
+                            {roles === ROLE_DISPATCHER ?
+                                <Button size="small" onClick={() => setShowQRDialogFor(delivery.id)}>QR</Button> :
+                                null}
+                            {roles === ROLE_DISPATCHER ?
+                                <Button size="small" onClick={() => setShowUpdateDialogFor(delivery.id)}>Edit</Button> :
+                                null}
+                            {roles === ROLE_DISPATCHER ?
+                                <Button size="small" onClick={() => handleDeleteDelivery(delivery.id)}>Delete</Button> :
+                                null}
                         </CardContent>
                     </Card>
                 </Grid>
