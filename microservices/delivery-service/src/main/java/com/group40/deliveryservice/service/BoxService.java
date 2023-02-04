@@ -4,6 +4,7 @@ import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.model.Box;
 import com.group40.deliveryservice.model.Delivery;
+import com.group40.deliveryservice.model.DeliveryStatus;
 import com.group40.deliveryservice.repository.BoxRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -144,5 +145,22 @@ public class BoxService {
     
     public void deleteBox(String id) {
         boxRepository.deleteById(id);
+    }
+
+    public void updateTargetCustomer(String id, String customerID) throws Exception {
+        Box box = getBoxes().stream()
+                .filter(box1 -> Objects.equals(id, box1.getId()))
+                .findFirst()
+                .orElseThrow(() -> new Exception("Box cannot found"));
+
+        //GET ALL DELIVERIES
+        List<Delivery> deliveries = deliveryService.getAllDeliveries().stream().filter(delivery -> Objects.equals(delivery.getTargetBoxID(), id)).toList();
+        if (deliveries.stream().anyMatch(delivery -> delivery.getStatus().equals(DeliveryStatus.ORDERED) || delivery.getStatus().equals(DeliveryStatus.PICKED_UP))) {
+            throw new Exception("Cannot update the box because there is a delivery on this box with status ORDERED or PICKED_UP");
+        } else {
+            box.setAssignedCustomer("");
+            boxRepository.save(box);
+        }
+     
     }
 }

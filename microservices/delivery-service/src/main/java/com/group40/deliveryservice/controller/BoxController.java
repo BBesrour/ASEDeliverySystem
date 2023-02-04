@@ -186,7 +186,7 @@ public class BoxController {
         if (user.getRole().equals(ERole.ROLE_CUSTOMER)) {
             if (box.getAssignedCustomer().equals(user.getId())) {
                 wantedStatus = DeliveryStatus.PICKED_UP;
-                boxService.resetBox(box);
+                boxService.updateTargetCustomer(box.getId(), box.getAssignedCustomer());
             } else {
                 return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (customer cannot close boxes that are not assigned to them)!\"}");
             }

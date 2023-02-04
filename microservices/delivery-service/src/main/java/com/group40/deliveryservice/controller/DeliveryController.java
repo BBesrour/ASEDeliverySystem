@@ -71,7 +71,7 @@ public class DeliveryController {
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    ResponseEntity<?> replaceDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody Delivery newDelivery, @PathVariable String id) throws JSONException, IOException, DeliveryNotFoundException {
+    ResponseEntity<?> replaceDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody Delivery newDelivery, @PathVariable String id) throws Exception {
         Delivery delivery = deliveryService.getSingleDelivery(id);
         String adminTokenCheck = "Bearer " + adminToken;
         if (adminTokenCheck.equals(token)){
@@ -85,13 +85,13 @@ public class DeliveryController {
             } else {
                 return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
             } 
-        } catch (DeliveryNotFoundException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Box does not exist! or assigned to another Customer: " + e.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    ResponseEntity<?> deleteDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String id) throws JSONException, IOException {
+    ResponseEntity<?> deleteDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable String id) throws Exception {
         User user = userService.getUser(token);
         Delivery delivery = deliveryService.getSingleDelivery(id);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getTargetCustomerID().equals(user.getId())) {
