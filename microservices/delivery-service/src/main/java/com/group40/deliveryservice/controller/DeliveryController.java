@@ -53,7 +53,7 @@ public class DeliveryController {
                 return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
             }
         } catch( DeliveryNotFoundException e ){
-            return ResponseEntity.status(409).body("{\"error\": \"Box does not exist! or assigned to another Customer\"}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"error\": \"Box does not exist! or assigned to another Customer\"}");
         }
     }
 
@@ -86,7 +86,7 @@ public class DeliveryController {
                 return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
             } 
         } catch (DeliveryNotFoundException e) {
-            return ResponseEntity.status(409).body("Box does not exist! or assigned to another Customer: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Box does not exist! or assigned to another Customer: " + e.getMessage());
         }
     }
 

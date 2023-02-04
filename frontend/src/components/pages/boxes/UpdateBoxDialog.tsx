@@ -21,7 +21,15 @@ export default function UpdateBoxDialog({open, handleClose, onBoxUpdated, box}: 
     async function handleUpdateBox() {
         box.name = name;
         box.address = address;
-        onBoxUpdated(await updateBox(box));
+        let updatedBox = null;
+        try {
+            updatedBox = await updateBox(box);
+        } catch (error) {
+            // @ts-ignore
+            alert("Error updating box: " + (await error.response.json()).error);
+            return;
+        }
+        onBoxUpdated(updatedBox);
         handleClose();
     }
 

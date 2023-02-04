@@ -23,7 +23,15 @@ export default function CreateBoxDialog({
 
   async function handleCreateBox() {
     const newBox = new Box(null, name, address, "");
-    onBoxCreated(await createBox(newBox));
+    let createdBox = null;
+    try {
+      createdBox = await createBox(newBox);
+    } catch (error) {
+      // @ts-ignore
+      alert("Error creating box: " + (await error.response.json()).error);
+      return;
+    }
+    onBoxCreated(createdBox);
     handleClose();
   }
 

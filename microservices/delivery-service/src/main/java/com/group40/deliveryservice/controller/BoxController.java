@@ -3,6 +3,7 @@ package com.group40.deliveryservice.controller;
 import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
 import com.group40.deliveryservice.model.*;
+import com.group40.deliveryservice.service.BoxNameDuplicateException;
 import com.group40.deliveryservice.service.BoxService;
 import com.group40.deliveryservice.service.DeliveryService;
 import com.group40.deliveryservice.service.UserService;
@@ -34,7 +35,11 @@ public class BoxController {
     public ResponseEntity<?> createBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @RequestBody BoxRequest boxRequest) throws JSONException, IOException {
         User user = userService.getUser(token);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
-            return ResponseEntity.ok(boxService.createBox(boxRequest));
+            try {
+                return ResponseEntity.ok(boxService.createBox(boxRequest));
+            } catch (BoxNameDuplicateException e) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"error\": \"" + e.getMessage() + "\"}");
+            }
         } else {
             return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
@@ -99,7 +104,11 @@ public class BoxController {
         User user = userService.getUser(token);
         System.out.println(user.getRole() == ERole.ROLE_DISPATCHER);
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
-            return ResponseEntity.ok(boxService.replaceBox(newBox, id));
+            try {
+                return ResponseEntity.ok(boxService.replaceBox(newBox, id));
+            } catch (BoxNameDuplicateException e) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"error\": \"Box name already exists!\"}");
+            }
         } else {
             return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
