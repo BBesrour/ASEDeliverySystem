@@ -2,7 +2,10 @@ package com.group40.deliveryservice.controller;
 
 import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
-import com.group40.deliveryservice.model.*;
+import com.group40.deliveryservice.model.Box;
+import com.group40.deliveryservice.model.Delivery;
+import com.group40.deliveryservice.model.ERole;
+import com.group40.deliveryservice.model.User;
 import com.group40.deliveryservice.service.BoxNameDuplicateException;
 import com.group40.deliveryservice.service.BoxService;
 import com.group40.deliveryservice.service.DeliveryService;
@@ -181,21 +184,18 @@ public class BoxController {
         if (user == null) {
             return ResponseEntity.badRequest().body("Wrong userToken!");
         }
-        DeliveryStatus wantedStatus = null; // no change
-        Boolean wantedActive = null; // no change
         BoxResponse box = boxService.getBox(id);
         if (user.getRole().equals(ERole.ROLE_CUSTOMER)) {
             if (box.getAssignedCustomer().equals(user.getId())) {
-                boxService.updateTargetCustomer(box.getId(), box.getAssignedCustomer());
-                wantedActive = false;
+                deliveryService.changeDeliveredDeliveriesToInactive(id);
             } else {
                 return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (customer cannot close boxes that are not assigned to them)!\"}");
             }
         } else if (user.getRole().equals(ERole.ROLE_DELIVERER)) {
-            wantedStatus = DeliveryStatus.DELIVERED;
+            deliveryService.changePickedUpDeliveriesToDelivered(id);
         } else {
             return ResponseEntity.badRequest().body("Not authorized (dispatchers cannot close boxes)!");
         }
-        return ResponseEntity.ok(deliveryService.changeDeliveriesInBoxStatus(id, wantedStatus, wantedActive, token));
+        return ResponseEntity.ok().build();
     }
 }

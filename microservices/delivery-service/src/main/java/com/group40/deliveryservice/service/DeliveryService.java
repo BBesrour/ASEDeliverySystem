@@ -54,7 +54,7 @@ public class DeliveryService {
     }
 
 
-    public Delivery replaceDelivery(Delivery newDelivery, String id, String token) throws Exception {
+    public Delivery replaceDelivery(Delivery newDelivery, String id) throws Exception {
 
         //create or update delivery with id, in that target box all deliveries are assigned to same customer id
         Box box = boxRepository.findById(newDelivery.getTargetBoxID()).orElseThrow(() -> new DeliveryNotFoundException("Box not found"));
@@ -116,29 +116,41 @@ public class DeliveryService {
         return repository.findInactiveDeliveries(customer);
     }
 
-    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status, Boolean active, String token) throws JSONException, IOException {
-        // each of status and active can be null to indicate no change
-        List<Delivery> toUpdate = repository.findDeliveriesForBox(boxID);
-        for (Delivery delivery : toUpdate) {
-            if (active != null) {
-                delivery.setActive(active);
-            }
-            if (status != null) {
-                delivery.setStatus(status);
-            }
-            repository.save(delivery);
-        }
-        User user = userService.getUserFromDB(toUpdate.get(0).getTargetCustomerID());
-        String activeMessage = active == null ? "" : "Active status was updated to " + active;
-        String statusMessage = status == null ? "" : "Delivery status was updated to " + status;
+    private void notifyUserOnDeliveryUpdate(String userID, String message) throws JSONException, IOException {
+        User user = userService.getUserFromDB(userID);
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),
-                "Delivery status for box " + boxID + " was updated: " + activeMessage + " " + statusMessage,
+                message,
                 "ASE Delivery: Delivery status");
-        boolean mailStatus = emailService.sendSimpleMail(emailDetails);
-        if (mailStatus) {
+        boolean status = emailService.sendSimpleMail(emailDetails);
+        if (status) {
             log.info("Mail sent successfully for email: " + user.getEmail());
         } else {
             log.error("Mail not sent for email: " + user.getEmail());
+        }
+    }
+
+    public List<Delivery> changePickedUpDeliveriesToDelivered(String boxID) throws JSONException, IOException {
+        // each of status and active can be null to indicate no change
+        List<Delivery> toUpdate = repository.findActiveDeliveriesForBox(boxID);
+        for (Delivery delivery : toUpdate) {
+            if (delivery.getStatus().equals(DeliveryStatus.PICKED_UP)) {
+                delivery.setStatus(DeliveryStatus.DELIVERED);
+                repository.save(delivery);
+                notifyUserOnDeliveryUpdate(delivery.getTargetCustomerID(), "Your delivery in the box " + delivery.getTargetBoxID() + " has been delivered! " + delivery.getId());
+            }
+        }
+        return toUpdate;
+    }
+
+    public List<Delivery> changeDeliveredDeliveriesToInactive(String boxID) throws JSONException, IOException {
+        // each of status and active can be null to indicate no change
+        List<Delivery> toUpdate = repository.findActiveDeliveriesForBox(boxID);
+        for (Delivery delivery : toUpdate) {
+            if (delivery.getStatus().equals(DeliveryStatus.DELIVERED)) {
+                delivery.setActive(false);
+                repository.save(delivery);
+                notifyUserOnDeliveryUpdate(delivery.getTargetCustomerID(), "Your delivery has been taken out of the box with ID " + delivery.getTargetBoxID() + "! " + delivery.getId());
+            }
         }
         return toUpdate;
     }
