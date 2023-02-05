@@ -23,6 +23,7 @@ class DeliveryService:
         response = self._get("/api/delivery/csrf")
         if response.status_code != 200:
             raise Exception(f"Failed to get CSRF token: {response.text}")
+        print("Got CSRF token:", response.json())
         return response.json()["token"]
 
     def _post(self, url: str, json_data=None) -> requests.Response:
