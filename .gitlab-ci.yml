@@ -10,9 +10,6 @@ build-job: # builds spring boot apps
   script:
     - cd microservices/
     - mvn clean install -B
-  only:
-    changes:
-      - microservices/*
 
 docker-frontend-job: # build FE image + pushes it to Docker hub
   image: docker:20.10.16
