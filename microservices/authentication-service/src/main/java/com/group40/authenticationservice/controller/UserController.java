@@ -9,7 +9,6 @@ import com.group40.authenticationservice.repository.RoleRepository;
 import com.group40.authenticationservice.repository.UserRepository;
 import com.group40.authenticationservice.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,10 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -44,10 +41,10 @@ public class UserController {
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('DISPATCHER')")
     public ResponseEntity<?> updateUser(@RequestBody PersonRequest newUser, @PathVariable String id){
-        UserDetailsImpl userDetails =
-                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        User user = userRepository.findById(id).orElseThrow();
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isEmpty())
+            return ResponseEntity.notFound().build();
+        User user = userOpt.get();
         user.setEmail(newUser.getEmail());
         if (!newUser.getPassword().isBlank())
             user.setPassword(encoder.encode(newUser.getPassword()));
@@ -68,10 +65,10 @@ public class UserController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('DISPATCHER')")
     public ResponseEntity<?> deleteUser(@PathVariable String id){
-        UserDetailsImpl userDetails =
-                (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        User user = userRepository.findById(id).orElseThrow();
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isEmpty())
+            return ResponseEntity.notFound().build();
+        User user = userOpt.get();
 
         userRepository.deleteById(id);
 
@@ -115,7 +112,10 @@ public class UserController {
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('DISPATCHER')")
     public ResponseEntity<?> getUser(@PathVariable String id){
-        User user = userRepository.findById(id).orElseThrow();
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isEmpty())
+            return ResponseEntity.notFound().build();
+        User user = userOpt.get();
         PersonResponse response = PersonResponse.builder()
                 .id(user.getId()).
                 role(user.getRole().getName().name())
