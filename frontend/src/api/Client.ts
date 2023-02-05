@@ -46,6 +46,16 @@ export default class Client {
         return csrfToken.token
     }
 
+    responseCheck(response: Response) {
+        if (!response.ok) {
+            const error = new Error("Failed Request");
+            // @ts-ignore
+            error.response = response;
+
+            throw error;
+        }
+    }
+
     async postRequest(url: string, params: any = {}, body: any = {}) {
         const urlWithParams = url + (Object.keys(params).length ? `?${new URLSearchParams(params)}` : '');
         const csrfToken = await this.getCSRFToken();
@@ -59,6 +69,7 @@ export default class Client {
             },
             body: body ? JSON.stringify(body) : undefined
         });
+        this.responseCheck(response);
         return await response.json();
     }
 
