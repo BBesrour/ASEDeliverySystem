@@ -63,7 +63,7 @@ public class DeliveryService {
 
             Delivery replacedDelivery = repository.findById(id)
                 .map(delivery -> {
-                    delivery.setActive(newDelivery.getIsActive());
+                    delivery.setActive(newDelivery.isActive());
                     delivery.setTargetCustomerID(newDelivery.getTargetCustomerID());
                     delivery.setTargetBoxID(newDelivery.getTargetBoxID());
                     delivery.setDelivererID(newDelivery.getDelivererID());
@@ -104,15 +104,23 @@ public class DeliveryService {
         return repository.findInactiveDeliveries(customer);
     }
 
-    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status, String token) throws JSONException, IOException {
+    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status, Boolean active, String token) throws JSONException, IOException {
+        // each of status and active can be null to indicate no change
         List<Delivery> toUpdate = repository.findDeliveriesForBox(boxID);
         for (Delivery delivery : toUpdate) {
-            delivery.setStatus(status);
+            if (active != null) {
+                delivery.setActive(active);
+            }
+            if (status != null) {
+                delivery.setStatus(status);
+            }
             repository.save(delivery);
         }
         User user = userService.getUserFromDB(toUpdate.get(0).getTargetCustomerID(), token);
+        String activeMessage = active == null ? "" : "Active status was updated to " + active;
+        String statusMessage = status == null ? "" : "Delivery status was updated to " + status;
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),
-                "Delivery status for box " + boxID + " was updated to " + status,
+                "Delivery status for box " + boxID + " was updated: " + activeMessage + " " + statusMessage,
                 "ASE Delivery: Delivery status");
         boolean mailStatus = emailService.sendSimpleMail(emailDetails);
         if (mailStatus) {

@@ -1,13 +1,12 @@
 package com.group40.deliveryservice.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 
 public class Delivery {
     @Id
     private String id;
-    @JsonProperty("isActive")
-    private boolean isActive;
+
+    private boolean active;
     private String targetCustomerID;
     private String targetBoxID;
     private String delivererID;
@@ -21,13 +20,12 @@ public class Delivery {
         this.id = id;
     }
 
-    @JsonProperty("isActive")
-    public boolean getIsActive() {
-        return isActive;
+    public boolean isActive() {
+        return active;
     }
 
     public void setActive(boolean active) {
-        isActive = active;
+        this.active = active;
     }
 
     public String getTargetCustomerID() {
