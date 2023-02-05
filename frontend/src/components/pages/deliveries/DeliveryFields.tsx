@@ -20,7 +20,7 @@ export default function DeliveryFields({
   const [targetBoxID, setTargetBoxID] = useState(delivery.targetBoxID);
   const [delivererID, setDelivererID] = useState(delivery.delivererID);
   const [status, setStatus] = useState(delivery.status || "ORDERED");
-  const [isActive, setIsActive] = useState(delivery.isActive);
+  const [active, setActive] = useState(delivery.active);
 
   function handleUpdateDelivery() {
     onDeliveryUpdate(
@@ -30,14 +30,14 @@ export default function DeliveryFields({
         targetBoxID,
         delivererID,
         status,
-        isActive
+        active
       )
     );
   }
 
   useEffect(() => {
     handleUpdateDelivery();
-  }, [targetCustomerID, targetBoxID, delivererID, status, isActive]);
+  }, [targetCustomerID, targetBoxID, delivererID, status, active]);
 
   return (
     <div>
@@ -63,8 +63,8 @@ export default function DeliveryFields({
         <FormControlLabel
           control={
             <Switch
-              checked={isActive}
-              onChange={(event) => setIsActive(event.target.checked)}
+              checked={active}
+              onChange={(event) => setActive(event.target.checked)}
               inputProps={{ "aria-label": "controlled" }}
             />
           }
