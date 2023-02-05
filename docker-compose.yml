@@ -42,7 +42,7 @@ services:
     pull_policy: always
     environment:
       - SPRING_PROFILES_ACTIVE=docker
-      - AUTH_MONGO_DB=${AUTH_MONGO_DB}
+      - AUTH_MONGO_URL=${AUTH_MONGO_URL}
     depends_on:
       - discovery-server
       - api-gateway
