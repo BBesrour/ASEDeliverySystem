@@ -3,7 +3,7 @@ version: "3"
 services:
   ## Eureka Server
   discovery-server:
-    image: ase40/discovery-server:latest
+    image: endurna/discovery-server:latest
     container_name: discovery-server
     pull_policy: always
     ports:
@@ -13,7 +13,7 @@ services:
 
   ## Api gateway
   api-gateway:
-    image: ase40/api-gateway:latest
+    image: endurna/api-gateway:latest
     container_name: api-gateway
     pull_policy: always
     ports:
@@ -25,7 +25,7 @@ services:
 
   ## Delivery Service
   delivery-service:
-    image: ase40/delivery-service:latest
+    image: endurna/delivery-service:latest
     container_name: delivery-service
     pull_policy: always
     environment:
@@ -37,7 +37,7 @@ services:
 
   ## Delivery Service!
   authentication-service:
-    image: ase40/authentication-service:latest
+    image: endurna/authentication-service:latest
     container_name: authentication-service
     pull_policy: always
     environment:
@@ -49,7 +49,7 @@ services:
 
   ## Frontned
   ui-service:
-    image: ase40/ui-service:latest
+    image: endurna/ui-service:latest
     container_name: ui-service
     depends_on:
       - api-gateway
