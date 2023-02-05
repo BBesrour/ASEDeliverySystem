@@ -29,8 +29,8 @@ docker-frontend-job: # build FE image + pushes it to Docker hub
     - echo "Logging in to Docker Hub..."
     - echo $CI_REGISTRY_PASSWORD | docker login --username=$CI_REGISTRY_USER
     - cd frontend/
-    - docker build -t endurna/ui-service:latest .
-    - docker push endurna/ui-service:latest
+    - docker build -t ase40/ui-service:latest .
+    - docker push ase40/ui-service:latest
   only:
     - main
 
