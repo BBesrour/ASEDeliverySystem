@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class DeliveryRequest {
     private String id;
 
-    private boolean isActive;
+    private boolean active;
     private String targetCustomerID;
     private String targetBoxID;
     private String delivererID;

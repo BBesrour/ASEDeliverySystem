@@ -5,6 +5,15 @@ In this repository is code of the delivery system implemented for the lecture Ad
 To test and play around with the latest version of our application please visit:
 ### - https://ase.pschwind.de
 
+If you also want to test the embedded system, set it up as described in the first ASE exercise, then clone the repository and run:
+```
+cd embedded
+./setup.sh
+python main.py
+```
+
+This will install and run the embedded system.
+
 Readme structure:
 1. Overview
 2. Quick start
@@ -18,6 +27,9 @@ Readme structure:
 Please make sure you have the following Requirements already installed on your computer before attempting to run the application:
 - Docker
 ## Quick start
+In order to run the application in production setting locally, execute the following command:
+- `docker-compose up -d`  
+
 In order to run the application in development mode with Docker, execute the following command:
 - `docker-compose -f docker-compose.test.yml up -d`
 ## Cloud hosting

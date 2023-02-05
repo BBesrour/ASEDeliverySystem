@@ -7,10 +7,10 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.List;
 
 public interface DeliveryRepository extends MongoRepository<Delivery, String> {
-    @Query("{ 'isActive' :  true, 'targetCustomerID' : ?0 }")
+    @Query("{ 'active' :  true, 'targetCustomerID' : ?0 }")
     List<Delivery> findActiveDeliveries(String customer);
 
-    @Query("{ 'isActive' :  false, 'targetCustomerID' : ?0 }")
+    @Query("{ 'active' :  false, 'targetCustomerID' : ?0 }")
     List<Delivery> findInactiveDeliveries(String customer);
 
     @Query("{'targetCustomerID' : ?0 }")

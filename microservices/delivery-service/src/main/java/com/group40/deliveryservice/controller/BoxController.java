@@ -181,12 +181,13 @@ public class BoxController {
         if (user == null) {
             return ResponseEntity.badRequest().body("Wrong userToken!");
         }
-        DeliveryStatus wantedStatus;
+        DeliveryStatus wantedStatus = null; // no change
+        Boolean wantedActive = null; // no change
         BoxResponse box = boxService.getBox(id);
         if (user.getRole().equals(ERole.ROLE_CUSTOMER)) {
             if (box.getAssignedCustomer().equals(user.getId())) {
-                wantedStatus = DeliveryStatus.PICKED_UP;
                 boxService.updateTargetCustomer(box.getId(), box.getAssignedCustomer());
+                wantedActive = false;
             } else {
                 return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (customer cannot close boxes that are not assigned to them)!\"}");
             }
@@ -195,6 +196,6 @@ public class BoxController {
         } else {
             return ResponseEntity.badRequest().body("Not authorized (dispatchers cannot close boxes)!");
         }
-        return ResponseEntity.ok(deliveryService.changeDeliveriesInBoxStatus(id, wantedStatus));
+        return ResponseEntity.ok(deliveryService.changeDeliveriesInBoxStatus(id, wantedStatus, wantedActive));
     }
 }
