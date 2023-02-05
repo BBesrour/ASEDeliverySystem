@@ -55,7 +55,7 @@ public class UserService {
             return new AdminUser();
         }
         URL url = new URL(apiURL + "/api/auth/user/" + id);
-        return executeGetUser(url, token);
+        return executeGetUser(url, "Bearer " + adminToken);
     }
 
     public Deliverer getDelivererFromDB(String email){
