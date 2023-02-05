@@ -20,9 +20,10 @@ export default function CreateBoxDialog({
 }) {
   const [name, setName] = React.useState("");
   const [address, setAddress] = React.useState("");
+  const [id, setId] = React.useState("");
 
   async function handleCreateBox() {
-    const newBox = new Box(null, name, address, "");
+    const newBox = new Box(id, name, address, "");
     let createdBox = null;
     try {
       createdBox = await createBox(newBox);
@@ -40,6 +41,16 @@ export default function CreateBoxDialog({
       <DialogTitle>Create New Box</DialogTitle>
       <DialogContent>
         <DialogContentText>Enter new box details here:</DialogContentText>
+        <TextField
+          autoFocus
+          margin="dense"
+          value={id}
+          onChange={(event) => setId(event.target.value)}
+          label="ID"
+          type="text"
+          fullWidth
+          variant="standard"
+        />
         <TextField
           autoFocus
           margin="dense"
