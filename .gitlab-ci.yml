@@ -26,9 +26,11 @@ docker-frontend-job: # build FE image + pushes it to Docker hub
   before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD"
   script:
+    - echo "Logging in to Docker Hub..."
+    - echo $CI_REGISTRY_PASSWORD | docker login --username=$CI_REGISTRY_USER
     - cd frontend/
-    - docker build -t ase40/ui-service:latest .
-    - docker push ase40/ui-service:latest
+    - docker build -t endurna/ui-service:latest .
+    - docker push endurna/ui-service:latest
   only:
     - main
 
@@ -36,6 +38,8 @@ docker-backend-job: # builds BE images using jib + pushes to Docker hub
   stage: docker
   image: maven:3.8.7-eclipse-temurin-17
   script:
+    - echo "Logging in to Docker Hub..."
+    - echo $CI_REGISTRY_PASSWORD | docker login --username=$CI_REGISTRY_USER
     - cd microservices/
     - echo "Deploying to Docker hub... This will take some time."
     - mvn compile jib:build -Djib.to.auth.username=${CI_REGISTRY_USER} -Djib.to.auth.password=${CI_REGISTRY_PASSWORD}
@@ -56,6 +60,6 @@ deploy: # deploys to linode and runs services with docker-compose (pullling from
     - chmod 644 ~/.ssh/known_hosts
   script:
     - scp docker-compose.yml root@139.162.132.244:/root/ # copy docker-compose to linode
-    - ssh $SSH_USER@$SSH_IP "docker compose --env-file ./.env up -d"
+    - ssh $SSH_USER@$SSH_IP "echo $CI_REGISTRY_PASSWORD | docker login --username=$CI_REGISTRY_USER && docker compose --env-file ./.env up -d"
   only:
     - main
