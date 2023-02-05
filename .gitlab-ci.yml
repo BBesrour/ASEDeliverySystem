@@ -1,7 +1,6 @@
 stages:
   - build
-  - docker-frontend
-  - docker-backend
+  - docker
   - deploy
 
 build-job: # builds spring boot apps
@@ -13,7 +12,7 @@ build-job: # builds spring boot apps
 
 docker-frontend-job: # build FE image + pushes it to Docker hub
   image: docker:20.10.16
-  stage: docker-frontend
+  stage: docker
   services:
     - docker:20.10.16-dind
   variables:
@@ -30,7 +29,7 @@ docker-frontend-job: # build FE image + pushes it to Docker hub
     - main
 
 docker-backend-job: # builds BE images using jib + pushes to Docker hub
-  stage: docker-backend
+  stage: docker
   image: maven:3.8.7-eclipse-temurin-17
   script:
     - cd microservices/
