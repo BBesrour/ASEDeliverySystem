@@ -159,7 +159,7 @@ public class BoxService {
 
         List<Delivery> deliveries = deliveryRepository.findAll().stream().filter(delivery -> Objects.equals(delivery.getTargetBoxID(), id)).toList();
         if (deliveries.stream().anyMatch(delivery -> delivery.getStatus().equals(DeliveryStatus.ORDERED) || delivery.getStatus().equals(DeliveryStatus.PICKED_UP))) {
-            throw new Exception("Cannot update the box because there is a delivery on this box with status ORDERED or PICKED_UP");
+            return;
         } else {
             box.setAssignedCustomer("");
             boxRepository.save(box);
