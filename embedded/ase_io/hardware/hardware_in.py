@@ -43,13 +43,13 @@ class ASEHardwareIn:
 
     def _check_darkness_change(self):
         print("Checking darkness change...")
-        if self.is_dark() != self._dark:
-            print("Darkness changed to", self.is_dark())
-            self._dark = self.is_dark()
-            for listener in self.darkness_listeners:
-                listener(self._dark)
-        t = Timer(0.1, self._check_darkness_change)
-        t.start()
+        while True:
+            if self.is_dark() != self._dark:
+                print("Darkness changed to", self.is_dark())
+                self._dark = self.is_dark()
+                for listener in self.darkness_listeners:
+                    listener(self._dark)
+            time.sleep(0.1)
 
     def _read_token(self):
         while True:
