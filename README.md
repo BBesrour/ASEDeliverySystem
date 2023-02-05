@@ -18,6 +18,9 @@ Readme structure:
 Please make sure you have the following Requirements already installed on your computer before attempting to run the application:
 - Docker
 ## Quick start
+In order to run the application in production setting locally, execute the following command:
+- `docker-compose up -d`  
+
 In order to run the application in development mode with Docker, execute the following command:
 - `docker-compose -f docker-compose.test.yml up -d`
 ## Cloud hosting
