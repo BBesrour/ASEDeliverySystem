@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,7 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -35,6 +37,7 @@ public class UserService {
     private final CustomerRepository customerRepository;
 
     private final EmailService emailService;
+
 
     @Value("${application.apiUrl}")
     private String apiURL;
@@ -233,7 +236,8 @@ public class UserService {
         if (adminTokenIsValid(token)) {
             return new AdminUser();
         }
-        URL url = new URL(apiURL + "/api/auth/user/token-to-user");
+        String encodedToken = URLEncoder.encode(token, StandardCharsets.UTF_8);
+        URL url = new URL(apiURL + "/api/auth/user/token-to-user?token="+ encodedToken);
         return executeGetUser(url, token);
     }
 
