@@ -1,7 +1,6 @@
 stages:
   - build
-  - docker-frontend
-  - docker-backend
+  - docker
   - deploy
 
 build-job: # builds spring boot apps
@@ -10,10 +9,14 @@ build-job: # builds spring boot apps
   script:
     - cd microservices/
     - mvn clean install -B
+  only:
+    changes:
+      - microservices/**/*
+
 
 docker-frontend-job: # build FE image + pushes it to Docker hub
   image: docker:20.10.16
-  stage: docker-frontend
+  stage: docker
   services:
     - docker:20.10.16-dind
   variables:
@@ -30,7 +33,7 @@ docker-frontend-job: # build FE image + pushes it to Docker hub
     - main
 
 docker-backend-job: # builds BE images using jib + pushes to Docker hub
-  stage: docker-backend
+  stage: docker
   image: maven:3.8.7-eclipse-temurin-17
   script:
     - cd microservices/
@@ -53,6 +56,6 @@ deploy: # deploys to linode and runs services with docker-compose (pullling from
     - chmod 644 ~/.ssh/known_hosts
   script:
     - scp docker-compose.yml root@139.162.132.244:/root/ # copy docker-compose to linode
-    - ssh $SSH_USER@$SSH_IP "docker compose up -d"
+    - ssh $SSH_USER@$SSH_IP "docker compose --env-file ./.env up -d"
   only:
     - main

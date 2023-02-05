@@ -23,28 +23,31 @@ class DeliveryService:
         response = self._get("/api/delivery/csrf")
         if response.status_code != 200:
             raise Exception(f"Failed to get CSRF token: {response.text}")
+        print("Got CSRF token:", response.json())
         return response.json()["token"]
 
     def _post(self, url: str, json_data=None) -> requests.Response:
+        csrf_token = self.get_csrf_token()
         return requests.post(
             self.config.delivery_server_address + url,
             json=json_data,
             headers={
                 "Authorization": f"Bearer {self.config.admin_token}",
-                "X-XSRF-Token": self.get_csrf_token()
+                "X-XSRF-Token": csrf_token
             },
-            cookies={"XSRF-TOKEN": self.get_csrf_token()}
+            cookies={"XSRF-TOKEN": csrf_token}
         )
 
     def _put(self, url: str, json_data=None) -> requests.Response:
+        csrf_token = self.get_csrf_token()
         return requests.put(
             self.config.delivery_server_address + url,
             json=json_data,
             headers={
                 "Authorization": f"Bearer {self.config.admin_token}",
-                "X-XSRF-Token": self.get_csrf_token()
+                "X-XSRF-Token": csrf_token
             },
-            cookies={"XSRF-TOKEN": self.get_csrf_token()}
+            cookies={"XSRF-TOKEN": csrf_token}
         )
 
     def get_box(self, box_id: int) -> Union[Box, None]:
