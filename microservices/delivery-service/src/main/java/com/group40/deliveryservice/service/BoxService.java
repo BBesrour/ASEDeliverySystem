@@ -47,7 +47,7 @@ public class BoxService {
 
     public BoxResponse createBox(BoxRequest boxRequest) throws Exception {
         Box box;
-        if (Objects.equals(boxRequest.getId(), "")) {
+        if (!Objects.equals(boxRequest.getId(), "")) {
             box = Box.builder()
                     .id(boxRequest.getId())
                     .address(boxRequest.getAddress())
