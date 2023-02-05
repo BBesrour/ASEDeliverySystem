@@ -60,15 +60,15 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
         });
     }, []);
     useEffect(() => {
-        const newBoxNames = boxNames;
-        const newBoxAddresses = boxAddresses;
+        const newBoxNames = new Map();
+        const newBoxAddresses = new Map();
         shownDeliveries.forEach((delivery) => {
             newBoxNames.set(delivery.id ?? "", boxes.filter((box) => box.id === delivery.targetBoxID)[0]?.name || "no box");
             newBoxAddresses.set(delivery.id ?? "", boxes.filter((box) => box.id === delivery.targetBoxID)[0]?.address || "no box");
         });
         setBoxNames(newBoxNames);
         setBoxAddresses(newBoxAddresses);
-    }, [shownDeliveries, boxes]);
+    }, [shownDeliveries, deliveries, boxes]);
 
     return <>
         <TextField
@@ -102,7 +102,7 @@ export default function DeliveriesList({deliveries, propertiesToShow, onDelivery
 
                             {propertiesToShow.map(property => (
                                 <Typography key={property}>
-                                    {property}: {getDeliveryProperty(delivery, property)}
+                                    {property}: {"" + getDeliveryProperty(delivery, property)}
                                 </Typography>
                             ))}
 
