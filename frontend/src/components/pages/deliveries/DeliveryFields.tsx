@@ -3,7 +3,6 @@ import Delivery from "../../../model/Delivery";
 import Box from "../../../model/Box";
 import BoxSelection from "../helpers/BoxSelection";
 import DeliveryStatusSelection from "./DeliveryStatusSelection";
-import { FormControlLabel, FormGroup, Switch } from "@mui/material";
 import UserSelection from "../helpers/UserSelection";
 import User from "../../../model/User";
 
@@ -20,7 +19,6 @@ export default function DeliveryFields({
   const [targetBoxID, setTargetBoxID] = useState(delivery.targetBoxID);
   const [delivererID, setDelivererID] = useState(delivery.delivererID);
   const [status, setStatus] = useState(delivery.status || "ORDERED");
-  const [active, setActive] = useState(delivery.active);
 
   function handleUpdateDelivery() {
     onDeliveryUpdate(
@@ -30,14 +28,14 @@ export default function DeliveryFields({
         targetBoxID,
         delivererID,
         status,
-        active
+        delivery.active
       )
     );
   }
 
   useEffect(() => {
     handleUpdateDelivery();
-  }, [targetCustomerID, targetBoxID, delivererID, status, active]);
+  }, [targetCustomerID, targetBoxID, delivererID, status, delivery.active]);
 
   return (
     <div>
@@ -59,18 +57,6 @@ export default function DeliveryFields({
         userRole={"ROLE_DELIVERER"}
       />
       <DeliveryStatusSelection status={status} onStatusUpdate={setStatus} />
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              checked={active}
-              onChange={(event) => setActive(event.target.checked)}
-              inputProps={{ "aria-label": "controlled" }}
-            />
-          }
-          label="Delivery Active"
-        />
-      </FormGroup>
     </div>
   );
 }
