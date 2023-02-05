@@ -49,3 +49,6 @@ Our pipeline runs as follows:
 2. at the docker-frontend stage, the `docker-frontend` job builds the frontend image and pushes it to docker hub. This job will only run when changes are detected on the main branch.
 3. at the docker-backend stage, the `docker-backend` job uses jib to build the backend images and pushes them to Docker hub. This job will only run when changes are detected on the main branch.
 4. at the deploy stage, the `deploy` job copies the latest version of our docker-compose file to our Linode server and then runs `docker compose up -d` on our server using ssh. the docker compose file will pull all latest images from docker hub and run them thus having all of our latest changes live.
+
+# Wiki
+For more in-depth information, visit [the Wiki](https://gitlab.lrz.de/ase-22-23/team40/ase-project-2022-team-40/-/wikis/home).
