@@ -11,7 +11,7 @@ build-job: # builds spring boot apps
     - mvn clean install -B
   only:
     changes:
-      - microservices/*
+      - microservices/**/*
 
 
 docker-frontend-job: # build FE image + pushes it to Docker hub
