@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 
 @RestController
@@ -156,13 +157,26 @@ public class BoxController {
         List<Delivery> deliveries;
         if (user.getRole().equals(ERole.ROLE_CUSTOMER)) {
             deliveries = deliveryService.getDeliveriesForCustomer(userId);
+            Stream<Delivery> relevantDeliveries = deliveries
+                    .stream()
+                    .filter(del -> del.getTargetBoxID().equals(boxID))
+                    .filter(Delivery::isActive)
+                    .filter(del -> del.getStatus().equals(DeliveryStatus.DELIVERED));
+            if (relevantDeliveries.toList().isEmpty()) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (no matching active deliveries with status DELIVERED)!\"}");
+            }
         } else if (user.getRole().equals(ERole.ROLE_DELIVERER)) {
             deliveries = deliveryService.getDeliveriesForDeliverer(userId);
+            Stream<Delivery> relevantDeliveries = deliveries
+                    .stream()
+                    .filter(del -> del.getTargetBoxID().equals(boxID))
+                    .filter(Delivery::isActive)
+                    .filter(del -> del.getStatus().equals(DeliveryStatus.PICKED_UP));
+            if (relevantDeliveries.toList().isEmpty()) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (no matching active deliveries with status PICKED_UP)!\"}");
+            }
         } else {
             return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (wrong role)!\"}");
-        }
-        if (deliveries.stream().filter(del -> del.getTargetBoxID().equals(boxID)).toList().isEmpty()) {
-            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (no matching deliveries)!\"}");
         }
 
         return ResponseEntity.ok("{\"msg\": \"Authenticated!\"}");
@@ -181,21 +195,18 @@ public class BoxController {
         if (user == null) {
             return ResponseEntity.badRequest().body("Wrong userToken!");
         }
-        DeliveryStatus wantedStatus = null; // no change
-        Boolean wantedActive = null; // no change
         BoxResponse box = boxService.getBox(id);
         if (user.getRole().equals(ERole.ROLE_CUSTOMER)) {
             if (box.getAssignedCustomer().equals(user.getId())) {
-                boxService.updateTargetCustomer(box.getId(), box.getAssignedCustomer());
-                wantedActive = false;
+                deliveryService.changeDeliveredDeliveriesToInactive(id);
             } else {
                 return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (customer cannot close boxes that are not assigned to them)!\"}");
             }
         } else if (user.getRole().equals(ERole.ROLE_DELIVERER)) {
-            wantedStatus = DeliveryStatus.DELIVERED;
+            deliveryService.changePickedUpDeliveriesToDelivered(id);
         } else {
             return ResponseEntity.badRequest().body("Not authorized (dispatchers cannot close boxes)!");
         }
-        return ResponseEntity.ok(deliveryService.changeDeliveriesInBoxStatus(id, wantedStatus, wantedActive, token));
+        return ResponseEntity.ok().build();
     }
 }

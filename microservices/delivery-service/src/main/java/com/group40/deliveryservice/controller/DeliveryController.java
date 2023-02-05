@@ -3,11 +3,10 @@ package com.group40.deliveryservice.controller;
 import com.group40.deliveryservice.exceptions.DeliveryNotFoundException;
 import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.model.ERole;
+import com.group40.deliveryservice.model.EmailDetails;
 import com.group40.deliveryservice.model.User;
 import com.group40.deliveryservice.service.DeliveryService;
 import com.group40.deliveryservice.service.EmailService;
-import com.group40.deliveryservice.service.EmailServiceImpl;
-import com.group40.deliveryservice.model.EmailDetails;
 import com.group40.deliveryservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONException;
@@ -85,13 +84,13 @@ public class DeliveryController {
         Delivery delivery = deliveryService.getSingleDelivery(id);
         String adminTokenCheck = "Bearer " + adminToken;
         if (adminTokenCheck.equals(token)){
-            return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id, token));
+            return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id));
         }
 
         User user = userService.getUser(token);
         try {
             if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getDelivererID().equals(user.getId()) || delivery.getTargetCustomerID().equals(user.getId())) {
-                return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id, token));
+                return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id));
             } else {
                 return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
             } 

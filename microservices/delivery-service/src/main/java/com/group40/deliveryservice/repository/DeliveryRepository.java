@@ -19,6 +19,6 @@ public interface DeliveryRepository extends MongoRepository<Delivery, String> {
     @Query("{'delivererID' : ?0 }")
     List<Delivery> findDeliveriesForDeliverer(String deliverer);
 
-    @Query("{'targetBoxID' : ?0 }")
-    List<Delivery> findDeliveriesForBox(String boxID);
+    @Query("{'targetBoxID' : ?0, 'active': true }")
+    List<Delivery> findActiveDeliveriesForBox(String boxID);
 }
