@@ -27,6 +27,10 @@ Readme structure:
 Please make sure you have the following Requirements already installed on your computer before attempting to run the application:
 - Docker
 ## Quick start
+For a local run without docker, please make sure to include the environment variables for the microservices as follows:
+- DELIVERY_MONGO_URL=mongodb+srv://ase40:8dLvwgoDK88VhgAK@cluster0.f4fafj5.mongodb.net/test
+- AUTH_MONGO_URL=mongodb+srv://ase40:6LTt57e7XrxMsleh@cluster0.mnyhtly.mongodb.net/test1
+
 In order to run the application in production setting locally, execute the following command:
 - `docker-compose up -d`  
 
