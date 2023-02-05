@@ -2,7 +2,7 @@ import Client from "../Client";
 import { deliveryServiceUrl } from "../config";
 import Box from "../../model/Box";
 
-const client = new Client(`${deliveryServiceUrl}/boxes`);
+const client = new Client(`${deliveryServiceUrl}`, '/boxes');
 
 function deserializeBoxList(json: any): Box[] {
   return json.map(Box.fromJson);
