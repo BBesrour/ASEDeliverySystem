@@ -37,7 +37,7 @@ public class BoxController {
         if (user.getRole().equals(ERole.ROLE_DISPATCHER)) {
             try {
                 return ResponseEntity.ok(boxService.createBox(boxRequest));
-            } catch (BoxNameDuplicateException e) {
+            } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"error\": \"" + e.getMessage() + "\"}");
             }
         } else {

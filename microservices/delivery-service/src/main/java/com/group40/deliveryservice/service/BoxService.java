@@ -45,14 +45,25 @@ public class BoxService {
             throw new BoxNameDuplicateException("Box name already exists! " + newBox.getName());
     }
 
-    public BoxResponse createBox(BoxRequest boxRequest) throws BoxNameDuplicateException {
-        Box box = Box.builder()
-                .id(UUID.randomUUID().toString())
-                .address(boxRequest.getAddress())
-                .name(boxRequest.getName())
-                .assignedCustomer(boxRequest.getAssignedCustomer())
-                .build();
+    public BoxResponse createBox(BoxRequest boxRequest) throws Exception {
+        Box box;
+        if (Objects.equals(boxRequest.getId(), "")) {
+            box = Box.builder()
+                    .id(boxRequest.getId())
+                    .address(boxRequest.getAddress())
+                    .name(boxRequest.getName())
+                    .assignedCustomer(boxRequest.getAssignedCustomer())
+                    .build();
 
+        } else {
+            box = Box.builder()
+                    .id(UUID.randomUUID().toString())
+                    .address(boxRequest.getAddress())
+                    .name(boxRequest.getName())
+                    .assignedCustomer(boxRequest.getAssignedCustomer())
+                    .build();
+
+        }
         checkBoxNameDuplicate(box);
         boxRepository.insert(box);
         return mapToBoxResponse(box);
