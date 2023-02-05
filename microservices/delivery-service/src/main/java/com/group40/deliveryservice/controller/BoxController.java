@@ -2,10 +2,7 @@ package com.group40.deliveryservice.controller;
 
 import com.group40.deliveryservice.dto.BoxRequest;
 import com.group40.deliveryservice.dto.BoxResponse;
-import com.group40.deliveryservice.model.Box;
-import com.group40.deliveryservice.model.Delivery;
-import com.group40.deliveryservice.model.ERole;
-import com.group40.deliveryservice.model.User;
+import com.group40.deliveryservice.model.*;
 import com.group40.deliveryservice.service.BoxNameDuplicateException;
 import com.group40.deliveryservice.service.BoxService;
 import com.group40.deliveryservice.service.DeliveryService;
@@ -20,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 
 @RestController
@@ -159,13 +157,26 @@ public class BoxController {
         List<Delivery> deliveries;
         if (user.getRole().equals(ERole.ROLE_CUSTOMER)) {
             deliveries = deliveryService.getDeliveriesForCustomer(userId);
+            Stream<Delivery> relevantDeliveries = deliveries
+                    .stream()
+                    .filter(del -> del.getTargetBoxID().equals(boxID))
+                    .filter(Delivery::isActive)
+                    .filter(del -> del.getStatus().equals(DeliveryStatus.DELIVERED));
+            if (relevantDeliveries.toList().isEmpty()) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (no matching active deliveries with status DELIVERED)!\"}");
+            }
         } else if (user.getRole().equals(ERole.ROLE_DELIVERER)) {
             deliveries = deliveryService.getDeliveriesForDeliverer(userId);
+            Stream<Delivery> relevantDeliveries = deliveries
+                    .stream()
+                    .filter(del -> del.getTargetBoxID().equals(boxID))
+                    .filter(Delivery::isActive)
+                    .filter(del -> del.getStatus().equals(DeliveryStatus.PICKED_UP));
+            if (relevantDeliveries.toList().isEmpty()) {
+                return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (no matching active deliveries with status PICKED_UP)!\"}");
+            }
         } else {
             return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (wrong role)!\"}");
-        }
-        if (deliveries.stream().filter(del -> del.getTargetBoxID().equals(boxID)).toList().isEmpty()) {
-            return ResponseEntity.badRequest().body("{\"error\": \"Not authorized (no matching deliveries)!\"}");
         }
 
         return ResponseEntity.ok("{\"msg\": \"Authenticated!\"}");
