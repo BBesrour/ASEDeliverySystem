@@ -72,10 +72,9 @@ public class DeliveryController {
     ResponseEntity<?> getSingleDelivery(@RequestHeader(HttpHeaders.AUTHORIZATION) String token, @PathVariable(value = "id") String id) throws JSONException, IOException {
         User user = userService.getUser(token);
         Delivery delivery = deliveryService.getSingleDelivery(id);
-        if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getTargetCustomerID().equals(user.getId()) ||
-        delivery.getDelivererID().equals(user.getId())) {
+        if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getTargetCustomerID().equals(user.getId()) || delivery.getDelivererID().equals((user.getId()))) {
             return ResponseEntity.ok(deliveryService.getSingleDelivery(id));
-        }else {
+        } else {
             return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
     }
