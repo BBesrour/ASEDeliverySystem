@@ -1,8 +1,8 @@
 import Client from "../Client";
-import {authenticationServiceUrl, deliveryServiceUrl} from "../config";
+import {authenticationServiceUrl} from "../config";
 import User from "../../model/User";
 
-const client = new Client(`${deliveryServiceUrl}`, '/user');
+const client = new Client(`${authenticationServiceUrl}`, '');
 
 function deserializeUserList(json: any): User[] {
     return json.map(User.fromJson);
