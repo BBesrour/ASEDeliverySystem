@@ -11,8 +11,9 @@ import Box from "../../../model/Box";
 import { deleteBox, getBoxes } from "../../../api/delivery/box";
 import CreateBoxDialog from "./CreateBoxDialog";
 import UpdateBoxDialog from "./UpdateBoxDialog";
+import { ROLE_DISPATCHER } from "../../../model/roles";
 
-export default function BoxesPage() {
+export default function BoxesPage({ role }: { role: string }) {
   const [boxes, setBoxes] = useState<Box[]>([]);
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [showUpdateDialog, setShowUpdateDialog] = useState(false);
@@ -60,14 +61,16 @@ export default function BoxesPage() {
               <Typography>Address: {box.address}</Typography>
               <Typography>Assigned Customer: {box.assignedCustomer}</Typography>
             </CardContent>
-            <CardActions>
-              <Button size="small" onClick={() => onClickEdit(box)}>
-                Edit
-              </Button>
-              <Button onClick={() => onClickDelete(box.id)} size="small">
-                Delete
-              </Button>
-            </CardActions>
+            {role === ROLE_DISPATCHER && (
+              <CardActions>
+                <Button size="small" onClick={() => onClickEdit(box)}>
+                  Edit
+                </Button>
+                <Button onClick={() => onClickDelete(box.id)} size="small">
+                  Delete
+                </Button>
+              </CardActions>
+            )}
           </Card>
         </Grid>
       ))}
