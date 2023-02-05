@@ -86,6 +86,7 @@ export default class Client {
             },
             body: body ? JSON.stringify(body) : undefined
         });
+        this.responseCheck(response);
         return await response.json();
     }
 
