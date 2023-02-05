@@ -143,7 +143,7 @@ public class BoxController {
     @PostMapping("/{boxID}/authenticate")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> authenticateBox(@RequestHeader(HttpHeaders.AUTHORIZATION) String token,
-                                             @PathVariable String boxID, @RequestBody Map<String, String> obj) {
+                                             @PathVariable String boxID, @RequestBody Map<String, String> obj) throws JSONException, IOException {
         if (!userService.adminTokenIsValid(token)) {
             return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
         }
@@ -195,6 +195,6 @@ public class BoxController {
         } else {
             return ResponseEntity.badRequest().body("Not authorized (dispatchers cannot close boxes)!");
         }
-        return ResponseEntity.ok(deliveryService.changeDeliveriesInBoxStatus(id, wantedStatus));
+        return ResponseEntity.ok(deliveryService.changeDeliveriesInBoxStatus(id, wantedStatus, token));
     }
 }

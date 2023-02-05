@@ -21,6 +21,7 @@ import java.util.Base64;
 @RequiredArgsConstructor
 public class UserController {
 
+/*
     private final UserService userService;
 
     private final UserRepository userRepository;
@@ -138,8 +139,9 @@ public class UserController {
         }
     }
     @GetMapping("/token-to-user")
-    public ResponseEntity<?> getUserFromToken(@RequestParam String token){
+    public ResponseEntity<?> getUserFromToken(@RequestParam String token) throws JSONException, IOException {
         return ResponseEntity.ok(userService.getUserFromToken(token));
     }
+*/
 
 }

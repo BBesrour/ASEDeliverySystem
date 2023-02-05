@@ -38,7 +38,7 @@ export default function UpdateUserDialog({
       alert("Password is required");
       return;
     }
-    const newUser = new User(user.id, email, null, role, user.token);
+    const newUser = new User(user.id, email, password, role, user.token);
     await updateUser(newUser);
     onUserUpdated(newUser);
     handleClose();

@@ -2,15 +2,13 @@ package com.group40.authenticationservice.security.services;
 
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.group40.authenticationservice.model.Person;
+import com.group40.authenticationservice.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class UserDetailsImpl implements UserDetails {
@@ -25,18 +23,29 @@ public class UserDetailsImpl implements UserDetails {
 	@JsonIgnore
 	private String password;
 
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+	private String token;
+
 	private GrantedAuthority authority;
 
 	public UserDetailsImpl(String id, String username, String email, String password,
-						   GrantedAuthority authority) {
+						   GrantedAuthority authority, String token) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
 		this.authority = authority;
+		this.token=token;
 	}
 
-	public static UserDetailsImpl build(Person user) {
+	public static UserDetailsImpl build(User user) {
 
 		SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(user.getRole().getName().name());
 
@@ -45,7 +54,8 @@ public class UserDetailsImpl implements UserDetails {
 				user.getEmail(),
 				user.getEmail(),
 				user.getPassword(),
-				simpleGrantedAuthority);
+				simpleGrantedAuthority,
+				user.getToken());
 	}
 
 	@Override

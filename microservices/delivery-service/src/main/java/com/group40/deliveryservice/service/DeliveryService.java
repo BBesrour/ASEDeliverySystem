@@ -6,8 +6,10 @@ import com.group40.deliveryservice.repository.BoxRepository;
 import com.group40.deliveryservice.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -51,7 +53,7 @@ public class DeliveryService {
     }
 
 
-    public Delivery replaceDelivery(Delivery newDelivery, String id) {
+    public Delivery replaceDelivery(Delivery newDelivery, String id, String token) throws JSONException, IOException {
 
         //create or update delivery with id, in that target box all deliveries are assigned to same customer id
         Box box = boxRepository.findById(newDelivery.getTargetBoxID()).orElseThrow(() -> new DeliveryNotFoundException("Box not found"));
@@ -61,7 +63,7 @@ public class DeliveryService {
 
             Delivery replacedDelivery = repository.findById(id)
                 .map(delivery -> {
-                    delivery.setActive(newDelivery.isActive());
+                    delivery.setActive(newDelivery.getIsActive());
                     delivery.setTargetCustomerID(newDelivery.getTargetCustomerID());
                     delivery.setTargetBoxID(newDelivery.getTargetBoxID());
                     delivery.setDelivererID(newDelivery.getDelivererID());
@@ -72,7 +74,7 @@ public class DeliveryService {
                     newDelivery.setId(id);
                     return repository.save(newDelivery);
                 });
-            User user = userService.getUserFromDB(newDelivery.getTargetCustomerID());
+            User user = userService.getUserFromDB(newDelivery.getTargetCustomerID(), token);
             EmailDetails emailDetails = new EmailDetails(user.getEmail(),
                     "Delivery updated!",
                     "Delivery updated. Tracking code: " + replacedDelivery.getId());
@@ -102,13 +104,13 @@ public class DeliveryService {
         return repository.findInactiveDeliveries(customer);
     }
 
-    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status) {
+    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status, String token) throws JSONException, IOException {
         List<Delivery> toUpdate = repository.findDeliveriesForBox(boxID);
         for (Delivery delivery : toUpdate) {
             delivery.setStatus(status);
             repository.save(delivery);
         }
-        User user = userService.getUserFromDB(toUpdate.get(0).getTargetCustomerID());
+        User user = userService.getUserFromDB(toUpdate.get(0).getTargetCustomerID(), token);
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),
                 "Delivery status for box " + boxID + " was updated to " + status,
                 "ASE Delivery: Delivery status");
