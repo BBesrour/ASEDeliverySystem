@@ -5,6 +5,7 @@ import com.group40.deliveryservice.model.Delivery;
 import com.group40.deliveryservice.model.ERole;
 import com.group40.deliveryservice.model.User;
 import com.group40.deliveryservice.service.DeliveryService;
+import com.group40.deliveryservice.service.EmailService;
 import com.group40.deliveryservice.service.EmailServiceImpl;
 import com.group40.deliveryservice.model.EmailDetails;
 import com.group40.deliveryservice.service.UserService;
@@ -25,6 +26,8 @@ import java.util.List;
 public class DeliveryController {
     private final DeliveryService deliveryService;
     private final UserService userService;
+
+    private final EmailService emailService;
 
     @Value("${adminToken}")
     private String adminToken;
@@ -53,7 +56,6 @@ public class DeliveryController {
                 ResponseEntity response_entity = ResponseEntity.ok(deliveryService.saveDelivery(newDelivery));
                 EmailDetails email_details = new EmailDetails(user.getEmail(), "New delivery created. Delivery id:"
                         + newDelivery.getId(), "New delivery notification");
-                EmailServiceImpl emailService = new EmailServiceImpl();
                 emailService.sendSimpleMail(email_details);
                 return response_entity;
             } else {
