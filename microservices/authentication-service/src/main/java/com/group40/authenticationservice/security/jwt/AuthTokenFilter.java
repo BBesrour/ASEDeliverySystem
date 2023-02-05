@@ -7,6 +7,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.group40.authenticationservice.model.ERole;
+import com.group40.authenticationservice.model.Role;
+import com.group40.authenticationservice.model.User;
+import com.group40.authenticationservice.security.services.UserDetailsImpl;
 import com.group40.authenticationservice.security.services.UserDetailsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +41,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     try {
       String jwt = parseJwt(request);
       if (jwt != null && jwt.equals(adminToken)){
-        UserDetails userDetails = userDetailsService.loadUserByUsername("bilel10@example.com");
+        User user = User.builder().email("Admin").role(new Role(ERole.ROLE_DISPATCHER)).password("password").token("token").build();
+        UserDetails userDetails = UserDetailsImpl.build(user);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
                 userDetails.getAuthorities());
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
