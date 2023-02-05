@@ -34,20 +34,25 @@ export default class Client {
         return this.request('GET', url, params, null);
     }
 
-    async postRequest(url: string, params: any = {}, body: any = {}) {
-        const urlWithParams = url + (Object.keys(params).length ? `?${new URLSearchParams(params)}` : '');
-        const csrf_token = await fetch(this.urlBase + "/csrf", {
+    async getCSRFToken() {
+        const csrfToken = await fetch(this.urlBase + "/csrf", {
             method: "GET"
         }).then(response => {
             if (!response.ok) {
                 throw new Error(response.statusText)
             }
             return response.json()
-        })
+        });
+        return csrfToken.token
+    }
+
+    async postRequest(url: string, params: any = {}, body: any = {}) {
+        const urlWithParams = url + (Object.keys(params).length ? `?${new URLSearchParams(params)}` : '');
+        const csrfToken = await this.getCSRFToken();
         const response = await fetch(this.service + urlWithParams, {
             method: 'POST',
             headers: {
-                'X-XSRF-TOKEN': csrf_token.token,
+                'X-XSRF-TOKEN': csrfToken,
                 'Content-Type': 'application/json',
                 // add authorization header with access token
                 'Authorization': `Bearer ${getAccessToken()}`
@@ -59,18 +64,11 @@ export default class Client {
 
     async putRequest(url: string, params: any = {}, body: any = {}) {
         const urlWithParams = url + (Object.keys(params).length ? `?${new URLSearchParams(params)}` : '');
-        const csrf_token = await fetch(this.urlBase + "/csrf", {
-            method: "GET"
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error(response.statusText)
-            }
-            return response.json()
-        })
+        const csrfToken = await this.getCSRFToken();
         const response = await fetch(this.service + urlWithParams, {
             method: 'PUT',
             headers: {
-                'X-XSRF-TOKEN': csrf_token.token,
+                'X-XSRF-TOKEN': csrfToken,
                 'Content-Type': 'application/json',
                 // add authorization header with access token
                 'Authorization': `Bearer ${getAccessToken()}`
@@ -82,18 +80,11 @@ export default class Client {
 
     async deleteRequest(url: string, params: any = {}, body: any = {}) {
         const urlWithParams = url + (Object.keys(params).length ? `?${new URLSearchParams(params)}` : '');
-        const csrf_token = await fetch(this.urlBase + "/csrf", {
-            method: "GET"
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error(response.statusText)
-            }
-            return response.json()
-        })
+        const csrfToken = await this.getCSRFToken();
         const response = await fetch(this.service + urlWithParams, {
             method: 'DELETE',
             headers: {
-                'X-XSRF-TOKEN': csrf_token.token,
+                'X-XSRF-TOKEN': csrfToken,
                 'Content-Type': 'application/json',
                 // add authorization header with access token
                 'Authorization': `Bearer ${getAccessToken()}`
