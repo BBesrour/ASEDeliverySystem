@@ -82,7 +82,7 @@ public class DeliveryService {
             // 3 case --> box updated, customer updated, both updated
             boxService.updateTargetCustomer(oldDelivery.getTargetBoxID(), oldDelivery.getTargetCustomerID());
 
-            User user = userService.getUserFromDB(newDelivery.getTargetCustomerID(), token);
+            User user = userService.getUserFromDB(newDelivery.getTargetCustomerID());
             EmailDetails emailDetails = new EmailDetails(user.getEmail(),
                     "Delivery updated!",
                     "Delivery updated. Tracking code: " + replacedDelivery.getId());
@@ -128,7 +128,7 @@ public class DeliveryService {
             }
             repository.save(delivery);
         }
-        User user = userService.getUserFromDB(toUpdate.get(0).getTargetCustomerID(), token);
+        User user = userService.getUserFromDB(toUpdate.get(0).getTargetCustomerID());
         String activeMessage = active == null ? "" : "Active status was updated to " + active;
         String statusMessage = status == null ? "" : "Delivery status was updated to " + status;
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),

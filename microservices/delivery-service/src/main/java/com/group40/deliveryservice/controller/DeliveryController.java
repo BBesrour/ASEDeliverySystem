@@ -54,7 +54,8 @@ public class DeliveryController {
             User user = userService.getUser(token);
             if (user.getRole().equals(ERole.ROLE_DISPATCHER) || newDelivery.getTargetCustomerID().equals(user.getId())) {
                 ResponseEntity response_entity = ResponseEntity.ok(deliveryService.saveDelivery(newDelivery));
-                EmailDetails email_details = new EmailDetails(user.getEmail(), "New delivery created. Delivery id:"
+                User customer = userService.getUserFromDB(newDelivery.getTargetCustomerID());
+                EmailDetails email_details = new EmailDetails(customer.getEmail(), "New delivery created. Delivery id:"
                         + newDelivery.getId(), "New delivery notification");
                 emailService.sendSimpleMail(email_details);
                 return response_entity;
