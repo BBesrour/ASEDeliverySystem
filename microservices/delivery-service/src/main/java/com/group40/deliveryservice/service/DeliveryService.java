@@ -6,8 +6,10 @@ import com.group40.deliveryservice.repository.BoxRepository;
 import com.group40.deliveryservice.repository.DeliveryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONException;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,11 +54,11 @@ public class DeliveryService {
     }
 
 
-    public Delivery replaceDelivery(Delivery newDelivery, String id) throws Exception {
+    public Delivery replaceDelivery(Delivery newDelivery, String id, String token) throws Exception {
 
         //create or update delivery with id, in that target box all deliveries are assigned to same customer id
         Box box = boxRepository.findById(newDelivery.getTargetBoxID()).orElseThrow(() -> new DeliveryNotFoundException("Box not found"));
-        //get delivery with id 
+        //get delivery with id
         Delivery oldDelivery = repository.findById(id).orElseThrow(() -> new DeliveryNotFoundException(id));
         if (Objects.equals(box.getAssignedCustomer(), "") || Objects.equals(box.getAssignedCustomer(), newDelivery.getTargetCustomerID())){
 
@@ -73,14 +75,14 @@ public class DeliveryService {
                     newDelivery.setId(id);
                     return repository.save(newDelivery);
                 });
-            
+
             box.setAssignedCustomer(newDelivery.getTargetCustomerID());
             boxRepository.save(box);
 
             // 3 case --> box updated, customer updated, both updated
             boxService.updateTargetCustomer(oldDelivery.getTargetBoxID(), oldDelivery.getTargetCustomerID());
 
-            User user = userService.getUserFromDB(newDelivery.getTargetCustomerID());
+            User user = userService.getUserFromDB(newDelivery.getTargetCustomerID(), token);
             EmailDetails emailDetails = new EmailDetails(user.getEmail(),
                     "Delivery updated!",
                     "Delivery updated. Tracking code: " + replacedDelivery.getId());
@@ -103,7 +105,7 @@ public class DeliveryService {
         Delivery delivery = repository.findById(id).orElseThrow(() -> new DeliveryNotFoundException(id));
         repository.deleteById(id);
         boxService.updateTargetCustomer(delivery.getTargetBoxID(), delivery.getTargetCustomerID());
-        
+
     }
 
     public List<Delivery> getActiveDeliveries(String customer) {
@@ -114,7 +116,7 @@ public class DeliveryService {
         return repository.findInactiveDeliveries(customer);
     }
 
-    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status, Boolean active) {
+    public List<Delivery> changeDeliveriesInBoxStatus(String boxID, DeliveryStatus status, Boolean active, String token) throws JSONException, IOException {
         // each of status and active can be null to indicate no change
         List<Delivery> toUpdate = repository.findDeliveriesForBox(boxID);
         for (Delivery delivery : toUpdate) {
@@ -126,7 +128,7 @@ public class DeliveryService {
             }
             repository.save(delivery);
         }
-        User user = userService.getUserFromDB(toUpdate.get(0).getTargetCustomerID());
+        User user = userService.getUserFromDB(toUpdate.get(0).getTargetCustomerID(), token);
         String activeMessage = active == null ? "" : "Active status was updated to " + active;
         String statusMessage = status == null ? "" : "Delivery status was updated to " + status;
         EmailDetails emailDetails = new EmailDetails(user.getEmail(),

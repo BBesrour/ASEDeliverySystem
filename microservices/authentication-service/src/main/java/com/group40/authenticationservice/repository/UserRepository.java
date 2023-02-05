@@ -4,11 +4,13 @@ import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.group40.authenticationservice.model.Person;
+import com.group40.authenticationservice.model.User;
 
-public interface UserRepository extends MongoRepository<Person, String> {
+public interface UserRepository extends MongoRepository<User, String> {
 
-  Optional<Person> findByEmail(String email);
+  Optional<User> findByEmail(String email);
 
   Boolean existsByEmail(String email);
+
+  Optional<User> findByToken(String token);
 }

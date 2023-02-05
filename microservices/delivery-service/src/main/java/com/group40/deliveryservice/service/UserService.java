@@ -47,11 +47,12 @@ public class UserService {
     }
 
 
-    public User getUserFromDB(String id){
+    public User getUserFromDB(String id, String token) throws IOException, JSONException {
         if (id.equals("admin")) {
             return new AdminUser();
         }
-        return userRepository.findById(id).orElseThrow();
+        URL url = new URL(apiURL + "/api/auth/user/" + id);
+        return executeGetUser(url, token);
     }
 
     public Deliverer getDelivererFromDB(String email){
@@ -225,6 +226,19 @@ public class UserService {
 
         URL url = new URL(apiURL + "/api/auth/current");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        return executeGetUser(url, token);
+    }
+
+    public User getUserFromToken(String token) throws IOException, JSONException {
+        if (adminTokenIsValid(token)) {
+            return new AdminUser();
+        }
+        URL url = new URL(apiURL + "/api/auth/user/token-to-user");
+        return executeGetUser(url, token);
+    }
+
+    public User executeGetUser(URL url, String token) throws IOException, JSONException {
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("Authorization", token);
         con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
@@ -249,13 +263,6 @@ public class UserService {
         String role = myResponse.getString("role");
         ERole eRole = ERole.valueOf(role);
         return new User(id, email, eRole);
-    }
-
-    public User getUserFromToken(String token){
-        if (adminTokenIsValid(token)) {
-            return new AdminUser();
-        }
-        return userRepository.findByToken(token);
     }
 
 }

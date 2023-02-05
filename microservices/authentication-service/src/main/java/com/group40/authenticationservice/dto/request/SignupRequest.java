@@ -5,7 +5,6 @@ import javax.validation.constraints.*;
  
 public class SignupRequest {
 
-    @NotBlank
     private String id;
     @NotBlank
     @Size(max = 50)

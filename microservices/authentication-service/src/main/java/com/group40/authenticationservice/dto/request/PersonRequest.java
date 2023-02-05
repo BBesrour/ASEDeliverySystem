@@ -18,4 +18,7 @@ public class PersonRequest {
 
     @NotBlank
     private String password;
+
+    private String role;
+
 }

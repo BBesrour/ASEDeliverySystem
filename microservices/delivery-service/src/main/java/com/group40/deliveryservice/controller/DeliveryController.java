@@ -82,13 +82,13 @@ public class DeliveryController {
         Delivery delivery = deliveryService.getSingleDelivery(id);
         String adminTokenCheck = "Bearer " + adminToken;
         if (adminTokenCheck.equals(token)){
-            return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id));
+            return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id, token));
         }
 
         User user = userService.getUser(token);
         try {
             if (user.getRole().equals(ERole.ROLE_DISPATCHER) || delivery.getDelivererID().equals(user.getId()) || delivery.getTargetCustomerID().equals(user.getId())) {
-                return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id));
+                return ResponseEntity.ok(deliveryService.replaceDelivery(newDelivery, id, token));
             } else {
                 return ResponseEntity.badRequest().body("{\"error\": \"Not authorized!\"}");
             } 

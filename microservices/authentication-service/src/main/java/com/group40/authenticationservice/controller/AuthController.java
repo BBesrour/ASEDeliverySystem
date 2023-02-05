@@ -6,7 +6,7 @@ import com.group40.authenticationservice.dto.response.JwtResponse;
 import com.group40.authenticationservice.dto.response.MessageResponse;
 import com.group40.authenticationservice.dto.response.PersonResponse;
 import com.group40.authenticationservice.model.ERole;
-import com.group40.authenticationservice.model.Person;
+import com.group40.authenticationservice.model.User;
 import com.group40.authenticationservice.model.Role;
 import com.group40.authenticationservice.repository.RoleRepository;
 import com.group40.authenticationservice.repository.UserRepository;
@@ -14,6 +14,7 @@ import com.group40.authenticationservice.security.jwt.JwtUtils;
 import com.group40.authenticationservice.security.services.UserDetailsImpl;
 import com.group40.authenticationservice.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +27,9 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.Base64;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -46,6 +50,11 @@ public class AuthController {
 
 	@Autowired
 	JwtUtils jwtUtils;
+
+	@Autowired
+	private SecureRandom secureRandom;
+	@Autowired
+	private Base64.Encoder base64Encoder;
 
 	@PostMapping("/login")
 	@ResponseStatus(HttpStatus.OK)
@@ -68,18 +77,27 @@ public class AuthController {
 
 	@PostMapping("/register")
 	@ResponseStatus(HttpStatus.CREATED)
+	@PreAuthorize("hasRole('DISPATCHER')")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-		if (userRepository.existsByEmail(signUpRequest.getEmail()) || userRepository.existsById(signUpRequest.getId())){
+		if (userRepository.existsByEmail(signUpRequest.getEmail())){
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Id/Email is already in use!"));
 		}
+		if (signUpRequest.getPassword().isBlank()){
+			return ResponseEntity
+					.badRequest()
+					.body(new MessageResponse("Error: No Password found"));
+		}
+
+		byte[] randomBytes = new byte[12];
+		secureRandom.nextBytes(randomBytes);
 
 		// Create new user's account
-		Person user = Person.builder()
-				.id(signUpRequest.getId())
+		User user = User.builder()
 				.email(signUpRequest.getEmail())
 				.password(encoder.encode(signUpRequest.getPassword()))
+				.token(base64Encoder.encodeToString(randomBytes))
 				.build();
 
 		String strRole = signUpRequest.getRole();
@@ -95,11 +113,8 @@ public class AuthController {
 
 		user.setRole(role);
 		userRepository.save(user);
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		return ResponseEntity.ok(new PersonResponse(user.getId(), user.getEmail(), role.getName().name(), user.getToken()));
 	}
-
-	@Autowired
-	private UserDetailsServiceImpl userDetailsService;
 
 	@GetMapping("/current")
 	@PreAuthorize("hasRole('CUSTOMER') or hasRole('DISPATCHER') or hasRole('DELIVERER')")
@@ -109,13 +124,14 @@ public class AuthController {
 
 		String role = userDetails.getAuthority().getAuthority();
 
-		return ResponseEntity.ok(new PersonResponse(userDetails.getId(), userDetails.getUsername(), role));
+		return ResponseEntity.ok(new PersonResponse(userDetails.getId(), userDetails.getUsername(), role, userDetails.getToken()));
 	}
 
 	@RequestMapping("/csrf")
 	public CsrfToken csrf(CsrfToken token) {
 		return token;
 	}
+
 
 
 }

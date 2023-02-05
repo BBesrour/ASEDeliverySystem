@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @Builder
 @Data
-public class Person {
+public class User {
     @Id
     private String id;
 
@@ -23,6 +23,7 @@ public class Person {
     @DBRef
     private Role role;
 
+    @NonNull
     private String token;
 
 }
