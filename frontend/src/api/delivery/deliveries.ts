@@ -2,7 +2,7 @@ import Client from "../Client";
 import {deliveryServiceUrl} from "../config";
 import Delivery from "../../model/Delivery";
 
-const client = new Client(`${deliveryServiceUrl}/deliveries`);
+const client = new Client(`${deliveryServiceUrl}`, '/deliveries');
 
 function deserializeDeliveryList(json: any): Delivery[] {
     return json.map(Delivery.fromJson);

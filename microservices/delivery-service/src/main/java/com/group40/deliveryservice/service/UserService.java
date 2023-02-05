@@ -145,17 +145,41 @@ public class UserService {
                 """.formatted(id, email, password, role);
     }
 
+    private static String getCSRF() throws IOException, JSONException {
+        URL url = new URL("http://localhost:8080/api/auth/csrf");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(con.getInputStream()));
+        String inputLine;
+        StringBuilder response = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            response.append(inputLine);
+        }
+        in.close();
+        //print in String
+        System.out.println(response);
+        //Read JSON response and print
+        JSONObject myResponse = new JSONObject(response.toString());
+
+        return myResponse.getString("token");
+
+    }
 
     private String executePost(String body) {
         HttpURLConnection connection = null;
 
         try {
             //Create connection
+            String csrf = getCSRF();
+            System.out.println(csrf);
             URL url = new URL(apiURL + "/api/auth/register");
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
-
+            connection.setRequestProperty("X-XSRF-TOKEN", csrf);
+            connection.setRequestProperty("Cookie", "XSRF-TOKEN="+csrf);
             connection.setRequestProperty("Accept", "application/json");
 
             connection.setDoOutput(true);

@@ -23,6 +23,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -124,6 +125,11 @@ public class AuthController {
 		String role = userDetails.getAuthority().getAuthority();
 
 		return ResponseEntity.ok(new PersonResponse(userDetails.getId(), userDetails.getUsername(), role, userDetails.getToken()));
+	}
+
+	@RequestMapping("/csrf")
+	public CsrfToken csrf(CsrfToken token) {
+		return token;
 	}
 
 

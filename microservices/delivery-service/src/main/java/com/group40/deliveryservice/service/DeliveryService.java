@@ -24,6 +24,7 @@ public class DeliveryService {
 
     private final EmailService emailService;
     private final BoxRepository boxRepository;
+    private final BoxService boxService;
 
     public List<Delivery> getDeliveriesForCustomer(String id){
         return repository.findDeliveriesForCustomer(id);
@@ -57,9 +58,9 @@ public class DeliveryService {
 
         //create or update delivery with id, in that target box all deliveries are assigned to same customer id
         Box box = boxRepository.findById(newDelivery.getTargetBoxID()).orElseThrow(() -> new DeliveryNotFoundException("Box not found"));
+        //get delivery with id
+        Delivery oldDelivery = repository.findById(id).orElseThrow(() -> new DeliveryNotFoundException(id));
         if (Objects.equals(box.getAssignedCustomer(), "") || Objects.equals(box.getAssignedCustomer(), newDelivery.getTargetCustomerID())){
-            box.setAssignedCustomer(newDelivery.getTargetCustomerID());
-            boxRepository.save(box);
 
             Delivery replacedDelivery = repository.findById(id)
                 .map(delivery -> {
@@ -74,6 +75,13 @@ public class DeliveryService {
                     newDelivery.setId(id);
                     return repository.save(newDelivery);
                 });
+
+            box.setAssignedCustomer(newDelivery.getTargetCustomerID());
+            boxRepository.save(box);
+
+            // 3 case --> box updated, customer updated, both updated
+            boxService.updateTargetCustomer(oldDelivery.getTargetBoxID(), oldDelivery.getTargetCustomerID());
+
             User user = userService.getUserFromDB(newDelivery.getTargetCustomerID(), token);
             EmailDetails emailDetails = new EmailDetails(user.getEmail(),
                     "Delivery updated!",
@@ -92,8 +100,12 @@ public class DeliveryService {
         
     }
 
-    public void deleteDelivery(String id) {
+    public void deleteDelivery(String id) throws Exception {
+        //get delivery by id
+        Delivery delivery = repository.findById(id).orElseThrow(() -> new DeliveryNotFoundException(id));
         repository.deleteById(id);
+        boxService.updateTargetCustomer(delivery.getTargetBoxID(), delivery.getTargetCustomerID());
+
     }
 
     public List<Delivery> getActiveDeliveries(String customer) {
