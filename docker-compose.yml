@@ -30,6 +30,7 @@ services:
     pull_policy: always
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - DELIVERY_MONGO_URL=${DELIVERY_MONGO_URL}
     depends_on:
       - discovery-server
       - api-gateway
@@ -41,6 +42,7 @@ services:
     pull_policy: always
     environment:
       - SPRING_PROFILES_ACTIVE=docker
+      - AUTH_MONGO_DB=${AUTH_MONGO_DB}
     depends_on:
       - discovery-server
       - api-gateway
