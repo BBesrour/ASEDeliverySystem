@@ -1,9 +1,9 @@
 # ASE delivery system
 Team: 40
+Contributors: Mohamed Bilel Besrour, Nour Bouzid, Paul Schwind, Ufuk Yagmur, Kevin Nguyen
 
 In this repository is code of the delivery system implemented for the lecture Advanced topics of software engineering. 
 To test and play around with the latest version of our application please visit:
-### - https://ase.pschwind.de
 
 If you also want to test the embedded system, set it up as described in the first ASE exercise, then clone the repository and run:
 ```
